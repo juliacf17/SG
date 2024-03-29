@@ -1,3 +1,4 @@
+
 // Clases de la biblioteca
 
 import * as THREE from '../libs/three.module.js'
@@ -6,7 +7,9 @@ import { TrackballControls } from '../libs/TrackballControls.js'
 import { Stats } from '../libs/stats.module.js'
 
 // Clases de mi proyecto
-import { Revolucion } from './MyRevolution.js' 
+
+import { Barrido } from './barrido.js'
+
  
 /// La clase fachada del modelo
 /**
@@ -27,7 +30,6 @@ class MyScene extends THREE.Scene {
     
     // Construimos los distinos elementos que tendremos en la escena
     
-    
     // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
     // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
     this.createLights ();
@@ -36,20 +38,19 @@ class MyScene extends THREE.Scene {
     this.createCamera ();
     
     // Un suelo 
-    //this.createGround (); // No se crea el suelo
+    //this.createGround ();
     
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     // Todas las unidades están en metros
     this.axis = new THREE.AxesHelper (2);
     this.add (this.axis);
-
+    
     
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    
-    this.revolucionModel = new Revolucion(this.gui, "Controles de la Revolución");
-    this.add (this.revolucionModel);
+    this.model = new Barrido(this.gui, "Controles de la Caja");
+    this.add (this.model);
   }
   
   initStats() {
@@ -91,7 +92,8 @@ class MyScene extends THREE.Scene {
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
   }
-
+  
+  /*
   createGround () {
     // El suelo es un Mesh, necesita una geometría y un material.
     
@@ -112,7 +114,7 @@ class MyScene extends THREE.Scene {
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
     this.add (ground);
   }
-  
+  */
   createGUI () {
     // Se crea la interfaz gráfica de usuario
     var gui = new GUI();
@@ -186,7 +188,7 @@ class MyScene extends THREE.Scene {
     var renderer = new THREE.WebGLRenderer();
     
     // Se establece un color de fondo en las imágenes que genera el render
-    renderer.setClearColor(new THREE.Color('lightblue'), 1.0);
+    renderer.setClearColor(new THREE.Color(0xEEEEEE), 1.0);
     
     // Se establece el tamaño, se aprovecha la totalidad de la ventana del navegador
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -230,8 +232,8 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
     
     // Se actualiza el resto del modelo
-    this.revolucionModel.update();
-
+    this.model.update();
+    
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
