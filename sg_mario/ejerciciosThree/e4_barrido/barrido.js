@@ -18,6 +18,14 @@ class Barrido extends THREE.Object3D {
     shape_corazon.quadraticCurveTo(-0.7,1.4,-0.8,1.0);
     shape_corazon.quadraticCurveTo(-0.8,0.25,0,0);
 
+    /*shape_corazon.moveTo(2,0); 
+    shape_corazon.quadraticCurveTo(2,2,1,2); 
+    shape_corazon.quadraticCurveTo(0,2,0,1); 
+    shape_corazon.quadraticCurveTo(0,2,-1,2); 
+    shape_corazon.quadraticCurveTo(-2,2,-2,0); 
+    shape_corazon.quadraticCurveTo(-1, -2,0,-2); 
+    shape_corazon.quadraticCurveTo(1,-2,2,0); */    //Mi corazón pocho
+
 
     var material = new THREE.MeshStandardMaterial({ 
         color: 'red', // Color de la forma
@@ -142,14 +150,6 @@ class Barrido extends THREE.Object3D {
     this.add(this.barrido2);
 
     this.barrido2.position.x = 2.5;
-
-
-
-
-
-
-
-
   }
 
 
@@ -157,14 +157,14 @@ class Barrido extends THREE.Object3D {
   }
 
   update() {
-    this.corazon.rotation.y += 0.01;
+    /*this.corazon.rotation.y += 0.01;
     this.trebol.rotation.y += 0.01;
     this.trebol2.rotation.y -= 0.01;
     this.corazon2.rotation.y -= 0.01;
     this.barrido1.rotation.y -= 0.01;
     this.barrido1.rotation.z -= 0.01;
     this.barrido2.rotation.y += 0.01;
-    this.barrido2.rotation.z += 0.01;
+    this.barrido2.rotation.z += 0.01;*/     //Para que giren
     
   }
 

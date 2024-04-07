@@ -203,6 +203,7 @@ class Barrido extends THREE.Object3D {
 
 
     var path = new THREE.CatmullRomCurve3(pts);     //Crea el camino
+    //new THREE.LinearCurve3(pts); 	//Pasa por los puntos en linea recta
     
     var options = {
         steps: 150,     //La suavidad de la extrusión, cuanto más pasos más suave.   
