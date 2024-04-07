@@ -42,13 +42,13 @@ class geometria_constructiva extends THREE.Object3D {
     csg.union([cilExtMesh, toroMesh]);
     csg.subtract([cilIntMesh]);
 
-    this.resultadoMesh = csg.toMesh();
+    this.taza = csg.toMesh();
 
-    this.resultadoMesh.scale.set(0.1,0.1,0.1);
+    this.taza.scale.set(0.1,0.1,0.1);
 
-    this.add(this.resultadoMesh);
+    this.add(this.taza);
 
-    this.resultadoMesh.position.x = -2;
+    this.taza.position.x = -2;
 
     /**** "APOYO ESTANTERÍA" ***************************************************************************/
 
@@ -75,20 +75,108 @@ class geometria_constructiva extends THREE.Object3D {
     this.csg.subtract([this.cilindro1]);
     this.csg.subtract([this.cilindro2]);
 
-    this.resultadoMesh2 = this.csg.toMesh();
+    this.estanteria = this.csg.toMesh();
 
-    this.add(this.resultadoMesh2);
+    this.add(this.estanteria);
 
-    this.resultadoMesh2.position.x = 2;
+    this.estanteria.position.x = 2;
+  //this.add(this.cilindro1);
+  //this.add(this.cilindro2);
+  //this.extrusion.translate(-0.20,-0.20,0);
 
 
-    //this.add(this.cilindro1);
-    //this.add(this.cilindro2);
-    //this.extrusion.translate(-0.20,-0.20,0);
+    /**** TUERCA ***************************************************************************/
 
     
+    //this.cuerpo = this.createExtrusion();
+
+    this.cuerpo = this.createCilindro(0.6,0.6,0.5,6);
+
+    //this.add(this.cuerpo);
+
+    this.cilindro1 = this.createCilindro(0.3,0.3,1,64);
+
+    //this.add(this.cilindro1);
+
+    this.espiral = this.createEspiral();
+
+    //this.add(this.espiral);
+
+    this.toro = this.createTorus(0.66,0.15,64,64);
+
+    this.toro.translateY(0.35);
+
+    //this.add(this.toro);
+
+    this.toro2 = this.createTorus(0.66,0.15,64,64);
+
+    this.toro2.translateY(-0.35);
+
+    //this.add(this.toro2);
+
+    this.csg = new CSG();
+
+    this.csg.union([this.cuerpo]);
+    this.csg.subtract([this.cilindro1]);
+    this.csg.subtract([this.espiral]);
+    this.csg.subtract([this.toro]);
+    this.csg.subtract([this.toro2]);
+  
+    this.tuerca = this.csg.toMesh();
+    this.add(this.tuerca);
+
+    this.tuerca.position.y = 2;
+    
+
   }
 
+  createEspiral(){
+    // shape cuadrado para barrerlo
+    var shape = new THREE.Shape();
+    var lado = 5; // Puedes ajustar el tamaño según necesites
+    shape.moveTo(0, 0);
+    shape.lineTo(lado, 0);
+    shape.lineTo(lado, lado);
+    shape.lineTo(0, lado);
+    shape.lineTo(0, 0);
+
+     // camino en espiral
+     var pts = [];
+     var altura = 100; // Altura de la espiral
+     var vueltas = 10; // Número de vueltas completas
+     var pasos = 100; // Número de puntos en el camino
+     for (var i = 0; i <= pasos; i++) {
+         var t = i / pasos * vueltas * Math.PI * 2; // ángulo actual
+         var x = Math.sin(t) * 20;
+         var y = (i / pasos) * altura - altura / 2;
+         var z = Math.cos(t) * 20;
+         pts.push(new THREE.Vector3(x, y, z));
+     }
+
+     var path = new THREE.CatmullRomCurve3(pts);     //Crea el camino
+     //new THREE.LinearCurve3(pts); 	//Pasa por los puntos en linea recta
+     
+     var options = {
+         steps: 500,     //La suavidad de la extrusión, cuanto más pasos más suave.   
+         curveSegments: 64, // Mejora la resolución de las curvas cuanto mayor es. 
+         extrudePath: path // La trayectoria a lo largo de la cual se extruirá la forma
+     };
+ 
+     var geometry = new THREE.ExtrudeGeometry( shape, options );     //Crear la geometría
+     var material = new THREE.MeshPhongMaterial({ color: 'lightpink', side: THREE.DoubleSide });
+ 
+     var espiral = new THREE.Mesh(geometry, material); 
+     espiral.scale.set(0.013, 0.0075, 0.013);
+
+     return espiral;
+  }
+  createTorus(radio, tubo, n_radial, n_tubular){
+    var geometry = new THREE.TorusGeometry(radio, tubo, n_radial, n_tubular); // radio, tubo, n_radial, n_tubular
+    var material = new THREE.MeshPhongMaterial({ color: 'lightpink', side: THREE.DoubleSide });
+    var mesh = new THREE.Mesh(geometry, material);
+    geometry.rotateX(Math.PI/2);
+    return mesh;
+  }
   createBox( width, height, depth ) {
     var geometry = new THREE.BoxGeometry( width, height, depth );
     var material = new THREE.MeshNormalMaterial();
@@ -127,7 +215,8 @@ class geometria_constructiva extends THREE.Object3D {
 
   createCilindro(radio_sup, radio_inf, altura, n_segmentos){
     var geometry = new THREE.CylinderGeometry(radio_sup, radio_inf, altura, n_segmentos, 1);
-    var material = new THREE.MeshPhongMaterial({ color: 'red', side: THREE.DoubleSide });
+    var material = new THREE.MeshPhongMaterial({ color: 'grey', side: THREE.DoubleSide });
+    //var material = new THREE.MeshNormalMaterial();
     var mesh = new THREE.Mesh(geometry, material);
     return mesh;
   }
@@ -164,12 +253,14 @@ class geometria_constructiva extends THREE.Object3D {
 
   update() {
 
-    this.resultadoMesh.rotation.y += 0.01;
-    this.resultadoMesh.rotation.z += 0.01;
+    this.taza.rotation.y += 0.01;
+    this.taza.rotation.z += 0.01;
     this.result.rotation.y += 0.01;
     this.result.rotation.z += 0.01;
-    this.resultadoMesh2.rotation.y += 0.01;
-    this.resultadoMesh2.rotation.z += 0.01;
+    this.estanteria.rotation.y += 0.01;
+    this.estanteria.rotation.z += 0.01;
+    this.tuerca.rotation.y += 0.01;
+    this.tuerca.rotation.z += 0.01;
     
     
   }
