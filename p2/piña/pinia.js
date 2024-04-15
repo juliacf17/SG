@@ -8,32 +8,6 @@ class geometria_constructiva extends THREE.Object3D {
     super();
 
     
-/* //CUBO MENOS UNA ESFERA  
-
-    // Create the first geometry
-    const geometry1 = new THREE.BoxGeometry(1, 1, 1);
-    var material1 = new THREE.MeshPhongMaterial({ color: 'lightpink', side: THREE.DoubleSide });
-    const mesh1 = new THREE.Mesh(geometry1, material1);
-
-    // Create the second geometry
-    const geometry2 = new THREE.SphereGeometry(0.5, 32, 32);
-    const material2 = new THREE.MeshBasicMaterial({ color: 'lightgreen' });
-    const mesh2 = new THREE.Mesh(geometry2, material2);
-
-    geometry2.translate(0,0.5,0);
-
-    // Perform the CSG operation
-    var csg = new CSG();
-    csg.union([mesh1]);
-    csg.subtract([mesh2]);
-
-    var result = csg.toMesh();
-
-    // Add the result to the scene
-    this.add(result);
-
-*/
-
     var MatBasePinia = new THREE.MeshBasicMaterial({ color: 0xb8921c, side: THREE.DoubleSide });
 
     this.points = [];
@@ -77,9 +51,8 @@ class geometria_constructiva extends THREE.Object3D {
     var hojasPiniaGeom = new THREE.LatheGeometry(this.points,20,0,Math.PI*2);
     hojasPiniaGeom.scale(0.9,0.9,0.9); 
 
-    // Añadir las partes al objeto con this.add(this.parte)
+
     var hojasPinia = new THREE.Mesh(hojasPiniaGeom, MatHojasPinia);   //Hoja central  
-    //this.add(hojasPinia);
 
     var geom2 =  new THREE.LatheGeometry(this.points,20,0,Math.PI*2);
     geom2.scale(0.8,0.8,0.8); 
@@ -105,7 +78,6 @@ class geometria_constructiva extends THREE.Object3D {
 
     var hojasPinia5 = new THREE.Mesh(geom5, MatHojasPinia); 
 
-
     var csg = new CSG();
     csg.union([hojasPinia, hojasPinia2, hojasPinia3, hojasPinia4, hojasPinia5]);
 
@@ -117,33 +89,37 @@ class geometria_constructiva extends THREE.Object3D {
 
     //LA CHIMENEA
 
-    var boxGeom = new THREE.BoxGeometry (0.4,0.20,0.15); //ancho, alto y largo
-    boxGeom.translate(0.8,1.4,0); 
-    var boxMat = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
+    var chimeneaGeom1 = new THREE.BoxGeometry (0.4,0.20,0.15); //ancho, alto y largo
+    chimeneaGeom1.translate(0.8,1.4,0); 
+    var chimeneaMat1 = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
+
+    var chimeneaParte1 = new THREE.Mesh (chimeneaGeom1, chimeneaMat1);
+
+    //this.add(chimenea); 
+
+
+    var chimeneaGeom2 = new THREE.BoxGeometry (0.2,0.4,0.15); //ancho, alto y largo
+    chimeneaGeom2.translate(0.9,1.5,0); 
+    var chimeneaMat2 = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
 
     // Ya podemos construir el Mesh
-    var box = new THREE.Mesh (boxGeom, boxMat);
+    var chimeneaParte2 = new THREE.Mesh (chimeneaGeom2, chimeneaMat2);
 
-    this.add(box); 
+    //this.add(chimenea2); 
 
+    var chimenea = new CSG();
+    chimenea.union([chimeneaParte1, chimeneaParte2]);
 
-    var boxGeom2 = new THREE.BoxGeometry (0.2,0.4,0.15); //ancho, alto y largo
-    boxGeom2.translate(0.9,1.5,0); 
-    var boxMat2 = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
-
-    // Ya podemos construir el Mesh
-    var box2 = new THREE.Mesh (boxGeom2, boxMat2);
-
-    this.add(box2); 
-
-    //VENTANAS
-
-
-
+    var chimenea = chimenea.toMesh();          
+    this.add(chimenea);
 
   }
 
   update() {
+
+    this.rotation.y += 0.01;
+
+
 
   }
 }

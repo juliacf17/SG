@@ -8,7 +8,7 @@ import { Stats } from '../libs/stats.module.js'
 
 // Clases de mi proyecto
 
-import { geometria_constructiva } from './csg.js'
+import { medusa } from './medusa.js'
 
  
 /// La clase fachada del modelo
@@ -49,7 +49,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new geometria_constructiva(this.gui, "Controles del CSG");
+    this.model = new medusa(this.gui, "Controles de la medusa");
     this.add (this.model);
   }
   
