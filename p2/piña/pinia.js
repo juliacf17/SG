@@ -8,8 +8,12 @@ class geometria_constructiva extends THREE.Object3D {
     super();
 
     
-    var MatBasePinia = new THREE.MeshBasicMaterial({ color: 0xb8921c, side: THREE.DoubleSide });
+    //var MatBasePinia = new THREE.MeshBasicMaterial({ color: 0xb8921c, side: THREE.DoubleSide });
 
+    var texture = new THREE.TextureLoader().load('../imgs/textura-piña.png');
+    var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture});
+
+    
     this.points = [];
 
     //CUERPO PIÑA
