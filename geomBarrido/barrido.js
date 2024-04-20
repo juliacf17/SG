@@ -136,7 +136,7 @@ class Barrido extends THREE.Object3D {
     }*/
 
     //CAMINO EN FORMA DE ONDA
-    /*var pts = [];
+    var pts = [];
     var altura = 10; // Altura de la onda
     var longitud = 200; // Longitud del camino
     var pasos = 100; // Número de puntos en el camino
@@ -145,10 +145,10 @@ class Barrido extends THREE.Object3D {
         var y = Math.sin(i / pasos * Math.PI * 4) * altura;
         var z = 0;
         pts.push(new THREE.Vector3(x, y, z));
-    }*/
+    }
 
     //CAMINO EN ESPIRAL
-    var pts = [];
+    /*var pts = [];
     var altura = 100; // Altura de la espiral
     var vueltas = 10; // Número de vueltas completas
     var pasos = 100; // Número de puntos en el camino
@@ -159,6 +159,7 @@ class Barrido extends THREE.Object3D {
         var z = Math.cos(t) * 20;
         pts.push(new THREE.Vector3(x, y, z));
     }
+    */
 
     //CAMINO EN FORMA DE MUELLE     (espiral alargada)
     /*var pts;
