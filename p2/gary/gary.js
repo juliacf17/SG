@@ -14,12 +14,36 @@ class gary extends THREE.Object3D {
 
     // Shape cuadrado
     var shapeBabosa = new THREE.Shape();
+    /*
     var lado = 1; // Puedes ajustar el tamaño según necesites
     shapeBabosa.moveTo(0, 0);
     shapeBabosa.lineTo(lado*2, 0);
     shapeBabosa.lineTo(lado*2, lado);
     shapeBabosa.lineTo(0, lado);
     shapeBabosa.lineTo(0, 0);
+    */ 
+
+    shapeBabosa.moveTo(0,-0.4);
+    shapeBabosa.quadraticCurveTo(-0.4,-0.6,-0.4,-0.2);
+    shapeBabosa.quadraticCurveTo(-0.4,0.0,-0.6,-0.1);
+    shapeBabosa.quadraticCurveTo(-0.8,-0.2,-0.8,0.0);
+
+    shapeBabosa.quadraticCurveTo(-0.8,0.2,-0.6,0.1);
+    shapeBabosa.quadraticCurveTo(-0.4,0.0,-0.4,0.2);
+    shapeBabosa.quadraticCurveTo(-0.4,0.6,0,0.4);
+
+    shapeBabosa.quadraticCurveTo(0.4,0.6,0.4,0.2);
+    shapeBabosa.quadraticCurveTo(0.4,0.0,0.6,0.1);
+    shapeBabosa.quadraticCurveTo(0.8,0.2,0.8,0.0);
+
+    shapeBabosa.quadraticCurveTo(0.8,-0.2,0.6,-0.1);
+    shapeBabosa.quadraticCurveTo(0.4,0.0,0.4,-0.2);
+    shapeBabosa.quadraticCurveTo(0,-0.4,0,-0.4);
+
+
+
+
+
 
     // Camino en forma de onda
     var pts = [];
@@ -36,14 +60,15 @@ class gary extends THREE.Object3D {
     var path = new THREE.CatmullRomCurve3(pts);     //Creamos el camino
 
     var options = {
-        steps: 150,     //La suavidad de la extrusión, cuanto más pasos más suave.   
-        curveSegments: 6, // Mejora la resolución de las curvas cuanto mayor es. 
+        steps: 50,     //La suavidad de la extrusión, cuanto más pasos más suave.   
+        curveSegments: 5, // Mejora la resolución de las curvas cuanto mayor es. 
         extrudePath: path, // La trayectoria a lo largo de la cual se extruirá la forma
         bevelEnabled: true, // Habilita el biselado
     };
 
     var babosaGeom = new THREE.ExtrudeGeometry( shapeBabosa, options );     //Crear la geometría
-    babosaGeom.translate(0, -0.6, 1.0);
+    babosaGeom.scale(1.0,1.0,1.5);
+    babosaGeom.translate(0, -0.6, 0);
     var babosaMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
 
     var babosa = new THREE.Mesh(babosaGeom, babosaMat);
@@ -59,7 +84,7 @@ class gary extends THREE.Object3D {
 
     var soporte1 = new THREE.Mesh(soporteGeom, soporteMat);
 
-    soporte1.position.set(2.5, 2.5, 1.0);
+    soporte1.position.set(3.0, 2, 1.0);
     soporte1.rotateZ(-20 * Math.PI / 180);
     soporte1.rotateX(20 * Math.PI / 180)
 
@@ -67,14 +92,21 @@ class gary extends THREE.Object3D {
 
     var soporte2 = new THREE.Mesh(soporteGeom, soporteMat);
 
-    soporte2.position.set(2.5, 2.5, -1.0);
+    soporte2.position.set(3.0, 2, -1.0);
     soporte2.rotateZ(-20 * Math.PI / 180);
     soporte2.rotateX(-20 * Math.PI / 180)
 
     //this.add(soporte2);
 
+    var unionGeom = new THREE.BoxGeometry(4,1,1);
+    unionGeom.translate(-1.0, -0.3, 0);
+    var unionMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
+
+    var union = new THREE.Mesh(unionGeom, unionMat);
+
     var csg = new CSG();
-    csg.union([babosa, soporte1, soporte2]);
+    csg.union([babosa, soporte1, soporte2, union]);
+    //csg.union([babosa, union]);
     var cuerpo = csg.toMesh();
 
     this.add(cuerpo);
@@ -113,10 +145,27 @@ class gary extends THREE.Object3D {
 
     var caparazon = new THREE.Mesh(caparazonGeom, caparazonMat);
 
+    var csg = new CSG();
+
+    var recorteGeom = new THREE.BoxGeometry(5,5,5);
+    recorteGeom.translate(-1.5, -2, 0);
+    var recorteMat = new THREE.MeshPhongMaterial({ color: 'red', side: THREE.DoubleSide });
+
+    var recorte = new THREE.Mesh(recorteGeom, recorteMat);
+
+    //this.add(box);
+
+    csg.union([ caparazon]);
+    csg.subtract([recorte]);
+
+    caparazon = csg.toMesh();
+
     this.add(caparazon);
 
-    // ---------------------------- OJOS ---------------------------- //
+    caparazon.position.x = 0.7;
+    caparazon.position.y = -0.3;
 
+    // ---------------------------- OJOS ---------------------------- //
 
     var materialLoader = new MTLLoader();
     var objectLoader = new OBJLoader();
@@ -127,8 +176,8 @@ class gary extends THREE.Object3D {
         ojo1.rotateY(Math.PI/2);
         this.add(ojo1); 
         ojo1.position.z = 2;
-        ojo1.position.x = 3.5;
-        ojo1.position.y = 5.5;
+        ojo1.position.x = 4;
+        ojo1.position.y = 5;
 
       }, null, null); 
     });
@@ -140,37 +189,16 @@ class gary extends THREE.Object3D {
         ojo2.rotateY(Math.PI/2);
         this.add(ojo2); 
         ojo2.position.z = -2;
-        ojo2.position.x = 3.5;
-        ojo2.position.y = 5.5;
+        ojo2.position.x = 4;
+        ojo2.position.y = 5;
 
       }, null, null); 
     });
 
 
 
-    // ---------------------------- SOPORTES OJOS ---------------------------- 
 
-    var soporteGeom = new THREE.CylinderGeometry(0.1, 0.5, 5, 64);
 
-    var soporteMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
-
-    var soporte1 = new THREE.Mesh(soporteGeom, soporteMat);
-
-    soporte1.position.set(2.5, 2.5, 1.0);
-    soporte1.rotateZ(-20 * Math.PI / 180);
-    soporte1.rotateX(20 * Math.PI / 180)
-
-    this.add(soporte1);
-
-    var soporte2 = new THREE.Mesh(soporteGeom, soporteMat);
-
-    soporte2.position.set(2.5, 2.5, -1.0);
-    soporte2.rotateZ(-20 * Math.PI / 180);
-    soporte2.rotateX(-20 * Math.PI / 180)
-
-    this.add(soporte2);
-
-       
 
     this.scale.set(0.25, 0.25, 0.25);
 
