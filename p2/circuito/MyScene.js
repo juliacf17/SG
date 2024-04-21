@@ -24,7 +24,7 @@ class MyScene extends THREE.Scene {
     this.renderer = this.createRenderer(myCanvas);
     
     // Se añade a la gui los controles para manipular los elementos de esta clase
-    this.gui = this.createGUI ();
+    this.gui = this.createGUI();
     
     this.initStats(); // Para mostrar información de rendimiento
     
@@ -49,7 +49,7 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new circuito(this.gui, "Controles de la medusa");
+    this.model = new circuito(this.gui, "Controles del circuito");
     this.add (this.model);
   }
   
@@ -146,6 +146,8 @@ class MyScene extends THREE.Scene {
     folder.add (this.guiControls, 'axisOnOff')
       .name ('Mostrar ejes : ')
       .onChange ( (value) => this.setAxisVisible (value) );
+
+    
     
     return gui;
   }
@@ -223,26 +225,22 @@ class MyScene extends THREE.Scene {
   }
 
   update () {
-    
-    if (this.stats) this.stats.update();
-    
-    // Se actualizan los elementos de la escena para cada frame
-    
+    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
+    this.renderer.render (this, this.getCamera());
+
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
     
     // Se actualiza el resto del modelo
     this.model.update();
     
-    // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    this.renderer.render (this, this.getCamera());
-
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
   }
 }
+
 
 /// La función   main
 $(function () {

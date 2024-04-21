@@ -6,11 +6,16 @@ import { CSG } from '../libs/CSG-v2.js'
 
 
 class circuito extends THREE.Object3D {
-  constructor() {
+  constructor(gui,titleGui) {
     
     super();
 
-    const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,6,8,);
+    // Se crea la parte de la interfaz que corresponde a la grapadora
+    // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
+    this.createGUI(gui,titleGui);
+
+    //const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,6,8,);
+    const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,8,12);
     const torusKnotMat = new THREE.MeshBasicMaterial( { color: 'lightblue' } ); 
     const torusKnot = new THREE.Mesh( torusKnotGeom, torusKnotMat ); 
     
@@ -19,17 +24,19 @@ class circuito extends THREE.Object3D {
     const spline = this.getPathFromTorusKnot(torusKnot);
 
     // Creamos un tubo a partir de la spline
-    const geometry = new THREE.TubeGeometry(spline, 300, 0.5, 8, false);
-    const material = new THREE.MeshBasicMaterial({ color: 'blue' , side: THREE.DoubleSide });
+    const geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, false);
+    var textureArena = new THREE.TextureLoader().load('../imgs/arena.png');
+    const material = new THREE.MeshBasicMaterial({ map: textureArena, side: THREE.DoubleSide });
     const tube = new THREE.Mesh(geometry, material);
 
     this.add(tube);
     // Añade edges al tubo
     const edges = new THREE.EdgesGeometry(geometry);
-    const edgesMaterial = new THREE.LineBasicMaterial({ color: 'black' });
+    const edgesMaterial = new THREE.LineBasicMaterial({ color: 'grey' });
     const edgesMesh = new THREE.LineSegments(edges, edgesMaterial);
-    this.add(edgesMesh);
+    tube.add(edgesMesh);
 
+   
 /*
     var points = spline.getPoints(100);
     var geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -45,8 +52,52 @@ class circuito extends THREE.Object3D {
     
   }
 
+  createGUI (gui,titleGui) {
+    // Controles para el movimiento de la parte móvil
+    this.guiControls = {
+      edgesVisible: true,
+      scale : 1,
+    } 
+    
+    // Se crea una sección para los controles de la caja
+    var folder = gui.addFolder (titleGui);
+    // Estas lineas son las que añaden los componentes de la interfaz
+    // Las tres cifras indican un valor mínimo, un máximo y el incremento
+    folder.add (this.guiControls, 'edgesVisible')
+      .name ('Mostrar aristas')
+      .onChange ( () => this.changeEdgesVisibility() );
+
+    folder.add (this.guiControls, 'scale', 0.1, 2, 0.1)
+      .name ('Escala')
+      .onChange ( () => this.changeScale() );
+  }
+
+  changeEdgesVisibility() {
+    this.children.forEach( (child) => {
+      if (child instanceof THREE.Mesh) {
+        child.children.forEach((edgesMesh) => {
+          if (edgesMesh instanceof THREE.LineSegments) {
+            edgesMesh.visible = this.guiControls.edgesVisible;
+          }
+        });
+      }
+    });
+  }
+
+  changeScale() {
+    this.children.forEach( (child) => {
+      if (child instanceof THREE.Mesh) {
+        child.scale.set(this.guiControls.scale, this.guiControls.scale, this.guiControls.scale);
+        child.children.forEach((edgesMesh) => {
+        });
+      }
+    });
+  }
+
+
   update() {
-      this.rotation.y += 0.01;
+      //this.rotation.y += 0.01;
+      
   }
 
   getPathFromTorusKnot (torusKnot) {
