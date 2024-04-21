@@ -2,7 +2,7 @@
 import * as THREE from '../libs/three.module.js'
 import { CSG } from '../libs/CSG-v2.js'
 
-class hamburguesa extends THREE.Object3D {
+class hamburcarro extends THREE.Object3D {
   constructor() {
     
     super();
@@ -353,4 +353,4 @@ class hamburguesa extends THREE.Object3D {
   }
 }
 
-export { hamburguesa };
+export { hamburcarro };

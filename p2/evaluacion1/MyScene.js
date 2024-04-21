@@ -8,6 +8,11 @@ import { Stats } from '../libs/stats.module.js'
 
 // Clases de mi proyecto
 
+import { bob } from './bob.js'
+import { gary } from './gary.js'
+import { hamburguesa } from './hamburguesa.js'
+import { hamburcarro } from './hamburcarro.js'
+import { medusa } from './medusa.js'
 import { pinia } from './pinia.js'
 
  
@@ -49,8 +54,31 @@ class MyScene extends THREE.Scene {
     // Por último creamos el modelo.
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    this.model = new pinia(this.gui, "Controles de la piña");
-    this.add (this.model);
+    this.bob = new bob(this.gui, "Controles de Bob");
+    this.gary = new gary(this.gui, "Controles de Gary");
+    this.hamburguesa = new hamburguesa(this.gui, "Controles de la Hamburguesa");
+    this.hamburcarro = new hamburcarro(this.gui, "Controles del Hamburcarro");
+    this.medusa = new medusa(this.gui, "Controles de la Medusa");
+    this.pinia = new pinia(this.gui, "Controles de la Piña");
+
+    this.add (this.bob);
+
+    this.gary.position.set(-2, 0, 0);
+    this.add(this.gary);
+
+    this.hamburguesa.position.set(2, 0, 0);
+    this.add(this.hamburguesa);
+
+    this.hamburcarro.position.set(0, 2, 0);
+    this.add(this.hamburcarro);
+
+    this.medusa.position.set(-2, 2, 0);
+    this.add(this.medusa);
+
+    this.pinia.position.set(2, 2, 0);
+    this.add(this.pinia);
+
+
   }
   
   initStats() {
@@ -77,9 +105,9 @@ class MyScene extends THREE.Scene {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
     // Recuerda: Todas las unidades están en metros
     // También se indica dónde se coloca
-    this.camera.position.set (4, 2, 4);
+    this.camera.position.set (0,3,8);
     // Y hacia dónde mira
-    var look = new THREE.Vector3 (0,0,0);
+    var look = new THREE.Vector3 (0,1.5,0);
     this.camera.lookAt(look);
     this.add (this.camera);
     
@@ -124,8 +152,8 @@ class MyScene extends THREE.Scene {
     // En este caso la intensidad de la luz y si se muestran o no los ejes
     this.guiControls = {
       // En el contexto de una función   this   alude a la función
-      lightPower : 500.0,  // La potencia de esta fuente de luz se mide en lúmenes
-      ambientIntensity : 0.5,   
+      lightPower : 1000.0,  // La potencia de esta fuente de luz se mide en lúmenes
+      ambientIntensity : 1.0,   
       axisOnOff : true
     }
 
@@ -165,7 +193,7 @@ class MyScene extends THREE.Scene {
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     this.pointLight = new THREE.PointLight( 0xffffff ); 
     this.pointLight.power = this.guiControls.lightPower;
-    this.pointLight.position.set( 2, 3, 1 );
+    this.pointLight.position.set( 0, 4, 4 );
     this.add (this.pointLight);
   }
   
@@ -232,7 +260,12 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
     
     // Se actualiza el resto del modelo
-    this.model.update();
+    this.bob.update();
+    this.gary.update();
+    this.hamburguesa.update();
+    this.hamburcarro.update();
+    this.medusa.update();
+    this.pinia.update();
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
