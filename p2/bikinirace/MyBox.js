@@ -29,6 +29,8 @@ class MyBox extends THREE.Object3D {
 
         this.t = 0;
 
+        this.rotacion = 0;
+
 
     }
 
@@ -42,17 +44,19 @@ class MyBox extends THREE.Object3D {
 
 
         // MODIFICAR CON LA VELOCIDAD
-        this.t += 0.0005;
+        this.t += 0.0001;
         if(this.t >= 1) this.t = 0;
 
+        if(this.rotacion >= Math.PI * 2) this.rotacion = 0;
+        this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();
         this.posSuper = new THREE.Object3D();
 
-        this.posSuper.translateY(this.radio);
+        this.posSuper.translateY(this.radio+ 0.5);
 
-        this.movLateral.rotateZ(Math.PI/2);
+        this.movLateral.rotateZ(this.rotacion);
            
         var posTmp = this.path.getPointAt(this.t);
         this.nodoPosOrientTubo.position.copy(posTmp);
