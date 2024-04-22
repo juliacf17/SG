@@ -55,9 +55,10 @@ class bikinirace extends THREE.Scene {
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
+
     this.box = new MyBox(this.gui, "Controles de la Caja", this.circuito.geometry);
 
-    this.add(this.box);
+    this.circuito.add(this.box);
     this.add(this.circuito);
 
 

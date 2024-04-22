@@ -27,7 +27,7 @@ class circuito extends THREE.Object3D {
     this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, false);
     var textureArena = new THREE.TextureLoader().load('../imgs/arena.png');
     const material = new THREE.MeshBasicMaterial({ map: textureArena, side: THREE.DoubleSide, opacity: 0.2, transparent: true});
-    const tube = new THREE.Mesh(this.geometry, material);
+    var tube = new THREE.Mesh(this.geometry, material);
 
     this.add(tube);
     // Añade edges al tubo
@@ -43,17 +43,8 @@ class circuito extends THREE.Object3D {
     var material2 = new THREE.LineBasicMaterial({ color: 0xff0000 });
     var curveObject = new THREE.Line(geometry2, material2);
     tube.add(curveObject);
-/*
-    var geometry = new THREE.TubeGeometry(spline, 100, 0.1, 8, false);
-    var material = new THREE.MeshBasicMaterial({ color: 'lightpink' , side: THREE.DoubleSide });
-    var tube = new THREE.Mesh(geometry, material);
 
-    //this.add(tube);
-    */
 
-  
-
-    //this.rotateX(Math.PI/2);
   }
 
   createGUI (gui,titleGui) {
