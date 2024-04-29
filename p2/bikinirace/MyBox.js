@@ -69,8 +69,6 @@ class MyBox extends THREE.Object3D {
     }
 
 
-   
-
 
 
     update () {
@@ -84,7 +82,7 @@ class MyBox extends THREE.Object3D {
             this.velocidad *= 2;
         }
 
-        if(this.rotacion >= Math.PI * 2) this.rotacion = 0;
+        
         this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
