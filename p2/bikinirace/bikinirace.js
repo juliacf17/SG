@@ -51,7 +51,8 @@ class bikinirace extends THREE.Scene {
     // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
     // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
     
-      
+
+    this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
@@ -82,6 +83,8 @@ class bikinirace extends THREE.Scene {
     
     this.stats = stats;
   }
+
+  
   
   createCamera () {
     // Para crear una cámara le indicamos
@@ -91,7 +94,7 @@ class bikinirace extends THREE.Scene {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
     // Recuerda: Todas las unidades están en metros
     // También se indica dónde se coloca
-    this.camera.position.set (0,3,8);
+    this.camera.position.set (0,16,32);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,1.5,0);
     this.camera.lookAt(look);
@@ -107,28 +110,7 @@ class bikinirace extends THREE.Scene {
     this.cameraControl.target = look;
   }
   
-  /*
-  createGround () {
-    // El suelo es un Mesh, necesita una geometría y un material.
-    
-    // La geometría es una caja con muy poca altura
-    var geometryGround = new THREE.BoxGeometry (10,0.2,10);
-    
-    // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('../imgs/wood.jpg');
-    var materialGround = new THREE.MeshStandardMaterial ({map: texture});
-    
-    // Ya se puede construir el Mesh
-    var ground = new THREE.Mesh (geometryGround, materialGround);
-    
-    // Todas las figuras se crean centradas en el origen.
-    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
-    ground.position.y = -0.1;
-    
-    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-    this.add (ground);
-  }
-  */
+
   createGUI () {
     // Se crea la interfaz gráfica de usuario
     var gui = new GUI();
@@ -216,7 +198,12 @@ class bikinirace extends THREE.Scene {
   getCamera () {
     // En principio se devuelve la única cámara que tenemos
     // Si hubiera varias cámaras, este método decidiría qué cámara devuelve cada vez que es consultado
-    return this.camera;
+    if (this.general){
+      return this.camera;
+    }else{
+      return this.box.getCamara3aPersona();
+    }
+    
   }
   
   setCameraAspect (ratio) {
@@ -226,7 +213,7 @@ class bikinirace extends THREE.Scene {
     // Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
     this.camera.updateProjectionMatrix();
   }
-  
+  /*
   onWindowResize () {
     // Este método es llamado cada vez que el usuario modifica el tamapo de la ventana de la aplicación
     // Hay que actualizar el ratio de aspecto de la cámara
@@ -235,6 +222,35 @@ class bikinirace extends THREE.Scene {
     // Y también el tamaño del renderizador
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
+  */
+
+  onWindowResize () {
+    var camara = this.getCamera();
+    var nuevaRatio = window.innerWidth / window.innerHeight;
+    if (camara.isOrthographicCamera) {
+      var altoVista = camara.top - camara.bottom;
+      var centroAncho = (camara.left + camara.right) / 2;
+      camara.left = centroAncho - (altoVista * nuevaRatio) / 2;
+      camara.right = centroAncho + (altoVista * nuevaRatio) / 2;
+    }else{
+      camara.aspect = nuevaRatio;
+    }
+
+    camara.updateProjectionMatrix();
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+  }
+
+  onKeyDown(event) {
+    var key = event.key;
+    switch (key) {
+      case ' ':
+        this.general = !this.general;
+        break;
+    }
+  }
+
 
   update () {
     
@@ -259,6 +275,8 @@ class bikinirace extends THREE.Scene {
   }
 }
 
+
+
 /// La función   main
 $(function () {
   
@@ -267,6 +285,8 @@ $(function () {
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
+
+  window.addEventListener('keydown', (event) => scene.onKeyDown(event));
   
   // Que no se nos olvide, la primera visualización.
   scene.update();

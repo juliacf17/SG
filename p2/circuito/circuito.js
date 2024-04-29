@@ -24,7 +24,7 @@ class circuito extends THREE.Object3D {
     const spline = this.getPathFromTorusKnot(torusKnot);
 
     // Creamos un tubo a partir de la spline
-    this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, false);
+    this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, true);
     var textureArena = new THREE.TextureLoader().load('../imgs/arena.png');
     const material = new THREE.MeshBasicMaterial({ map: textureArena, side: THREE.DoubleSide, opacity: 0.2, transparent: true});
     var tube = new THREE.Mesh(this.geometry, material);
