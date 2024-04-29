@@ -248,6 +248,27 @@ class bikinirace extends THREE.Scene {
       case ' ':
         this.general = !this.general;
         break;
+
+      case 'ArrowLeft':
+        this.box.izquierda = true;
+        break;
+
+      case 'ArrowRight':
+        this.box.derecha = true;
+        break;
+    }
+  }
+
+  onKeyUp(event) {
+    var key = event.key;
+    switch (key) {
+      case 'ArrowLeft':
+        this.box.izquierda = false;
+        break;
+
+      case 'ArrowRight':
+        this.box.derecha = false;
+        break;
     }
   }
 
@@ -289,6 +310,9 @@ $(function () {
   window.addEventListener ("resize", () => scene.onWindowResize());
 
   window.addEventListener('keydown', (event) => scene.onKeyDown(event));
+  window.addEventListener('keyup', (event) => scene.onKeyUp(event));
+
+  
   
   // Que no se nos olvide, la primera visualización.
   scene.update();

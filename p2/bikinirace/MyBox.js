@@ -12,8 +12,8 @@ class MyBox extends THREE.Object3D {
         this.add (this.axis);
 
         // Un Mesh se compone de geometría y material
-        var boxGeom = new THREE.BoxGeometry (0.5,0.5,0.5); //ancho, alto y largo
-        boxGeom.translate(0,0.25,0);
+        var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
+        boxGeom.translate(0,0.125,0);
         var boxMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
@@ -37,6 +37,9 @@ class MyBox extends THREE.Object3D {
         this.nuevoTarget = new THREE.Vector3();
 
         this.createCamara3aPersona();
+
+        this.izquierda = false;
+        this.derecha = false;
 
     }
 
@@ -68,15 +71,31 @@ class MyBox extends THREE.Object3D {
 
         // MODIFICAR CON LA VELOCIDAD
         this.t += this.reloj.getDelta() * this.velocidad;
-        console.log(this.t);
+        //console.log(this.t);
 
         if(this.t >= 1){
             this.t = 0;
             this.velocidad *= 2;
         }
 
+        console.log("Izquierda: " + this.izquierda);
+        console.log("Derecha: " + this.derecha);
+
         
-        this.rotacion += Math.PI * 2 /180;
+        if (this.izquierda) {
+            this.rotacion -= Math.PI * 2 / 180;
+            if (this.rotacion < -Math.PI / 3) {
+            this.rotacion = -Math.PI / 3;
+            }
+        } else if (this.derecha) {
+            this.rotacion += Math.PI * 2 / 180;
+            if (this.rotacion > Math.PI / 3) {
+            this.rotacion = Math.PI / 3;
+            }
+        }
+    
+        
+        //this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();
