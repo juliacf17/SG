@@ -10,6 +10,7 @@ import { Stats } from '../../libs/stats.module.js'
 
 import { circuito } from '../circuito/circuito.js'
 import { MyBox } from './MyBox.js'
+import {MyBoxColision} from './colisiones.js' 
 
  
 /// La clase fachada del modelo
@@ -57,15 +58,15 @@ class bikinirace extends THREE.Scene {
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
 
-    this.box = new MyBox(this.gui, "Controles de la Caja", this.circuito.geometry);
+    this.box = new MyBox(this.circuito.geometry);
+
+    this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.01); 
+    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.2); 
 
     this.circuito.add(this.box);
+    this.circuito.add (this.obstaculo1); 
+    this.circuito.add(this.obstaculo2);
     this.add(this.circuito);
-
-
-
-    
-
   }
   
   initStats() {
@@ -84,7 +85,6 @@ class bikinirace extends THREE.Scene {
     this.stats = stats;
   }
 
-  
   
   createCamera () {
     // Para crear una cámara le indicamos
@@ -264,6 +264,8 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.box.update();
+    this.obstaculo1.update(); 
+    this.obstaculo2.update();
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

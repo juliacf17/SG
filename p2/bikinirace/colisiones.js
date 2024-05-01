@@ -2,19 +2,13 @@ import * as THREE from '../libs/three.module.js'
 import { circuito } from '../circuito/circuito.js'
 
 
-class MyBox extends THREE.Object3D {
-    constructor(circuitoGeometry) {
+class MyBoxColision extends THREE.Object3D {
+    constructor(circuitoGeometry, _t) {
         super();
-        // Se crea la parte de la interfaz que corresponde a la caja
-        // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
 
-        this.axis = new THREE.AxesHelper (0.1);
-        this.add (this.axis);
-
-        // Un Mesh se compone de geometría y material
         var boxGeom = new THREE.BoxGeometry (0.5,0.5,0.5); //ancho, alto y largo
         boxGeom.translate(0,0.25,0);
-        var boxMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var boxMat = new THREE.MeshBasicMaterial({ color: 0x61baf0 });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
      
@@ -26,56 +20,12 @@ class MyBox extends THREE.Object3D {
         this.radio = circuitoGeometry.parameters.radius;
         this.segmentos = circuitoGeometry.parameters.tubularSegments;
 
-        this.t = 0;
-
-        this.reloj = new THREE.Clock();
+        this.t = _t;
 
         this.rotacion = 0;
-
-        this.velocidad = 0.01;
-
-        this.nuevoTarget = new THREE.Vector3();
-
-        this.createCamara3aPersona();
-
     }
 
-
-    createCamara3aPersona() {
-        this.camara = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.box.add(this.camara);
-
-        
-        this.camara.position.set(0,1,-2);
-
-        var puntoDeMiraRelativo = new THREE.Vector3(0,-0.1,0.5);
-
-        var target = new THREE.Vector3();
-        this.camara.getWorldPosition(target);
-
-        target.add(puntoDeMiraRelativo);
-
-        this.camara.lookAt(puntoDeMiraRelativo);
-
-    }
-
-    getCamara3aPersona() {
-        return this.camara;
-    }
-
-
-    update () {
-
-        // MODIFICAR CON LA VELOCIDAD
-        this.t += this.reloj.getDelta() * this.velocidad;
-        console.log(this.t);
-
-        if(this.t >= 1){
-            this.t = 0;
-            this.velocidad *= 2;
-        }
-
-        
+    update () {      
         this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
@@ -100,13 +50,7 @@ class MyBox extends THREE.Object3D {
         this.nodoPosOrientTubo.add(this.movLateral);
         this.movLateral.add(this.posSuper);
         this.posSuper.add(this.box);
-
-
-        this.box.getWorldPosition(this.nuevoTarget);
-
-        this.camara.lookAt(this.nuevoTarget);  
-  
     }
 }
 
-export { MyBox };
+export { MyBoxColision };
