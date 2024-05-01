@@ -2,13 +2,13 @@ import * as THREE from '../libs/three.module.js'
 import { circuito } from '../circuito/circuito.js'
 
 
-class MyBoxColision extends THREE.Object3D {
+class MyBoxVolador extends THREE.Object3D {
     constructor(circuitoGeometry, _t) {
         super();
 
-        var boxGeom = new THREE.BoxGeometry (0.5,0.5,0.5); //ancho, alto y largo
-        boxGeom.translate(0,0.25,0);
-        var boxMat = new THREE.MeshBasicMaterial({ color: 0x61baf0 });
+        var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
+        boxGeom.translate(0,0.5,0);
+        var boxMat = new THREE.MeshBasicMaterial({ color: 0x61f061 });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
      
@@ -23,10 +23,20 @@ class MyBoxColision extends THREE.Object3D {
 
         this.t = _t;
 
+        this.reloj = new THREE.Clock();
+        this.velocidad = 0.015;
+
         this.rotacion = 0;
     }
 
-    update () {      
+    update () {    
+        
+        this.t += this.reloj.getDelta() * this.velocidad;
+
+        if(this.t >= 1){
+            this.t = 0;
+        }
+
         this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
@@ -54,4 +64,4 @@ class MyBoxColision extends THREE.Object3D {
     }
 }
 
-export { MyBoxColision };
+export { MyBoxVolador };

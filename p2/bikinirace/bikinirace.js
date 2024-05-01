@@ -11,6 +11,7 @@ import { Stats } from '../../libs/stats.module.js'
 import { circuito } from '../circuito/circuito.js'
 import { MyBox } from './MyBox.js'
 import {MyBoxColision} from './colisiones.js' 
+import { MyBoxVolador } from './voladores.js'
 
  
 /// La clase fachada del modelo
@@ -61,11 +62,43 @@ class bikinirace extends THREE.Scene {
     this.box = new MyBox(this.circuito.geometry);
 
     this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.01); 
-    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.2); 
+    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.2);
+    
+    this.volador1 = new MyBoxVolador(this.circuito.geometry, 0.001);
+    this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
+
+
+    //COLISIONES POR RAYCASTING
+    var distancia = 0.5; 
+    this.posicion = new THREE.Vector3();
+    
+    this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
+
+    this.candidatos = [this.obstaculo1, this.obstaculo2];
+
+
+/*  COLISIONES POR CAJAS ENGLOBANTES
+    this.meshBox = new THREE.Box3().setFromObject(this.box);
+    this.meshObstaculo1 = new THREE.Box3().setFromObject(this.obstaculo1);
+    this.meshObstaculo2 = new THREE.Box3().setFromObject(this.obstaculo2);
+
+
+    this.meshBoxVisible = new THREE.BoxHelper(this.meshBox, 0x00ff00);
+    this.meshObstaculo1Visible = new THREE.BoxHelper(this.meshObstaculo1, 0x00ff00);
+    this.meshObstaculo2Visible = new THREE.BoxHelper(this.meshObstaculo2, 0x00ff00);
+
+    this.add(this.meshBoxVisible, this.meshObstaculo1Visible, this.meshObstaculo2Visible);
+
+    this.meshBoxVisible.visible = true;
+    this.meshObstaculo1Visible.visible = true;
+    this.meshObstaculo2Visible.visible = true;*/
+
 
     this.circuito.add(this.box);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
+    this.circuito.add(this.volador1);
+    this.circuito.add(this.volador2);
     this.add(this.circuito);
   }
   
@@ -213,16 +246,6 @@ class bikinirace extends THREE.Scene {
     // Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
     this.camera.updateProjectionMatrix();
   }
-  /*
-  onWindowResize () {
-    // Este método es llamado cada vez que el usuario modifica el tamapo de la ventana de la aplicación
-    // Hay que actualizar el ratio de aspecto de la cámara
-    this.setCameraAspect (window.innerWidth / window.innerHeight);
-    
-    // Y también el tamaño del renderizador
-    this.renderer.setSize (window.innerWidth, window.innerHeight);
-  }
-  */
 
   onWindowResize () {
     var camara = this.getCamera();
@@ -287,6 +310,19 @@ class bikinirace extends THREE.Scene {
     this.box.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
+    this.volador1.update();
+    this.volador2.update();
+
+    //COLISIONES POR RAYCASTING
+    this.box.getWorldPosition(this.posicion);
+    this.rayo.set(this.posicion, this.box.nuevoTarget.normalize()); //nuevoTarget almacena la dirección de la caja. 
+
+    var impactados = this.rayo.intersectObjects(this.candidatos, true);
+
+    if (impactados.length > 0) {
+      // Reducción de velocidad
+      this.box.reduceSpeed(); // Ajusta la velocidad de la caja
+    }
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
@@ -296,7 +332,7 @@ class bikinirace extends THREE.Scene {
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
   }
-}
+  }
 
 
 

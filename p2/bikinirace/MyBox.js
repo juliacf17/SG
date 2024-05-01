@@ -66,6 +66,10 @@ class MyBox extends THREE.Object3D {
         return this.camara;
     }
 
+    reduceSpeed(){
+    this.velocidad = 0.001; 
+    }
+
 
     update () {
 
@@ -78,8 +82,8 @@ class MyBox extends THREE.Object3D {
             this.velocidad *= 2;
         }
 
-        console.log("Izquierda: " + this.izquierda);
-        console.log("Derecha: " + this.derecha);
+        //console.log("Izquierda: " + this.izquierda);
+        //console.log("Derecha: " + this.derecha);
 
         
         if (this.izquierda) {
