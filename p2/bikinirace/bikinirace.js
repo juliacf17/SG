@@ -13,6 +13,7 @@ import { medusa } from '../medusa/medusa.js'
 import { MyBox } from './MyBox.js'
 import {MyBoxColision} from './colisiones.js' 
 import { MyBoxVolador } from './voladores.js'
+import { bob } from '../bob/bob.js'
 
  
 /// La clase fachada del modelo
@@ -76,7 +77,8 @@ class bikinirace extends THREE.Scene {
     this.voladores = [this.volador1, this.volador2];
 
 
-    this.box = new MyBox(this.circuito.geometry, this.candidatos, 0, 'lightpink');
+    //this.box = new bob(this.circuito.geometry, this.candidatos, 0);
+    this.box = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
     this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
 
 
