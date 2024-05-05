@@ -3,7 +3,7 @@ import { circuito } from '../circuito/circuito.js'
 
 
 class MyBox extends THREE.Object3D {
-    constructor(circuitoGeometry, candidatosColision) {
+    constructor(circuitoGeometry, candidatosColision, _t, color) {
         super();
         // Se crea la parte de la interfaz que corresponde a la caja
         // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
@@ -14,7 +14,7 @@ class MyBox extends THREE.Object3D {
         // Un Mesh se compone de geometría y material
         var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
         boxGeom.translate(0,0.125,0);
-        var boxMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var boxMat = new THREE.MeshBasicMaterial({ color: color });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
      
@@ -26,7 +26,7 @@ class MyBox extends THREE.Object3D {
         this.radio = circuitoGeometry.parameters.radius;
         this.segmentos = circuitoGeometry.parameters.tubularSegments;
 
-        this.t = 0; // Longitud recorrida del spline - entre 0 y 1
+        this.t = _t; // Longitud recorrida del spline - entre 0 y 1
 
         this.reloj = new THREE.Clock(); // reloj para aumentar la velocidad
 
@@ -94,9 +94,6 @@ class MyBox extends THREE.Object3D {
         return this.camara;
     }
 
-    reduceSpeed(){
-    this.velocidad = 0.001; 
-    }
 
 
     update () {

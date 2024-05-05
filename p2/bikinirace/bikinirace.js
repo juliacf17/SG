@@ -57,6 +57,7 @@ class bikinirace extends THREE.Scene {
     
 
     this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
+    this.multiplayer = false; // Variable que indica si estamos en modo multijugador
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
@@ -75,7 +76,8 @@ class bikinirace extends THREE.Scene {
     this.voladores = [this.volador1, this.volador2];
 
 
-    this.box = new MyBox(this.circuito.geometry, this.candidatos);
+    this.box = new MyBox(this.circuito.geometry, this.candidatos, 0, 'lightpink');
+    this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
 
 
     this.mouse = new THREE.Vector2();
@@ -103,6 +105,7 @@ class bikinirace extends THREE.Scene {
 
 
     this.circuito.add(this.box);
+    this.circuito.add(this.box2);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
     this.circuito.add(this.obstaculo3);
@@ -311,6 +314,18 @@ class bikinirace extends THREE.Scene {
         this.box.derecha = true;
         break;
 
+      case 'a':
+        if(this.multiplayer){
+          this.box2.izquierda = true;
+        }
+        break;
+
+      case 'd':
+        if(this.multiplayer){
+          this.box2.derecha = true;
+        }
+        break;
+
 
     }
   }
@@ -326,13 +341,34 @@ class bikinirace extends THREE.Scene {
         this.box.derecha = false;
         break;
 
+      case 'a':
+        if(this.multiplayer){
+          this.box2.izquierda = false;
+        }
+        break;
+
+      case 'd':
+        if(this.multiplayer){
+          this.box2.derecha = false;
+        }
+        break;
+
       case 'p':
         this.box.velocidad = 0;
+        if(this.multiplayer){
+          this.box2.velocidad = 0;
+        }
         break;
 
       case 'r':
         this.box.velocidad = 0.01;
         break;
+
+      case 'm':
+        this.multiplayer = !this.multiplayer;
+        break;
+
+
 
     }
   }
@@ -397,8 +433,22 @@ class bikinirace extends THREE.Scene {
     this.box.derecha = false;
   }
 
+  renderViewport (escena, camara, left, top, width, height) {
+    var l = left * window.innerWidth;
+    var t = top * window.innerHeight;
+    var w = width * window.innerWidth;
+    var h = height * window.innerHeight;
+    this.renderer.setViewport(l, t, w, h);
+    this.renderer.setScissor(l, t, w, h);
+    this.renderer.setScissorTest(true);
+    camara.aspect = w / h;
+    camara.updateProjectionMatrix();
+    this.renderer.render(escena, camara);
+  }
+
 
   update () {
+    
     
     if (this.stats) this.stats.update();
 
@@ -414,6 +464,7 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.box.update();
+    this.box2.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
     this.obstaculo3.update();
@@ -423,7 +474,18 @@ class bikinirace extends THREE.Scene {
 
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    this.renderer.render (this, this.getCamera());
+    //this.renderer.render (this, this.getCamera());
+
+    if(this.multiplayer){
+      this.renderViewport(this, this.box2.getCamara3aPersona(), 0, 0, 0.5, 1);
+      this.renderViewport(this, this.box.getCamara3aPersona(), 0.5, 0, 0.5, 1);
+    }else if(this.general){
+      this.renderViewport(this, this.camera, 0, 0, 1, 1);
+    }else{
+      this.renderViewport(this, this.box.getCamara3aPersona(), 0, 0, 1, 1);
+      this.renderViewport(this, this.camera, 0.75, 0.75, 0.25, 0.25);
+    }
+  
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
@@ -446,7 +508,7 @@ $(function () {
   window.addEventListener('keydown', (event) => scene.onKeyDown(event));
   window.addEventListener('keyup', (event) => scene.onKeyUp(event));
   window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event));
-  
+
   window.addEventListener('touchstart', (event) => scene.onTouchStart(event));
   window.addEventListener('touchmove', (event) => scene.onTouchMove(event));
   window.addEventListener('touchend', (event) => scene.onTouchEnd(event));
