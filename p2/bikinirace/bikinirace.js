@@ -30,6 +30,7 @@ class bikinirace extends THREE.Scene {
     this.gui = this.createGUI ();
     
     this.initStats(); // Para mostrar información de rendimiento
+    this.initPuntos(); // Para mostrar información de puntos
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -70,7 +71,7 @@ class bikinirace extends THREE.Scene {
     
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
 
-    this.voladores = [this.obstaculo1, this.volador1, this.volador2];
+    this.voladores = [this.volador1, this.volador2];
 
 
     this.box = new MyBox(this.circuito.geometry, this.candidatos);
@@ -78,6 +79,8 @@ class bikinirace extends THREE.Scene {
 
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
+
+    this.puntos = 0;
 
     
 
@@ -126,6 +129,23 @@ class bikinirace extends THREE.Scene {
     
     this.stats = stats;
   }
+
+  initPuntos() {
+    // Crea un elemento para mostrar los puntos
+    var marcador = document.createElement('div');
+
+    marcador.id = 'Marcador';
+    marcador.style.position = 'absolute';
+    marcador.style.left = '100px'; 
+    marcador.style.top = '0px'; // Espacio debajo de los stats
+    marcador.style.color = 'black'; // Color del texto
+    marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
+    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+    
+    $("#Marcador").append(marcador); // Añade el elemento al div ya existente
+
+    this.marcador = marcador;
+}
 
   
   createCamera () {
@@ -335,6 +355,7 @@ class bikinirace extends THREE.Scene {
   
       // Cambiar la opacidad del material del objeto intersectado
       selectedObject.material.opacity -= 0.5;
+      this.puntos++; // Aumenta la puntuación
       //intersectedObject.material.transparent = true;
   
       //this.puntos++; // Aumenta la puntuación
@@ -345,6 +366,10 @@ class bikinirace extends THREE.Scene {
   update () {
     
     if (this.stats) this.stats.update();
+
+    if (this.marcador) {
+      this.marcador.textContent = 'Puntos: ' + this.puntos;
+    }
     
     // Se actualizan los elementos de la escena para cada frame
     
