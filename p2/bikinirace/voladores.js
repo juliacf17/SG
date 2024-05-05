@@ -13,6 +13,7 @@ class MyBoxVolador extends THREE.Object3D {
         boxMat.needsUpdate = true;
      
         this.box = new THREE.Mesh (boxGeom, boxMat);
+        this.box.userData = this;
         this.geometry = boxGeom; 
 
 
@@ -26,7 +27,15 @@ class MyBoxVolador extends THREE.Object3D {
         this.reloj = new THREE.Clock();
         this.velocidad = 0.015;
 
+
         this.rotacion = 0;
+    }
+
+    recibeClic(meshConcreto){
+        console.log("He clicado la caja voladora");
+        if(meshConcreto.userData == this){
+            this.box.material.opacity -= 0.5; // cabeza
+        }
     }
 
     update () {    
