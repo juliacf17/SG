@@ -178,8 +178,8 @@ class MyBox extends THREE.Object3D {
             }
         }
 
-        console.log(this.hasImpacted);
-        console.log(this.velocidad);
+        //console.log(this.hasImpacted);
+        //console.log(this.velocidad);
 
 /*
         this.rayo.set(this.posicion, this.direccion.normalize());
