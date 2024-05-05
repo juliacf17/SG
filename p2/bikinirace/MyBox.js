@@ -32,9 +32,7 @@ class MyBox extends THREE.Object3D {
 
         this.rotacion = 0; // rotación en el tubo
 
-        this.velocidad = 0.2; // velocidad del personaje
-
-
+        this.velocidad = 0.02; // velocidad del personaje
         
 
         this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
@@ -108,14 +106,14 @@ class MyBox extends THREE.Object3D {
         
         if (this.izquierda) {
             this.rotacion -= Math.PI * 2 / 180;
-            //if (this.rotacion < -Math.PI / 3) {
-            //this.rotacion = -Math.PI / 3;
-            //}
+            if (this.rotacion < -Math.PI / 3) {
+            this.rotacion = -Math.PI / 3;
+            }
         } else if (this.derecha) {
             this.rotacion += Math.PI * 2 / 180;
-            //if (this.rotacion > Math.PI / 3) {
-            //this.rotacion = Math.PI / 3;
-            //}
+            if (this.rotacion > Math.PI / 3) {
+            this.rotacion = Math.PI / 3;
+            }
         }
     
         
@@ -168,7 +166,7 @@ class MyBox extends THREE.Object3D {
             if (impactados.length > 0) {
                 console.log(impactados[0].object);
                 this.impacto = impactados[0].object;
-                this.velocidad =  this.velocidad / 2;
+                this.velocidad =  this.velocidad * 2;
                 this.hasImpacted = true;
             }
         }else{
@@ -179,8 +177,8 @@ class MyBox extends THREE.Object3D {
             }
         }
 
-        console.log(this.hasImpacted);
-        console.log(this.velocidad);
+        //console.log(this.hasImpacted);
+        //console.log(this.velocidad);
 
 
         

@@ -70,8 +70,14 @@ class bikinirace extends THREE.Scene {
     
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
 
+    this.voladores = [this.obstaculo1, this.volador1, this.volador2];
+
 
     this.box = new MyBox(this.circuito.geometry, this.candidatos);
+
+
+    this.mouse = new THREE.Vector2();
+    this.raycaster = new THREE.Raycaster();
 
     
 
@@ -99,7 +105,11 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.volador1);
     this.circuito.add(this.volador2);
     this.add(this.circuito);
+
+
+  
   }
+
   
   initStats() {
   
@@ -140,6 +150,7 @@ class bikinirace extends THREE.Scene {
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
+
   }
   
 
@@ -305,6 +316,31 @@ class bikinirace extends THREE.Scene {
     }
   }
 
+  onDocumentMouseDown(event) {
+    event.preventDefault();
+    console.log("click")
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+    this.raycaster.setFromCamera(this.mouse, this.getCamera());
+  
+    var pickedObjects = this.raycaster.intersectObjects(this.voladores, true);
+  
+    if (pickedObjects.length > 0) {
+      var selectedObject = pickedObjects[0].object;
+      var selectedPoint = pickedObjects[0].point;
+
+      console.log(selectedObject);
+      console.log(selectedPoint);
+  
+      // Cambiar la opacidad del material del objeto intersectado
+      selectedObject.material.opacity -= 0.5;
+      //intersectedObject.material.transparent = true;
+  
+      //this.puntos++; // Aumenta la puntuación
+    }
+  }
+
 
   update () {
     
@@ -349,6 +385,7 @@ $(function () {
 
   window.addEventListener('keydown', (event) => scene.onKeyDown(event));
   window.addEventListener('keyup', (event) => scene.onKeyUp(event));
+  window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event));
 
   
   

@@ -8,7 +8,7 @@ class MyBoxVolador extends THREE.Object3D {
 
         var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
         boxGeom.translate(0,0.5,0);
-        var boxMat = new THREE.MeshBasicMaterial({ color: 0x61f061 });
+        var boxMat = new THREE.MeshStandardMaterial({ color: 'lightpink' , transparent: true, opacity: 1.0, metalness: 0.3, roughness: 0.7});
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
      
@@ -31,13 +31,13 @@ class MyBoxVolador extends THREE.Object3D {
 
     update () {    
         
-        this.t += this.reloj.getDelta() * this.velocidad;
+        //this.t += this.reloj.getDelta() * this.velocidad;
 
         if(this.t >= 1){
             this.t = 0;
         }
 
-        this.rotacion += Math.PI * 2 /180;
+        //this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();
