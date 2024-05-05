@@ -32,7 +32,7 @@ class MyBox extends THREE.Object3D {
 
         this.rotacion = 0; // rotación en el tubo
 
-        this.velocidad = 0.005; // velocidad del personaje
+        this.velocidad = 0.05; // velocidad del personaje
         
 
         this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
@@ -55,6 +55,16 @@ class MyBox extends THREE.Object3D {
         this.hasImpacted = false;
 
         this.impacto = null;
+
+        this.cajaFigura = new THREE.Box3();
+
+        var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
+        
+        this.add(cajaVisible);
+
+        cajaVisible.visible = true;
+
+        
 
 
 
@@ -90,6 +100,8 @@ class MyBox extends THREE.Object3D {
 
 
     update () {
+
+        this.cajaFigura.setFromObject(this.box);
 
         // MODIFICAR CON LA VELOCIDAD
         this.t += this.reloj.getDelta() * this.velocidad;
@@ -142,7 +154,7 @@ class MyBox extends THREE.Object3D {
         this.add(this.nodoPosOrientTubo);
         this.nodoPosOrientTubo.add(this.movLateral);
         this.movLateral.add(this.posSuper);
-        this.posSuper.add(this.box);
+        this.posSuper.add(this.box); 
 
 
         this.box.getWorldPosition(this.nuevoTarget);
@@ -153,7 +165,23 @@ class MyBox extends THREE.Object3D {
 
         this.nodoPosOrientTubo.getWorldDirection(this.direccion);
 
+        for (var i = 0; i < this.candidatos.length; i++) {
+            if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){
+                console.log("COLISIÓN");
+                this.velocidad =  this.velocidad * 0.5;
+                this.impacto = this.candidatos[i];
+                this.hasImpacted = true;
+                console.log(this.hasImpacted);
+            }else{
+                //console.log("NO COLISIÓN");
+                this.hasImpacted = false;
+            }
+        }
 
+        console.log(this.hasImpacted);
+        console.log(this.velocidad);
+
+/*
         this.rayo.set(this.posicion, this.direccion.normalize());
 
         var impactados = this.rayo.intersectObjects(this.candidatos, true);
@@ -179,7 +207,7 @@ class MyBox extends THREE.Object3D {
 
         //console.log(this.hasImpacted);
         //console.log(this.velocidad);
-
+*/
 
         
 
