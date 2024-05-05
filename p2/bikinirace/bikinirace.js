@@ -9,6 +9,7 @@ import { Stats } from '../../libs/stats.module.js'
 // Clases de mi proyecto
 
 import { circuito } from '../circuito/circuito.js'
+import { medusa } from '../medusa/medusa.js'
 import { MyBox } from './MyBox.js'
 import {MyBoxColision} from './colisiones.js' 
 import { MyBoxVolador } from './voladores.js'
@@ -64,7 +65,7 @@ class bikinirace extends THREE.Scene {
     this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
     this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
     
-    this.volador1 = new MyBoxVolador(this.circuito.geometry, 0.001);
+    this.volador1 = new medusa(this.circuito.geometry, 0.01);
     this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
 
 
@@ -348,13 +349,18 @@ class bikinirace extends THREE.Scene {
   
     if (pickedObjects.length > 0) {
       var selectedObject = pickedObjects[0].object;
+
+      console.log(selectedObject);
+      if(selectedObject.userData){
+        selectedObject.userData.recibeClic(selectedObject);
+      }
+
       var selectedPoint = pickedObjects[0].point;
 
       console.log(selectedObject);
       console.log(selectedPoint);
   
       // Cambiar la opacidad del material del objeto intersectado
-      selectedObject.material.opacity -= 0.5;
       this.puntos++; // Aumenta la puntuación
       //intersectedObject.material.transparent = true;
   
