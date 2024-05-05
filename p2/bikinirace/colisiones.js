@@ -27,7 +27,7 @@ class MyBoxColision extends THREE.Object3D {
     }
 
     update () {      
-        this.rotacion += Math.PI * 2 /180;
+        //this.rotacion += Math.PI * 2 /180;
         
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();

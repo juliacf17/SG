@@ -59,23 +59,21 @@ class bikinirace extends THREE.Scene {
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
 
-    this.box = new MyBox(this.circuito.geometry);
-
-    this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.01); 
-    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.2);
+    this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
+    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
+    this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
     
     this.volador1 = new MyBoxVolador(this.circuito.geometry, 0.001);
     this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
 
 
-    //COLISIONES POR RAYCASTING
-    var distancia = 0.5; 
-    this.posicion = new THREE.Vector3();
     
-    this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
+    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
 
-    this.candidatos = [this.obstaculo1, this.obstaculo2];
 
+    this.box = new MyBox(this.circuito.geometry, this.candidatos);
+
+    
 
 /*  COLISIONES POR CAJAS ENGLOBANTES
     this.meshBox = new THREE.Box3().setFromObject(this.box);
@@ -97,6 +95,7 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.box);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
+    this.circuito.add(this.obstaculo3);
     this.circuito.add(this.volador1);
     this.circuito.add(this.volador2);
     this.add(this.circuito);
@@ -279,6 +278,8 @@ class bikinirace extends THREE.Scene {
       case 'ArrowRight':
         this.box.derecha = true;
         break;
+
+
     }
   }
 
@@ -292,6 +293,15 @@ class bikinirace extends THREE.Scene {
       case 'ArrowRight':
         this.box.derecha = false;
         break;
+
+      case 'p':
+        this.box.velocidad = 0;
+        break;
+
+      case 'r':
+        this.box.velocidad = 0.01;
+        break;
+
     }
   }
 
@@ -310,19 +320,11 @@ class bikinirace extends THREE.Scene {
     this.box.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
+    this.obstaculo3.update();
     this.volador1.update();
     this.volador2.update();
 
-    //COLISIONES POR RAYCASTING
-    this.box.getWorldPosition(this.posicion);
-    this.rayo.set(this.posicion, this.box.nuevoTarget.normalize()); //nuevoTarget almacena la dirección de la caja. 
 
-    var impactados = this.rayo.intersectObjects(this.candidatos, true);
-
-    if (impactados.length > 0) {
-      // Reducción de velocidad
-      this.box.reduceSpeed(); // Ajusta la velocidad de la caja
-    }
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());

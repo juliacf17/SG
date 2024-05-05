@@ -15,7 +15,7 @@ class circuito extends THREE.Object3D {
     this.createGUI(gui,titleGui);
 
     //const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,6,8,);
-    const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,8,12);
+    const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,2,3);
     const torusKnotMat = new THREE.MeshBasicMaterial( { color: 'lightblue' } ); 
     const torusKnot = new THREE.Mesh( torusKnotGeom, torusKnotMat ); 
     

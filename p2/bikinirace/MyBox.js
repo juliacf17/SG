@@ -3,7 +3,7 @@ import { circuito } from '../circuito/circuito.js'
 
 
 class MyBox extends THREE.Object3D {
-    constructor(circuitoGeometry) {
+    constructor(circuitoGeometry, candidatosColision) {
         super();
         // Se crea la parte de la interfaz que corresponde a la caja
         // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
@@ -26,20 +26,40 @@ class MyBox extends THREE.Object3D {
         this.radio = circuitoGeometry.parameters.radius;
         this.segmentos = circuitoGeometry.parameters.tubularSegments;
 
-        this.t = 0;
+        this.t = 0; // Longitud recorrida del spline - entre 0 y 1
 
-        this.reloj = new THREE.Clock();
+        this.reloj = new THREE.Clock(); // reloj para aumentar la velocidad
 
-        this.rotacion = 0;
+        this.rotacion = 0; // rotación en el tubo
 
-        this.velocidad = 0.01;
+        this.velocidad = 0.2; // velocidad del personaje
 
-        this.nuevoTarget = new THREE.Vector3();
 
-        this.createCamara3aPersona();
+        
 
-        this.izquierda = false;
+        this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
+
+        this.createCamara3aPersona(); // crear cámara en 3a persona
+
+        // Movimientos a la izquierda y derecha
+        this.izquierda = false; 
         this.derecha = false;
+
+        // Colisiones por Raycasting
+
+        this.candidatos = candidatosColision;
+        var distancia = 0.5; 
+        this.posicion = new THREE.Vector3();
+        this.direccion = new THREE.Vector3();
+        
+        this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
+
+        this.hasImpacted = false;
+
+        this.impacto = null;
+
+
+
 
     }
 
@@ -88,25 +108,27 @@ class MyBox extends THREE.Object3D {
         
         if (this.izquierda) {
             this.rotacion -= Math.PI * 2 / 180;
-            if (this.rotacion < -Math.PI / 3) {
-            this.rotacion = -Math.PI / 3;
-            }
+            //if (this.rotacion < -Math.PI / 3) {
+            //this.rotacion = -Math.PI / 3;
+            //}
         } else if (this.derecha) {
             this.rotacion += Math.PI * 2 / 180;
-            if (this.rotacion > Math.PI / 3) {
-            this.rotacion = Math.PI / 3;
-            }
+            //if (this.rotacion > Math.PI / 3) {
+            //this.rotacion = Math.PI / 3;
+            //}
         }
     
         
         //this.rotacion += Math.PI * 2 /180;
-        
+   
+
+        //console.log(this.velocidad);
+
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();
         this.posSuper = new THREE.Object3D();
 
         this.posSuper.translateY(this.radio);
-
         this.movLateral.rotateZ(this.rotacion);
            
         var posTmp = this.path.getPointAt(this.t);
@@ -127,8 +149,42 @@ class MyBox extends THREE.Object3D {
 
         this.box.getWorldPosition(this.nuevoTarget);
 
-        this.camara.lookAt(this.nuevoTarget);  
-  
+        this.camara.lookAt(this.nuevoTarget); 
+        
+        this.box.getWorldPosition(this.posicion);
+
+        this.nodoPosOrientTubo.getWorldDirection(this.direccion);
+
+
+        this.rayo.set(this.posicion, this.direccion.normalize());
+
+        var impactados = this.rayo.intersectObjects(this.candidatos, true);
+
+        if (impactados.length > 0) {
+            console.log("IMPACTO");
+        }
+
+        if (!this.hasImpacted) {
+            if (impactados.length > 0) {
+                console.log(impactados[0].object);
+                this.impacto = impactados[0].object;
+                this.velocidad =  this.velocidad / 2;
+                this.hasImpacted = true;
+            }
+        }else{
+            if (impactados.length == 0 || impactados.length > 0 && impactados[0].object != this.impacto) {
+                console.log("Cambio de impacto");
+                this.hasImpacted = false;
+                this.impacto = null;
+            }
+        }
+
+        console.log(this.hasImpacted);
+        console.log(this.velocidad);
+
+
+        
+
     }
 }
 
