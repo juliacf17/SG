@@ -435,6 +435,9 @@ class bikinirace extends THREE.Scene {
     this.box.derecha = false;
   }
 
+
+
+
   renderViewport (escena, camara, left, top, width, height) {
     var l = left * window.innerWidth;
     var t = top * window.innerHeight;
