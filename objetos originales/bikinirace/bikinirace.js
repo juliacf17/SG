@@ -9,11 +9,7 @@ import { Stats } from '../../libs/stats.module.js'
 // Clases de mi proyecto
 
 import { circuito } from '../circuito/circuito.js'
-import { medusa } from '../medusa/medusa.js'
 import { MyBox } from './MyBox.js'
-import {MyBoxColision} from './colisiones.js' 
-import { MyBoxVolador } from './voladores.js'
-import { bob } from '../bob/bob.js'
 
  
 /// La clase fachada del modelo
@@ -32,7 +28,6 @@ class bikinirace extends THREE.Scene {
     this.gui = this.createGUI ();
     
     this.initStats(); // Para mostrar información de rendimiento
-    this.initPuntos(); // Para mostrar información de puntos
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -58,67 +53,20 @@ class bikinirace extends THREE.Scene {
     
 
     this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
-    this.multiplayer = false; // Variable que indica si estamos en modo multijugador
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
 
-    this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
-    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
-    this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
-    
-    this.volador1 = new medusa(this.circuito.geometry, 0.01);
-    this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
-
-
-    
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
-
-    this.voladores = [this.volador1, this.volador2];
-
-
-    //this.box = new bob(this.circuito.geometry, this.candidatos, 0);
-    this.box = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
-    this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
-
-
-    this.mouse = new THREE.Vector2();
-    this.raycaster = new THREE.Raycaster();
-
-    this.puntos = 0;
-
-    
-
-/*  COLISIONES POR CAJAS ENGLOBANTES
-    this.meshBox = new THREE.Box3().setFromObject(this.box);
-    this.meshObstaculo1 = new THREE.Box3().setFromObject(this.obstaculo1);
-    this.meshObstaculo2 = new THREE.Box3().setFromObject(this.obstaculo2);
-
-
-    this.meshBoxVisible = new THREE.BoxHelper(this.meshBox, 0x00ff00);
-    this.meshObstaculo1Visible = new THREE.BoxHelper(this.meshObstaculo1, 0x00ff00);
-    this.meshObstaculo2Visible = new THREE.BoxHelper(this.meshObstaculo2, 0x00ff00);
-
-    this.add(this.meshBoxVisible, this.meshObstaculo1Visible, this.meshObstaculo2Visible);
-
-    this.meshBoxVisible.visible = true;
-    this.meshObstaculo1Visible.visible = true;
-    this.meshObstaculo2Visible.visible = true;*/
-
+    this.box = new MyBox(this.gui, "Controles de la Caja", this.circuito.geometry);
 
     this.circuito.add(this.box);
-    this.circuito.add(this.box2);
-    this.circuito.add (this.obstaculo1); 
-    this.circuito.add(this.obstaculo2);
-    this.circuito.add(this.obstaculo3);
-    this.circuito.add(this.volador1);
-    this.circuito.add(this.volador2);
     this.add(this.circuito);
 
 
-  
-  }
 
+    
+
+  }
   
   initStats() {
   
@@ -136,23 +84,7 @@ class bikinirace extends THREE.Scene {
     this.stats = stats;
   }
 
-  initPuntos() {
-    // Crea un elemento para mostrar los puntos
-    var marcador = document.createElement('div');
-
-    marcador.id = 'Marcador';
-    marcador.style.position = 'absolute';
-    marcador.style.left = '100px'; 
-    marcador.style.top = '0px'; // Espacio debajo de los stats
-    marcador.style.color = 'black'; // Color del texto
-    marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
-    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
-    
-    $("#Marcador").append(marcador); // Añade el elemento al div ya existente
-
-    this.marcador = marcador;
-}
-
+  
   
   createCamera () {
     // Para crear una cámara le indicamos
@@ -176,7 +108,6 @@ class bikinirace extends THREE.Scene {
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
-
   }
   
 
@@ -282,6 +213,16 @@ class bikinirace extends THREE.Scene {
     // Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
     this.camera.updateProjectionMatrix();
   }
+  /*
+  onWindowResize () {
+    // Este método es llamado cada vez que el usuario modifica el tamapo de la ventana de la aplicación
+    // Hay que actualizar el ratio de aspecto de la cámara
+    this.setCameraAspect (window.innerWidth / window.innerHeight);
+    
+    // Y también el tamaño del renderizador
+    this.renderer.setSize (window.innerWidth, window.innerHeight);
+  }
+  */
 
   onWindowResize () {
     var camara = this.getCamera();
@@ -315,20 +256,6 @@ class bikinirace extends THREE.Scene {
       case 'ArrowRight':
         this.box.derecha = true;
         break;
-
-      case 'a':
-        if(this.multiplayer){
-          this.box2.izquierda = true;
-        }
-        break;
-
-      case 'd':
-        if(this.multiplayer){
-          this.box2.derecha = true;
-        }
-        break;
-
-
     }
   }
 
@@ -342,121 +269,13 @@ class bikinirace extends THREE.Scene {
       case 'ArrowRight':
         this.box.derecha = false;
         break;
-
-      case 'a':
-        if(this.multiplayer){
-          this.box2.izquierda = false;
-        }
-        break;
-
-      case 'd':
-        if(this.multiplayer){
-          this.box2.derecha = false;
-        }
-        break;
-
-      case 'p':
-        this.box.velocidad = 0;
-        if(this.multiplayer){
-          this.box2.velocidad = 0;
-        }
-        break;
-
-      case 'r':
-        this.box.velocidad = 0.01;
-        break;
-
-      case 'm':
-        this.multiplayer = !this.multiplayer;
-        break;
-
-
-
     }
-  }
-
-  onDocumentMouseDown(event) {
-    event.preventDefault();
-    console.log("click")
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-    this.raycaster.setFromCamera(this.mouse, this.getCamera());
-  
-    var pickedObjects = this.raycaster.intersectObjects(this.voladores, true);
-  
-    if (pickedObjects.length > 0) {
-      var selectedObject = pickedObjects[0].object;
-
-      console.log(selectedObject);
-      if(selectedObject.userData){
-        selectedObject.userData.recibeClic(selectedObject);
-      }
-
-      var selectedPoint = pickedObjects[0].point;
-
-      console.log(selectedObject);
-      console.log(selectedPoint);
-  
-      // Cambiar la opacidad del material del objeto intersectado
-      this.puntos++; // Aumenta la puntuación
-      //intersectedObject.material.transparent = true;
-  
-      //this.puntos++; // Aumenta la puntuación
-    }
-  }
-
-  onTouchStart(event) {
-    var touch = event.touches[0];
-    var touchX = touch.clientX;
-
-    if (touchX < window.innerWidth / 2) {
-      this.box.izquierda = true;
-    }
-    else {
-      this.box.derecha = true;
-    }
-  }
-
-  onTouchMove(event) {
-    var touch = event.touches[0];
-    var touchX = touch.clientX;
-
-    if (touchX < window.innerWidth / 2) {
-      this.box.izquierda = true;
-    }
-    else {
-      this.box.derecha = true;
-    }
-  }
-
-  onTouchEnd(event) {
-    this.box.izquierda = false;
-    this.box.derecha = false;
-  }
-
-  renderViewport (escena, camara, left, top, width, height) {
-    var l = left * window.innerWidth;
-    var t = top * window.innerHeight;
-    var w = width * window.innerWidth;
-    var h = height * window.innerHeight;
-    this.renderer.setViewport(l, t, w, h);
-    this.renderer.setScissor(l, t, w, h);
-    this.renderer.setScissorTest(true);
-    camara.aspect = w / h;
-    camara.updateProjectionMatrix();
-    this.renderer.render(escena, camara);
   }
 
 
   update () {
     
-    
     if (this.stats) this.stats.update();
-
-    if (this.marcador) {
-      this.marcador.textContent = 'Puntos: ' + this.puntos;
-    }
     
     // Se actualizan los elementos de la escena para cada frame
     
@@ -466,35 +285,16 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.box.update();
-    this.box2.update();
-    this.obstaculo1.update(); 
-    this.obstaculo2.update();
-    this.obstaculo3.update();
-    this.volador1.update();
-    this.volador2.update();
-
-
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    //this.renderer.render (this, this.getCamera());
-
-    if(this.multiplayer){
-      this.renderViewport(this, this.box2.getCamara3aPersona(), 0, 0, 0.5, 1);
-      this.renderViewport(this, this.box.getCamara3aPersona(), 0.5, 0, 0.5, 1);
-    }else if(this.general){
-      this.renderViewport(this, this.camera, 0, 0, 1, 1);
-    }else{
-      this.renderViewport(this, this.box.getCamara3aPersona(), 0, 0, 1, 1);
-      this.renderViewport(this, this.camera, 0.75, 0.75, 0.25, 0.25);
-    }
-  
+    this.renderer.render (this, this.getCamera());
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
   }
-  }
+}
 
 
 
@@ -509,11 +309,6 @@ $(function () {
 
   window.addEventListener('keydown', (event) => scene.onKeyDown(event));
   window.addEventListener('keyup', (event) => scene.onKeyUp(event));
-  window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event));
-
-  window.addEventListener('touchstart', (event) => scene.onTouchStart(event));
-  window.addEventListener('touchmove', (event) => scene.onTouchMove(event));
-  window.addEventListener('touchend', (event) => scene.onTouchEnd(event));
 
   
   

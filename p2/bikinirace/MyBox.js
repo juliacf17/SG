@@ -3,7 +3,7 @@ import { circuito } from '../circuito/circuito.js'
 
 
 class MyBox extends THREE.Object3D {
-    constructor(circuitoGeometry, candidatosColision) {
+    constructor(circuitoGeometry, candidatosColision, _t, color) {
         super();
         // Se crea la parte de la interfaz que corresponde a la caja
         // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
@@ -14,7 +14,7 @@ class MyBox extends THREE.Object3D {
         // Un Mesh se compone de geometría y material
         var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
         boxGeom.translate(0,0.125,0);
-        var boxMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        var boxMat = new THREE.MeshBasicMaterial({ color: color });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
      
@@ -26,13 +26,13 @@ class MyBox extends THREE.Object3D {
         this.radio = circuitoGeometry.parameters.radius;
         this.segmentos = circuitoGeometry.parameters.tubularSegments;
 
-        this.t = 0; // Longitud recorrida del spline - entre 0 y 1
+        this.t = _t; // Longitud recorrida del spline - entre 0 y 1
 
         this.reloj = new THREE.Clock(); // reloj para aumentar la velocidad
 
         this.rotacion = 0; // rotación en el tubo
 
-        this.velocidad = 0.005; // velocidad del personaje
+        this.velocidad = 0.05; // velocidad del personaje
         
 
         this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
@@ -55,6 +55,16 @@ class MyBox extends THREE.Object3D {
         this.hasImpacted = false;
 
         this.impacto = null;
+
+        this.cajaFigura = new THREE.Box3();
+
+        var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
+        
+        this.add(cajaVisible);
+
+        cajaVisible.visible = true;
+
+        
 
 
 
@@ -84,12 +94,11 @@ class MyBox extends THREE.Object3D {
         return this.camara;
     }
 
-    reduceSpeed(){
-    this.velocidad = 0.001; 
-    }
 
 
     update () {
+
+        this.cajaFigura.setFromObject(this.box);
 
         // MODIFICAR CON LA VELOCIDAD
         this.t += this.reloj.getDelta() * this.velocidad;
@@ -142,7 +151,7 @@ class MyBox extends THREE.Object3D {
         this.add(this.nodoPosOrientTubo);
         this.nodoPosOrientTubo.add(this.movLateral);
         this.movLateral.add(this.posSuper);
-        this.posSuper.add(this.box);
+        this.posSuper.add(this.box); 
 
 
         this.box.getWorldPosition(this.nuevoTarget);
@@ -153,7 +162,23 @@ class MyBox extends THREE.Object3D {
 
         this.nodoPosOrientTubo.getWorldDirection(this.direccion);
 
+        for (var i = 0; i < this.candidatos.length; i++) {
+            if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){
+                console.log("COLISIÓN");
+                this.velocidad =  this.velocidad * 0.5;
+                this.impacto = this.candidatos[i];
+                this.hasImpacted = true;
+                console.log(this.hasImpacted);
+            }else{
+                //console.log("NO COLISIÓN");
+                this.hasImpacted = false;
+            }
+        }
 
+        //console.log(this.hasImpacted);
+        //console.log(this.velocidad);
+
+/*
         this.rayo.set(this.posicion, this.direccion.normalize());
 
         var impactados = this.rayo.intersectObjects(this.candidatos, true);
@@ -179,7 +204,7 @@ class MyBox extends THREE.Object3D {
 
         //console.log(this.hasImpacted);
         //console.log(this.velocidad);
-
+*/
 
         
 

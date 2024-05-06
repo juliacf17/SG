@@ -5,12 +5,9 @@ import { MTLLoader } from '../libs/MTLLoader.js'
 import { OBJLoader } from '../libs/OBJLoader.js'
 
 class bob extends THREE.Object3D {
-  constructor(circuitoGeometry, candidatosColision, _t) {
+  constructor() {
     
     super();
-
-
-    this.bob = new THREE.Group();
 
 
     // ---------------------------- TRONCO ---------------------------- //
@@ -37,10 +34,10 @@ class bob extends THREE.Object3D {
     narizGeom.translate(0,2,0.75);
     var nariz = new THREE.Mesh(narizGeom, cuerpoMat);
 
-    this.bob.add(nariz);
+    this.add(nariz);
 
-    this.bob.add(cuerpo);
-    this.bob.add(ropa);
+    this.add(cuerpo);
+    this.add(ropa);
 
     // ---------------------------- PIERNAS ---------------------------- //
     
@@ -57,8 +54,8 @@ class bob extends THREE.Object3D {
 
     pierna2.translateX(0.5);
 
-    this.bob.add(pierna1);
-    this.bob.add(pierna2);
+    this.add(pierna1);
+    this.add(pierna2);
 
     // ---------------------------- ZAPATOS ---------------------------- //
 
@@ -75,8 +72,8 @@ class bob extends THREE.Object3D {
 
     zapato2.translateX(0.5);
 
-    this.bob.add(zapato1);
-    this.bob.add(zapato2);
+    this.add(zapato1);
+    this.add(zapato2);
 
 
     // ---------------------------- BRAZOS ---------------------------- //
@@ -98,8 +95,8 @@ class bob extends THREE.Object3D {
     manga2.translateY(0.5);
 
 
-    this.bob.add(manga1);
-    this.bob.add(manga2);
+    this.add(manga1);
+    this.add(manga2);
     
 
 
@@ -136,13 +133,13 @@ class bob extends THREE.Object3D {
     var brazo1 = csgBrazo1.toMesh();
 
     
-    this.bob.add(brazo1);
+    this.add(brazo1);
 
     var csgBrazo2 = new CSG();
     csgBrazo2.union([brazo2,mano2]);
     var brazo2 = csgBrazo2.toMesh();
 
-    this.bob.add(brazo2);
+    this.add(brazo2);
     
 
    
@@ -158,8 +155,8 @@ class bob extends THREE.Object3D {
     ojosGeom2.translate(0.7,2.5,0.4);
     var ojo2 = new THREE.Mesh(ojosGeom2, ojosMat);
 
-    this.bob.add(ojo1);
-    this.bob.add(ojo2);
+    this.add(ojo1);
+    this.add(ojo2);
 
     // Pupilas
 
@@ -172,8 +169,8 @@ class bob extends THREE.Object3D {
     pupilaGeom2.translate(0.7,2.5,0.7);
     var pupila2 = new THREE.Mesh(pupilaGeom2, pupilaMat);
 
-    this.bob.add(pupila1);
-    this.bob.add(pupila2);
+    this.add(pupila1);
+    this.add(pupila2);
 
     // Pestañas
 
@@ -210,12 +207,12 @@ class bob extends THREE.Object3D {
 
 
 
-    this.bob.add(pestania1);
-    this.bob.add(pestania2);
-    this.bob.add(pestania3);
-    this.bob.add(pestania4);
-    this.bob.add(pestania5);
-    this.bob.add(pestania6);
+    this.add(pestania1);
+    this.add(pestania2);
+    this.add(pestania3);
+    this.add(pestania4);
+    this.add(pestania5);
+    this.add(pestania6);
 
     // ---------------------------- BOCA ---------------------------- //
 
@@ -235,7 +232,7 @@ class bob extends THREE.Object3D {
     var bocaMat = new THREE.MeshStandardMaterial ({color: 'pink'});
     var boca = new THREE.Mesh(bocaGeom, bocaMat);
 
-    this.bob.add(boca);
+    this.add(boca);
 
 
     var paletaGeom = new THREE.BoxGeometry(0.2, 0.3, 0.05);
@@ -246,164 +243,16 @@ class bob extends THREE.Object3D {
     var paleta2 = new THREE.Mesh(paletaGeom, paletaMat);
     paleta2.translateX(0.3);
 
-    this.bob.add(paleta1);
-    this.bob.add(paleta2);
+    this.add(paleta1);
+    this.add(paleta2);
 
-    this.add(this.bob);
-
-    this.bob.scale.set(0.05,0.05,0.05);
-    
-    this.bob.translateY(0.08);
-
-    // ---------------------------- VARIABLES ---------------------------- //
-
-    
-    this.circuito = circuitoGeometry;
-    this.path = circuitoGeometry.parameters.path;
-    this.radio = circuitoGeometry.parameters.radius;
-    this.segmentos = circuitoGeometry.parameters.tubularSegments;
-
-    this.t = _t; // Longitud recorrida del spline - entre 0 y 1
-
-    this.reloj = new THREE.Clock(); // reloj para aumentar la velocidad
-
-    this.rotacion = 0; // rotación en el tubo
-
-    this.velocidad = 0.05; // velocidad del personaje
-    
-
-    this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
-
-    this.createCamara3aPersona(); // crear cámara en 3a persona
-
-    // Movimientos a la izquierda y derecha
-    this.izquierda = false; 
-    this.derecha = false;
-
-    // Colisiones por Raycasting
-
-    this.candidatos = candidatosColision;
-    var distancia = 0.5; 
-    this.posicion = new THREE.Vector3();
-    this.direccion = new THREE.Vector3();
-    
-    this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
-
-    this.hasImpacted = false;
-
-    this.impacto = null;
-
-    this.cajaFigura = new THREE.Box3();
-
-    var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
-    
-    this.add(cajaVisible);
-
-    cajaVisible.visible = true;
+    this.scale.set(0.25,0.25,0.25);
 
 
-
-  }
-
-  createCamara3aPersona() {
-    this.camara = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.bob.add(this.camara);
-
-    
-    this.camara.position.set(0,10,-20);
-
-    var puntoDeMiraRelativo = new THREE.Vector3(0,-0.1,0.5);
-
-    var target = new THREE.Vector3();
-    this.camara.getWorldPosition(target);
-
-    target.add(puntoDeMiraRelativo);
-
-    this.camara.lookAt(puntoDeMiraRelativo);
-
-   }
-
-   getCamara3aPersona() {
-    return this.camara;
   }
 
   update() {
-    this.cajaFigura.setFromObject(this.bob);
-
-    // MODIFICAR CON LA VELOCIDAD
-    this.t += this.reloj.getDelta() * this.velocidad;
-    //console.log(this.t);
-
-    if(this.t >= 1){
-        this.t = 0;
-        this.velocidad *= 2;
-    }
-
-    //console.log("Izquierda: " + this.izquierda);
-    //console.log("Derecha: " + this.derecha);
-
-    
-    if (this.izquierda) {
-        this.rotacion -= Math.PI * 2 / 180;
-        if (this.rotacion < -Math.PI / 3) {
-        this.rotacion = -Math.PI / 3;
-        }
-    } else if (this.derecha) {
-        this.rotacion += Math.PI * 2 / 180;
-        if (this.rotacion > Math.PI / 3) {
-        this.rotacion = Math.PI / 3;
-        }
-    }
-
-    
-    //this.rotacion += Math.PI * 2 /180;
-
-
-    //console.log(this.velocidad);
-
-    this.nodoPosOrientTubo = new THREE.Object3D();
-    this.movLateral = new THREE.Object3D();
-    this.posSuper = new THREE.Object3D();
-
-    this.posSuper.translateY(this.radio);
-    this.movLateral.rotateZ(this.rotacion);
-        
-    var posTmp = this.path.getPointAt(this.t);
-    this.nodoPosOrientTubo.position.copy(posTmp);
-    
-    var tangente = this.path.getTangentAt(this.t);
-    posTmp.add(tangente);
-    var segmentoActual = Math.floor(this.t * this.segmentos);
-    this.nodoPosOrientTubo.up = this.circuito.binormals[segmentoActual];
-    this.nodoPosOrientTubo.lookAt(posTmp);
-    
-                      
-    this.add(this.nodoPosOrientTubo);
-    this.nodoPosOrientTubo.add(this.movLateral);
-    this.movLateral.add(this.posSuper);
-    this.posSuper.add(this.bob); 
-
-
-    this.bob.getWorldPosition(this.nuevoTarget);
-
-    this.camara.lookAt(this.nuevoTarget); 
-    
-    this.bob.getWorldPosition(this.posicion);
-
-    this.nodoPosOrientTubo.getWorldDirection(this.direccion);
-
-    for (var i = 0; i < this.candidatos.length; i++) {
-        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){
-            console.log("COLISIÓN");
-            this.velocidad =  this.velocidad * 0.5;
-            this.impacto = this.candidatos[i];
-            this.hasImpacted = true;
-            console.log(this.hasImpacted);
-        }else{
-            //console.log("NO COLISIÓN");
-            this.hasImpacted = false;
-        }
-    }
+    this.rotation.y += 0.01;
     
   }
 }

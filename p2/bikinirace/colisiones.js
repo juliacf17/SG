@@ -6,8 +6,8 @@ class MyBoxColision extends THREE.Object3D {
     constructor(circuitoGeometry, _t) {
         super();
 
-        var boxGeom = new THREE.BoxGeometry (0.5,0.5,0.5); //ancho, alto y largo
-        boxGeom.translate(0,0.25,0);
+        var boxGeom = new THREE.BoxGeometry (0.25,0.25,0.25); //ancho, alto y largo
+        boxGeom.translate(0,0.125,0);
         var boxMat = new THREE.MeshBasicMaterial({ color: 0x61baf0 });
         boxMat.flatShading = true;
         boxMat.needsUpdate = true;
@@ -24,10 +24,21 @@ class MyBoxColision extends THREE.Object3D {
         this.t = _t;
 
         this.rotacion = 0;
+
+        this.cajaFigura = new THREE.Box3();
+
+        var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
+        
+        this.add(cajaVisible);
+
+        cajaVisible.visible = true;
+
     }
 
     update () {      
         //this.rotacion += Math.PI * 2 /180;
+
+        this.cajaFigura.setFromObject(this.box);
         
         this.nodoPosOrientTubo = new THREE.Object3D();
         this.movLateral = new THREE.Object3D();
