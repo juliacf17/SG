@@ -66,13 +66,15 @@ class bikinirace extends THREE.Scene {
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
 
-    this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
-    //this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
-    this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
-    this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
+    //this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
+    this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
+    //this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
+    this.obstaculo2 = new gary (this.circuito.geometry, 0.4); 
+    //this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
+    this.obstaculo3 = new gary (this.circuito.geometry, 0.6); 
     
     this.volador1 = new medusa(this.circuito.geometry, 0.01);
-    this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
+    this.volador2 = new medusa(this.circuito.geometry, 0.15);
 
 
     this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
@@ -90,7 +92,8 @@ class bikinirace extends THREE.Scene {
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
     //this.protagonista = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
-    this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
+    //this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
+    this.box2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
 
 
     this.mouse = new THREE.Vector2();
