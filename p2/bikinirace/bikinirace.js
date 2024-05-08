@@ -75,6 +75,12 @@ class bikinirace extends THREE.Scene {
     
     this.volador1 = new medusa(this.circuito.geometry, 0.01);
     this.volador2 = new medusa(this.circuito.geometry, 0.15);
+    this.volador3 = new medusa(this.circuito.geometry, 0.25);
+    this.volador4 = new medusa(this.circuito.geometry, 0.40);
+    this.volador5 = new medusa(this.circuito.geometry, 0.55);
+    this.volador6 = new medusa(this.circuito.geometry, 0.65);
+    this.volador7 = new medusa(this.circuito.geometry, 0.75);
+    this.volador8 = new medusa(this.circuito.geometry, 0.90);
 
 
     this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
@@ -87,7 +93,7 @@ class bikinirace extends THREE.Scene {
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
     this.premios = [this.premio1, this.premio2]; 
 
-    this.voladores = [this.volador1, this.volador2];
+    this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
 
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
@@ -127,6 +133,12 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.obstaculo3);
     this.circuito.add(this.volador1);
     this.circuito.add(this.volador2);
+    this.circuito.add(this.volador3);
+    this.circuito.add(this.volador4);
+    this.circuito.add(this.volador5);
+    this.circuito.add(this.volador6);
+    this.circuito.add(this.volador7);
+    this.circuito.add(this.volador8);
     this.circuito.add(this.premio1);
     this.circuito.add(this.premio2);
     this.circuito.add(this.pinia); 
@@ -492,6 +504,12 @@ class bikinirace extends THREE.Scene {
     this.obstaculo3.update();
     this.volador1.update();
     this.volador2.update();
+    this.volador3.update();
+    this.volador4.update();
+    this.volador5.update();
+    this.volador6.update();
+    this.volador7.update();
+    this.volador8.update();
     this.premio1.update();
     this.premio2.update(); 
     this.pinia.update(); 

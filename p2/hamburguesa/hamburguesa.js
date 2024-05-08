@@ -241,13 +241,13 @@ class hamburguesa extends THREE.Object3D {
   }
 
   update() {
-    this.rotacion += 0.0001;
+    this.rotacion += 0.01;
 
 
     this.cajaFigura.setFromObject(this.hamburguesa);
         
     
-    this.movLateral.rotateY(this.rotacion);
+    this.movLateral.rotation.y = this.rotacion;
        
     var posTmp = this.path.getPointAt(this.t);
     this.nodoPosOrientTubo.position.copy(posTmp);

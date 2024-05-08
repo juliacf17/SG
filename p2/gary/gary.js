@@ -239,12 +239,12 @@ class gary extends THREE.Object3D {
   }
 
   update() {
-    //this.rotacion += Math.PI * 2 /180;
+    this.rotacion -= 0.01;
 
     this.cajaFigura.setFromObject(this.gary);
         
     
-    this.movLateral.rotateZ(this.rotacion);
+    this.movLateral.rotation.z = this.rotacion;
        
     var posTmp = this.path.getPointAt(this.t);
     this.nodoPosOrientTubo.position.copy(posTmp);
