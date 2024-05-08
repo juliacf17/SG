@@ -13,7 +13,8 @@ import { medusa } from '../medusa/medusa.js'
 import { MyBox } from './MyBox.js'
 import {MyBoxColision} from './colisiones.js' 
 import { MyBoxVolador } from './voladores.js'
-import { bob } from '../bob/bob.js'
+import { bob_hambur } from '../bob_hambur/bob_hambur.js'
+import { gary } from '../gary/gary.js'
 
  
 /// La clase fachada del modelo
@@ -64,6 +65,7 @@ class bikinirace extends THREE.Scene {
 
 
     this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
+    //this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
     this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
     this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
     
@@ -77,8 +79,8 @@ class bikinirace extends THREE.Scene {
     this.voladores = [this.volador1, this.volador2];
 
 
-    //this.box = new bob(this.circuito.geometry, this.candidatos, 0);
-    this.box = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
+    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+    //this.protagonista = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
     this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
 
 
@@ -90,7 +92,7 @@ class bikinirace extends THREE.Scene {
     
 
 /*  COLISIONES POR CAJAS ENGLOBANTES
-    this.meshBox = new THREE.Box3().setFromObject(this.box);
+    this.meshBox = new THREE.Box3().setFromObject(this.protagonista);
     this.meshObstaculo1 = new THREE.Box3().setFromObject(this.obstaculo1);
     this.meshObstaculo2 = new THREE.Box3().setFromObject(this.obstaculo2);
 
@@ -106,7 +108,7 @@ class bikinirace extends THREE.Scene {
     this.meshObstaculo2Visible.visible = true;*/
 
 
-    this.circuito.add(this.box);
+    this.circuito.add(this.protagonista);
     this.circuito.add(this.box2);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
@@ -270,7 +272,7 @@ class bikinirace extends THREE.Scene {
     if (this.general){
       return this.camera;
     }else{
-      return this.box.getCamara3aPersona();
+      return this.protagonista.getCamara3aPersona();
     }
     
   }
@@ -309,11 +311,11 @@ class bikinirace extends THREE.Scene {
         break;
 
       case 'ArrowLeft':
-        this.box.izquierda = true;
+        this.protagonista.izquierda = true;
         break;
 
       case 'ArrowRight':
-        this.box.derecha = true;
+        this.protagonista.derecha = true;
         break;
 
       case 'a':
@@ -336,11 +338,11 @@ class bikinirace extends THREE.Scene {
     var key = event.key;
     switch (key) {
       case 'ArrowLeft':
-        this.box.izquierda = false;
+        this.protagonista.izquierda = false;
         break;
 
       case 'ArrowRight':
-        this.box.derecha = false;
+        this.protagonista.derecha = false;
         break;
 
       case 'a':
@@ -356,14 +358,14 @@ class bikinirace extends THREE.Scene {
         break;
 
       case 'p':
-        this.box.velocidad = 0;
+        this.protagonista.velocidad = 0;
         if(this.multiplayer){
           this.box2.velocidad = 0;
         }
         break;
 
       case 'r':
-        this.box.velocidad = 0.01;
+        this.protagonista.velocidad = 0.01;
         break;
 
       case 'm':
@@ -411,10 +413,10 @@ class bikinirace extends THREE.Scene {
     var touchX = touch.clientX;
 
     if (touchX < window.innerWidth / 2) {
-      this.box.izquierda = true;
+      this.protagonista.izquierda = true;
     }
     else {
-      this.box.derecha = true;
+      this.protagonista.derecha = true;
     }
   }
 
@@ -423,17 +425,20 @@ class bikinirace extends THREE.Scene {
     var touchX = touch.clientX;
 
     if (touchX < window.innerWidth / 2) {
-      this.box.izquierda = true;
+      this.protagonista.izquierda = true;
     }
     else {
-      this.box.derecha = true;
+      this.protagonista.derecha = true;
     }
   }
 
   onTouchEnd(event) {
-    this.box.izquierda = false;
-    this.box.derecha = false;
+    this.protagonista.izquierda = false;
+    this.protagonista.derecha = false;
   }
+
+
+
 
   renderViewport (escena, camara, left, top, width, height) {
     var l = left * window.innerWidth;
@@ -465,7 +470,7 @@ class bikinirace extends THREE.Scene {
     
     // Se actualiza el resto del modelo
     this.circuito.update();
-    this.box.update();
+    this.protagonista.update();
     this.box2.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
@@ -480,11 +485,11 @@ class bikinirace extends THREE.Scene {
 
     if(this.multiplayer){
       this.renderViewport(this, this.box2.getCamara3aPersona(), 0, 0, 0.5, 1);
-      this.renderViewport(this, this.box.getCamara3aPersona(), 0.5, 0, 0.5, 1);
+      this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0.5, 0, 0.5, 1);
     }else if(this.general){
       this.renderViewport(this, this.camera, 0, 0, 1, 1);
     }else{
-      this.renderViewport(this, this.box.getCamara3aPersona(), 0, 0, 1, 1);
+      this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0, 0, 1, 1);
       this.renderViewport(this, this.camera, 0.75, 0.75, 0.25, 0.25);
     }
   

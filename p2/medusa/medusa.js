@@ -140,6 +140,19 @@ class medusa extends THREE.Object3D {
 
     this.t = _t;
 
+    this.nodoPosOrientTubo = new THREE.Object3D();
+    this.movLateral = new THREE.Object3D();
+    this.posSuper = new THREE.Object3D();
+
+
+
+    this.posSuper.translateY(this.radio + 0.5);
+
+
+    
+
+    
+
     this.reloj = new THREE.Clock();
     this.velocidad = 0.005;
 
@@ -149,7 +162,15 @@ class medusa extends THREE.Object3D {
     this.tentaculos.userData = this;
     
     this.medusa.add(this.tentaculos);
+
+      
     this.add(this.medusa);
+    this.add(this.nodoPosOrientTubo);
+    this.nodoPosOrientTubo.add(this.movLateral);
+    this.movLateral.add(this.posSuper);
+    this.posSuper.add(this.medusa);
+
+    
 
     
 
@@ -174,20 +195,26 @@ class medusa extends THREE.Object3D {
           
     this.t += this.reloj.getDelta() * this.velocidad;
 
-    this.medusa.rotation.y += 0.2;
+    
+
+    //this.medusa.rotation.y += 0.2;
     if(this.t >= 1){
         this.t = 0;
     }
 
     this.rotacion += Math.PI * 2 /180;
     
-    this.nodoPosOrientTubo = new THREE.Object3D();
-    this.movLateral = new THREE.Object3D();
-    this.posSuper = new THREE.Object3D();
 
-    this.posSuper.translateY(this.radio + 0.5);
 
-    this.movLateral.rotateZ(this.rotacion);
+
+    this.medusa.rotation.z = -this.rotacion;
+    this.movLateral.rotation.z = this.rotacion;
+
+    this.medusa.children[2].rotation.y += 0.1;
+
+
+
+    
     
     
     var posTmp = this.path.getPointAt(this.t);
@@ -200,10 +227,7 @@ class medusa extends THREE.Object3D {
     this.nodoPosOrientTubo.lookAt(posTmp);
     
                     
-    this.add(this.nodoPosOrientTubo);
-    this.nodoPosOrientTubo.add(this.movLateral);
-    this.movLateral.add(this.posSuper);
-    this.posSuper.add(this.medusa);
+    
   }
 }
 

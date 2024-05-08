@@ -64,6 +64,19 @@ class MyBox extends THREE.Object3D {
 
         cajaVisible.visible = true;
 
+        this.nodoPosOrientTubo = new THREE.Object3D();
+        this.movLateral = new THREE.Object3D();
+        this.posSuper = new THREE.Object3D();
+
+        this.posSuper.translateY(this.radio);
+
+        this.add(this.nodoPosOrientTubo);
+        this.nodoPosOrientTubo.add(this.movLateral);
+        this.movLateral.add(this.posSuper);
+        this.posSuper.add(this.box); 
+
+
+
         
 
 
@@ -113,30 +126,23 @@ class MyBox extends THREE.Object3D {
         //console.log("Derecha: " + this.derecha);
 
         
+        
         if (this.izquierda) {
             this.rotacion -= Math.PI * 2 / 180;
-            if (this.rotacion < -Math.PI / 3) {
-            this.rotacion = -Math.PI / 3;
+            if (this.rotacion < -Math.PI / 2) {
+            this.rotacion = -Math.PI / 2;
             }
         } else if (this.derecha) {
             this.rotacion += Math.PI * 2 / 180;
-            if (this.rotacion > Math.PI / 3) {
-            this.rotacion = Math.PI / 3;
+            if (this.rotacion > Math.PI / 2) {
+            this.rotacion = Math.PI / 2;
             }
         }
     
         
-        //this.rotacion += Math.PI * 2 /180;
-   
+    
 
-        //console.log(this.velocidad);
-
-        this.nodoPosOrientTubo = new THREE.Object3D();
-        this.movLateral = new THREE.Object3D();
-        this.posSuper = new THREE.Object3D();
-
-        this.posSuper.translateY(this.radio);
-        this.movLateral.rotateZ(this.rotacion);
+        this.movLateral.rotation.z = this.rotacion;
            
         var posTmp = this.path.getPointAt(this.t);
         this.nodoPosOrientTubo.position.copy(posTmp);
@@ -148,15 +154,13 @@ class MyBox extends THREE.Object3D {
         this.nodoPosOrientTubo.lookAt(posTmp);
         
                          
-        this.add(this.nodoPosOrientTubo);
-        this.nodoPosOrientTubo.add(this.movLateral);
-        this.movLateral.add(this.posSuper);
-        this.posSuper.add(this.box); 
+        
 
 
-        this.box.getWorldPosition(this.nuevoTarget);
+        //this.box.getWorldPosition(this.nuevoTarget);
+        //this.camara.lookAt(this.nuevoTarget); 
+        
 
-        this.camara.lookAt(this.nuevoTarget); 
         
         this.box.getWorldPosition(this.posicion);
 
