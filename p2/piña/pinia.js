@@ -3,7 +3,7 @@ import * as THREE from '../libs/three.module.js'
 import { CSG } from '../libs/CSG-v2.js'
 
 class pinia extends THREE.Object3D {
-  constructor() {
+  constructor(circuitoGeometry, _t) {
     
     super();
 
@@ -38,7 +38,6 @@ class pinia extends THREE.Object3D {
     var basePinia = new THREE.Mesh(basePiniaGeom, MatBasePinia); 
 
 
-
     var cylinderGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 20); // radioTop, radioBottom, altura, segmentosRadiales
     // Como material se crea uno a partir de un color
     cylinderGeom.scale(3, 8, 3); 
@@ -58,11 +57,6 @@ class pinia extends THREE.Object3D {
     this.salida = csg2.toMesh(); 
 
     this.pinia.add(this.salida);
-
-
-
-    //this.pinia.add(basePinia);
-    //this.add(basePinia);
 
 
     //HOJAS PIÑA
@@ -147,38 +141,48 @@ class pinia extends THREE.Object3D {
     this.pinia.add(chimenea);
     //this.add(chimenea);
 
-    /*VAMOS A HACER LA CASILLA DE SALIDA, EL AGUJERO*/
-
-    var cylinderGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 20); // radioTop, radioBottom, altura, segmentosRadiales
-        // Como material se crea uno a partir de un color
-    cylinderGeom.scale(2, 8, 2); 
-    cylinderGeom.rotateZ(Math.PI/2); 
-    var cylinderMat = new THREE.MeshNormalMaterial({color: 0xCF0000});
-    cylinderMat.flatShading = true;
-    cylinderMat.needsUpdate = true;
-    
-    // Construimos el Mesh
-    this.cylinder = new THREE.Mesh(cylinderGeom, cylinderMat);
-
-
-    //var piniaMesh = this.pinia.toMesh();
-/*
-    var csg2 = new CSG();
-    csg2.subtract([piniaMesh, this.cylinder]);
-    
-    this.salida = csg2.toMesh(); 
-
-    this.add(this.salida); */
-
     this.add(this.pinia); 
+
+     // ---------------------------- VARIABLES ---------------------------- //
+    
+  
+     this.circuito = circuitoGeometry;
+     this.path = circuitoGeometry.parameters.path;
+     this.radio = circuitoGeometry.parameters.radius;
+     this.segmentos = circuitoGeometry.parameters.tubularSegments;
+ 
+     this.t = _t;
+ 
+     this.rotacion = 0;
+
+     this.nodoPosOrientTubo = new THREE.Object3D();
+     this.movLateral = new THREE.Object3D();
+     this.posSuper = new THREE.Object3D();
+ 
+     this.posSuper.translateY(this.radio-0.3);
+ 
+     this.add(this.nodoPosOrientTubo);
+     this.nodoPosOrientTubo.add(this.movLateral);
+     this.movLateral.add(this.posSuper);
+     this.posSuper.add(this.pinia);
 
   }
 
   update() {
 
     //this.rotation.y += 0.01;
-
+        
     
+    this.movLateral.rotateY(this.rotacion);
+       
+    var posTmp = this.path.getPointAt(this.t);
+    this.nodoPosOrientTubo.position.copy(posTmp);
+    
+    var tangente = this.path.getTangentAt(this.t);
+    posTmp.add(tangente);
+    var segmentoActual = Math.floor(this.t * this.segmentos);
+    this.nodoPosOrientTubo.up = this.circuito.binormals[segmentoActual];
+    this.nodoPosOrientTubo.lookAt(posTmp);   
 
 
   }

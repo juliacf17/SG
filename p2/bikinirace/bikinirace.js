@@ -16,6 +16,7 @@ import { MyBoxVolador } from './voladores.js'
 import { bob_hambur } from '../bob_hambur/bob_hambur.js'
 import { gary } from '../gary/gary.js'  
 import { hamburguesa } from '../hamburguesa/hamburguesa.js'
+import { pinia } from '../piña/pinia.js'
 
  
 /// La clase fachada del modelo
@@ -77,6 +78,8 @@ class bikinirace extends THREE.Scene {
     this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
     this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
 
+    this.pinia = new pinia(this.circuito.geometry, 0);
+
 
     
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
@@ -123,6 +126,7 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.volador2);
     this.circuito.add(this.premio1);
     this.circuito.add(this.premio2);
+    this.circuito.add(this.pinia); 
     this.add(this.circuito);
 
 
@@ -487,6 +491,7 @@ class bikinirace extends THREE.Scene {
     this.volador2.update();
     this.premio1.update();
     this.premio2.update(); 
+    this.pinia.update(); 
 
 
     
