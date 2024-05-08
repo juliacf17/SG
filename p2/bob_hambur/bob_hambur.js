@@ -9,7 +9,7 @@ import { hamburcarro } from './hamburcarro.js'
 import { hamburguesa } from './hamburguesa.js'
 
 class bob_hambur extends THREE.Object3D {
-  constructor(circuitoGeometry, candidatosColision, _t) {
+  constructor(circuitoGeometry, candidatosColision, premiosColision, _t) {
     
     super();
 
@@ -53,27 +53,48 @@ class bob_hambur extends THREE.Object3D {
     this.izquierda = false; 
     this.derecha = false;
 
-    // Colisiones por Raycasting
+    // Colisiones por Raycasting GARY
 
     this.candidatos = candidatosColision;
-    var distancia = 0.5; 
-    this.posicion = new THREE.Vector3();
-    this.direccion = new THREE.Vector3();
+    //var distancia = 0.5; 
+    //this.posicion = new THREE.Vector3();
+    //this.direccion = new THREE.Vector3();
     
-    this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
+    //this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
 
     this.hasImpacted = false;
 
     this.impacto = null;
 
+
+    // Colisiones por Raycasting HAMBURGUESA
+
+    this.premios = premiosColision;
+    //this.posicionH = new THREE.Vector3();
+    //this.direccionH = new THREE.Vector3();
+    
+    //this.rayoH = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
+
+    this.hasImpactedH = false;
+
+    this.impactoH = null;
+
+
+
+
+// ---------------------------- CAJA DE COLISIÓN --------------------------- //
+
     this.cajaFigura = new THREE.Box3();
 
     var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
-    
+
     this.add(cajaVisible);
 
     cajaVisible.visible = true;
 
+
+
+// ---------------------------- NODOS ---------------------------- //
     this.nodoPosOrientTubo = new THREE.Object3D();
     this.movLateral = new THREE.Object3D();
     this.posSuper = new THREE.Object3D();
@@ -161,10 +182,14 @@ class bob_hambur extends THREE.Object3D {
     
                       
     
-    this.bob_hambur.getWorldPosition(this.posicion);
+    //this.bob_hambur.getWorldPosition(this.posicion);
 
-    this.nodoPosOrientTubo.getWorldDirection(this.direccion);
+    //this.nodoPosOrientTubo.getWorldDirection(this.direccion);
 
+
+    //this.bob_hambur.getWorldPosition(this.posicionH);
+
+    //this.nodoPosOrientTubo.getWorldDirection(this.direccionH);
     
     for (var i = 0; i < this.candidatos.length; i++) {
         if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){
@@ -178,6 +203,19 @@ class bob_hambur extends THREE.Object3D {
             this.hasImpacted = false;
         }
     }
+
+    for (var i = 0; i < this.premios.length; i++) {
+      if(this.cajaFigura.intersectsBox(this.premios[i].cajaFigura) && !this.hasImpactedH && this.premios[i] != this.impactoH){
+          //console.log("COLISIÓN");
+          this.velocidad =  this.velocidad * 1.5;
+          this.impactoH = this.premios[i];
+          this.hasImpactedH = true;
+          //console.log(this.hasImpacted);
+      }else{
+          //console.log("NO COLISIÓN");
+          this.hasImpactedH = false;
+      }
+  }
     
   
   }

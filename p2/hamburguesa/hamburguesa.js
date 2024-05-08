@@ -3,9 +3,11 @@ import * as THREE from '../libs/three.module.js'
 import { CSG } from '../libs/CSG-v2.js'
 
 class hamburguesa extends THREE.Object3D {
-  constructor() {
+  constructor(circuitoGeometry, _t) {
     
     super();
+
+    this.hamburguesa = new THREE.Group();
 
     
     // -------------------------------- PAN SUPERIOR -------------------------------- //
@@ -27,7 +29,9 @@ class hamburguesa extends THREE.Object3D {
 
     var pan_superior = pan_superior.toMesh();
     pan_superior.geometry.translate(0,-0.1,0);
-    this.add(pan_superior);
+    //this.add(pan_superior);
+
+    this.hamburguesa.add(pan_superior);
 
     // -------------------------------- PAN INFERIOR -------------------------------- //
 
@@ -43,7 +47,9 @@ class hamburguesa extends THREE.Object3D {
 
     var pan_inferior = pan_inferior.toMesh(); 
 
-    this.add(pan_inferior);
+    //this.add(pan_inferior);
+
+    this.hamburguesa.add(pan_inferior);
 
     // -------------------------------- CARNE -------------------------------- //
 
@@ -55,7 +61,9 @@ class hamburguesa extends THREE.Object3D {
 
     var carne = new THREE.Mesh(carneGeom, carneMat); 
 
-    this.add(carne); 
+    //this.add(carne); 
+
+    this.hamburguesa.add(carne);  
 
     // -------------------------------- QUESO -------------------------------- //
      
@@ -66,7 +74,9 @@ class hamburguesa extends THREE.Object3D {
     queso.geometry.rotateY(45); 
     queso.geometry.translate(0,0.25,0);
 
-    this.add(queso);
+    //this.add(queso);
+
+    this.hamburguesa.add(queso);
 
     
 
@@ -95,7 +105,6 @@ class hamburguesa extends THREE.Object3D {
 
 
     var extrudeSettings = {
-        steps: 1.5,
         depth: 0.1,
         bevelEnabled: false,
     };
@@ -110,8 +119,9 @@ class hamburguesa extends THREE.Object3D {
     lechuga.geometry.scale(1.1,1.0,1.1);
     lechuga.geometry.translate(0,0.34,0);
 
-    this.add(lechuga);
+    //this.add(lechuga);
 
+    this.hamburguesa.add(lechuga);
     // -------------------------------- TOMATE -------------------------------- //
 
     var shapeTomate = new THREE.Shape();
@@ -120,7 +130,6 @@ class hamburguesa extends THREE.Object3D {
     shapeTomate.absarc(0, 0, 0.55, 0, Math.PI * 2, false); // Añadir un arco al path
 
     var extrudeSettings = {
-      steps: 1.5,
       depth: 0.1,
       bevelEnabled: false,
     };
@@ -136,7 +145,9 @@ class hamburguesa extends THREE.Object3D {
 
     tomate.geometry.translate(0,0.41,0);
 
-    this.add(tomate);
+    //this.add(tomate);
+
+    this.hamburguesa.add(tomate);
 
     /*
     var shape = new THREE.Shape();
@@ -193,12 +204,59 @@ class hamburguesa extends THREE.Object3D {
 
     */
 
+    this.hamburguesa.translateY(0.1); 
+    this.hamburguesa.scale.set(0.15, 0.15, 0.15);
 
+
+    this.add(this.hamburguesa); 
+
+    // ---------------------------- VARIABLES ---------------------------- //
+    
+  
+    this.circuito = circuitoGeometry;
+    this.path = circuitoGeometry.parameters.path;
+    this.radio = circuitoGeometry.parameters.radius;
+    this.segmentos = circuitoGeometry.parameters.tubularSegments;
+
+    this.t = _t;
+
+    this.rotacion = 0;
+    this.cajaFigura = new THREE.Box3();
+
+    var cajaVisible = new THREE.Box3Helper(this.cajaFigura, 'black');
+    
+    this.add(cajaVisible);
+
+    cajaVisible.visible = true;
+    this.nodoPosOrientTubo = new THREE.Object3D();
+    this.movLateral = new THREE.Object3D();
+    this.posSuper = new THREE.Object3D();
+
+    this.posSuper.translateY(this.radio);
+
+    this.add(this.nodoPosOrientTubo);
+    this.nodoPosOrientTubo.add(this.movLateral);
+    this.movLateral.add(this.posSuper);
+    this.posSuper.add(this.hamburguesa);
   }
 
   update() {
-    this.rotation.y += 0.01;
+    this.rotacion += 0.0001;
+
+
+    this.cajaFigura.setFromObject(this.hamburguesa);
+        
     
+    this.movLateral.rotateY(this.rotacion);
+       
+    var posTmp = this.path.getPointAt(this.t);
+    this.nodoPosOrientTubo.position.copy(posTmp);
+    
+    var tangente = this.path.getTangentAt(this.t);
+    posTmp.add(tangente);
+    var segmentoActual = Math.floor(this.t * this.segmentos);
+    this.nodoPosOrientTubo.up = this.circuito.binormals[segmentoActual];
+    this.nodoPosOrientTubo.lookAt(posTmp);    
   }
 }
 

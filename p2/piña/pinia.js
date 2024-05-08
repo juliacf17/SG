@@ -7,7 +7,8 @@ class pinia extends THREE.Object3D {
     
     super();
 
-    
+    this.pinia = new THREE.Group();
+
     //var MatBasePinia = new THREE.MeshBasicMaterial({ color: 0xb8921c, side: THREE.DoubleSide });
 
     var texture = new THREE.TextureLoader().load('../imgs/textura-piña.png');
@@ -35,7 +36,33 @@ class pinia extends THREE.Object3D {
     var basePiniaGeom = new THREE.LatheGeometry(this.points,20,0,Math.PI*2);
 
     var basePinia = new THREE.Mesh(basePiniaGeom, MatBasePinia); 
-    this.add(basePinia);
+
+
+
+    var cylinderGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 20); // radioTop, radioBottom, altura, segmentosRadiales
+    // Como material se crea uno a partir de un color
+    cylinderGeom.scale(3, 8, 3); 
+    cylinderGeom.rotateZ(Math.PI/2); 
+    cylinderGeom.rotateY(Math.PI/2);
+    var cylinderMat = new THREE.MeshNormalMaterial({color: 0xCF0000});
+    cylinderMat.flatShading = true;
+    cylinderMat.needsUpdate = true;
+
+    // Construimos el Mesh
+    this.cylinder = new THREE.Mesh(cylinderGeom, cylinderMat);
+
+
+    var csg2 = new CSG();
+    csg2.subtract([basePinia, this.cylinder]);
+    
+    this.salida = csg2.toMesh(); 
+
+    this.pinia.add(this.salida);
+
+
+
+    //this.pinia.add(basePinia);
+    //this.add(basePinia);
 
 
     //HOJAS PIÑA
@@ -89,7 +116,8 @@ class pinia extends THREE.Object3D {
     result.scale.set(1.5,1.5,1.5);
     result.position.set(0,1.8,0); 
 
-    this.add(result);
+    this.pinia.add(result); 
+    //this.add(result);
 
     //LA CHIMENEA
 
@@ -115,14 +143,42 @@ class pinia extends THREE.Object3D {
     chimenea.union([chimeneaParte1, chimeneaParte2]);
 
     var chimenea = chimenea.toMesh();          
-    this.add(chimenea);
+    
+    this.pinia.add(chimenea);
+    //this.add(chimenea);
+
+    /*VAMOS A HACER LA CASILLA DE SALIDA, EL AGUJERO*/
+
+    var cylinderGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 20); // radioTop, radioBottom, altura, segmentosRadiales
+        // Como material se crea uno a partir de un color
+    cylinderGeom.scale(2, 8, 2); 
+    cylinderGeom.rotateZ(Math.PI/2); 
+    var cylinderMat = new THREE.MeshNormalMaterial({color: 0xCF0000});
+    cylinderMat.flatShading = true;
+    cylinderMat.needsUpdate = true;
+    
+    // Construimos el Mesh
+    this.cylinder = new THREE.Mesh(cylinderGeom, cylinderMat);
+
+
+    //var piniaMesh = this.pinia.toMesh();
+/*
+    var csg2 = new CSG();
+    csg2.subtract([piniaMesh, this.cylinder]);
+    
+    this.salida = csg2.toMesh(); 
+
+    this.add(this.salida); */
+
+    this.add(this.pinia); 
 
   }
 
   update() {
 
-    this.rotation.y += 0.01;
+    //this.rotation.y += 0.01;
 
+    
 
 
   }

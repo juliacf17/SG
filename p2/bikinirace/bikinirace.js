@@ -14,7 +14,8 @@ import { MyBox } from './MyBox.js'
 import {MyBoxColision} from './colisiones.js' 
 import { MyBoxVolador } from './voladores.js'
 import { bob_hambur } from '../bob_hambur/bob_hambur.js'
-import { gary } from '../gary/gary.js'
+import { gary } from '../gary/gary.js'  
+import { hamburguesa } from '../hamburguesa/hamburguesa.js'
 
  
 /// La clase fachada del modelo
@@ -73,13 +74,18 @@ class bikinirace extends THREE.Scene {
     this.volador2 = new MyBoxVolador(this.circuito.geometry, 0.15);
 
 
+    this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
+    this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
+
+
     
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
+    this.premios = [this.premio1, this.premio2]; 
 
     this.voladores = [this.volador1, this.volador2];
 
 
-    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
     //this.protagonista = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
     this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
 
@@ -115,6 +121,8 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.obstaculo3);
     this.circuito.add(this.volador1);
     this.circuito.add(this.volador2);
+    this.circuito.add(this.premio1);
+    this.circuito.add(this.premio2);
     this.add(this.circuito);
 
 
@@ -477,6 +485,8 @@ class bikinirace extends THREE.Scene {
     this.obstaculo3.update();
     this.volador1.update();
     this.volador2.update();
+    this.premio1.update();
+    this.premio2.update(); 
 
 
     
