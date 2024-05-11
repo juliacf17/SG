@@ -8,17 +8,24 @@ class pinia extends THREE.Object3D {
     super();
 
     this.pinia = new THREE.Group();
-
-    //var MatBasePinia = new THREE.MeshBasicMaterial({ color: 0xb8921c, side: THREE.DoubleSide });
-
     var texture = new THREE.TextureLoader().load('../imgs/textura-piña.png');
-    var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture});
-
+    var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture, side: THREE.DoubleSide});
     
     this.points = [];
 
-    //CUERPO PIÑA
-    this.points.push(new THREE.Vector2(0,0));
+    // ---------------------CUERPO PIÑA---------------------
+
+    this.points.push(new THREE.Vector2(0,-2));
+    this.points.push(new THREE.Vector2(0.2,-1.95));
+    this.points.push(new THREE.Vector2(0.3,-1.9));
+    this.points.push(new THREE.Vector2(0.45,-1.8));
+    this.points.push(new THREE.Vector2(0.65,-1.6));
+    this.points.push(new THREE.Vector2(0.70,-1.5));
+    this.points.push(new THREE.Vector2(0.8,-1.2));
+    this.points.push(new THREE.Vector2(0.85,-1.05));
+    this.points.push(new THREE.Vector2(0.9,-0.9));
+    this.points.push(new THREE.Vector2(0.95,-0.7));
+    this.points.push(new THREE.Vector2(1,-0.5));
     this.points.push(new THREE.Vector2(1,0));
     this.points.push(new THREE.Vector2(1,0.5));
     this.points.push(new THREE.Vector2(0.95,0.7));
@@ -37,29 +44,33 @@ class pinia extends THREE.Object3D {
 
     var basePinia = new THREE.Mesh(basePiniaGeom, MatBasePinia); 
 
+    
+    var cilindroHuecoGeom = new THREE.CylinderGeometry(0.6,0.6,2.0, 20); // radioTop, radioBottom, altura, segmentosRadiales
 
-    var cylinderGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 20); // radioTop, radioBottom, altura, segmentosRadiales
-    // Como material se crea uno a partir de un color
-    cylinderGeom.scale(3, 8, 3); 
-    cylinderGeom.rotateZ(Math.PI/2); 
-    cylinderGeom.rotateY(Math.PI/2);
-    var cylinderMat = new THREE.MeshNormalMaterial({color: 0xCF0000});
-    cylinderMat.flatShading = true;
-    cylinderMat.needsUpdate = true;
+    cilindroHuecoGeom.rotateZ(Math.PI/2);
+    cilindroHuecoGeom.scale(1,2,1);
+    cilindroHuecoGeom.translate(0,-0.5,0);
+
+    var cilindroHuecoMat = new THREE.MeshNormalMaterial({color: 0xCF0000});
+    cilindroHuecoMat.flatShading = true;
+    cilindroHuecoMat.needsUpdate = true;
 
     // Construimos el Mesh
-    this.cylinder = new THREE.Mesh(cylinderGeom, cylinderMat);
+    this.cylinder = new THREE.Mesh(cilindroHuecoGeom, cilindroHuecoMat);
+
+    //this.add(this.cylinder);
 
 
-    var csg2 = new CSG();
-    csg2.subtract([basePinia, this.cylinder]);
+    var csg3 = new CSG();
+    csg3.subtract([basePinia, this.cylinder]);
     
-    this.salida = csg2.toMesh(); 
+    this.salida = csg3.toMesh(); 
 
+  
     this.pinia.add(this.salida);
 
 
-    //HOJAS PIÑA
+    //---------------------HOJAS PIÑA---------------------
 
     var MatHojasPinia = new THREE.MeshBasicMaterial({ color: 0x25800c, side: THREE.DoubleSide });
 
@@ -72,7 +83,6 @@ class pinia extends THREE.Object3D {
     this.points.push(new THREE.Vector2(0.05,1));
     this.points.push(new THREE.Vector2(0,1.2));
     
-
     var hojasPiniaGeom = new THREE.LatheGeometry(this.points,20,0,Math.PI*2);
     hojasPiniaGeom.scale(0.9,0.9,0.9); 
 
@@ -141,7 +151,12 @@ class pinia extends THREE.Object3D {
     this.pinia.add(chimenea);
     //this.add(chimenea);
 
+    this.pinia.rotation.y = Math.PI/2;
+    this.pinia.position.set(0,1.5,0);
+
     this.add(this.pinia); 
+
+
 
      // ---------------------------- VARIABLES ---------------------------- //
     
