@@ -13,16 +13,7 @@ class gary extends THREE.Object3D {
 
     // ---------------------------- BABOSA ---------------------------- //
 
-    // Shape cuadrado
     var shapeBabosa = new THREE.Shape();
-    /*
-    var lado = 1; // Puedes ajustar el tamaño según necesites
-    shapeBabosa.moveTo(0, 0);
-    shapeBabosa.lineTo(lado*2, 0);
-    shapeBabosa.lineTo(lado*2, lado);
-    shapeBabosa.lineTo(0, lado);
-    shapeBabosa.lineTo(0, 0);
-    */ 
 
     shapeBabosa.moveTo(0,-0.4);
     shapeBabosa.quadraticCurveTo(-0.4,-0.6,-0.4,-0.2);
@@ -40,11 +31,6 @@ class gary extends THREE.Object3D {
     shapeBabosa.quadraticCurveTo(0.8,-0.2,0.6,-0.1);
     shapeBabosa.quadraticCurveTo(0.4,0.0,0.4,-0.2);
     shapeBabosa.quadraticCurveTo(0,-0.4,0,-0.4);
-
-
-
-
-
 
     // Camino en forma de onda
     var pts = [];
@@ -74,9 +60,6 @@ class gary extends THREE.Object3D {
 
     var babosa = new THREE.Mesh(babosaGeom, babosaMat);
 
-
-    //this.add(babosa);
-
     // ---------------------------- SOPORTES OJOS ---------------------------- 
 
     var soporteGeom = new THREE.CylinderGeometry(0.1, 0.5, 5, 64);
@@ -89,15 +72,12 @@ class gary extends THREE.Object3D {
     soporte1.rotateZ(-20 * Math.PI / 180);
     soporte1.rotateX(20 * Math.PI / 180)
 
-    //this.add(soporte1);
-
     var soporte2 = new THREE.Mesh(soporteGeom, soporteMat);
 
     soporte2.position.set(3.0, 2, -1.0);
     soporte2.rotateZ(-20 * Math.PI / 180);
     soporte2.rotateX(-20 * Math.PI / 180)
 
-    //this.add(soporte2);
 
     var unionGeom = new THREE.BoxGeometry(4,1,1);
     unionGeom.translate(-1.0, -0.3, 0);
@@ -107,7 +87,6 @@ class gary extends THREE.Object3D {
 
     var csg = new CSG();
     csg.union([babosa, soporte1, soporte2, union]);
-    //csg.union([babosa, union]);
     var cuerpo = csg.toMesh();
 
     this.gary.add(cuerpo);    
@@ -152,8 +131,6 @@ class gary extends THREE.Object3D {
 
     var recorte = new THREE.Mesh(recorteGeom, recorteMat);
 
-    //this.add(box);
-
     csg.union([ caparazon]);
     csg.subtract([recorte]);
 
@@ -193,9 +170,6 @@ class gary extends THREE.Object3D {
 
       }, null, null); 
     });
-
-
-
   
 
     this.gary.translateY(0.03);
@@ -239,10 +213,10 @@ class gary extends THREE.Object3D {
   }
 
   update() {
-    this.rotacion -= 0.01;
 
     this.cajaFigura.setFromObject(this.gary);
-        
+    
+    this.rotacion -= 0.05;
     
     this.movLateral.rotation.z = this.rotacion;
        

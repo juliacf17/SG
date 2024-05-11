@@ -195,26 +195,17 @@ class medusa extends THREE.Object3D {
           
     this.t += this.reloj.getDelta() * this.velocidad;
 
-    
-
     //this.medusa.rotation.y += 0.2;
     if(this.t >= 1){
         this.t = 0;
     }
 
     this.rotacion += Math.PI * 2 /180;
-    
-
-
 
     this.medusa.rotation.z = -this.rotacion;
     this.movLateral.rotation.z = this.rotacion;
 
     this.medusa.children[2].rotation.y += 0.1;
-
-
-
-    
     
     
     var posTmp = this.path.getPointAt(this.t);

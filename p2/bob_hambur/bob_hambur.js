@@ -7,6 +7,7 @@ import { OBJLoader } from '../libs/OBJLoader.js'
 import { bob } from './bob.js'
 import { hamburcarro } from './hamburcarro.js'
 import { hamburguesa } from './hamburguesa.js'
+import { plancton } from '../plancton/plancton.js'
 
 class bob_hambur extends THREE.Object3D {
   constructor(circuitoGeometry, candidatosColision, premiosColision, _t) {
@@ -42,7 +43,7 @@ class bob_hambur extends THREE.Object3D {
 
     this.rotacion = 0; // rotación en el tubo
 
-    this.velocidad = 0.01; // velocidad del personaje
+    this.velocidad = 0; // velocidad del personaje
     
 
     this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
@@ -63,6 +64,7 @@ class bob_hambur extends THREE.Object3D {
     //this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
 
     this.hasImpacted = false;
+    this.colisionPlancton = false;
 
     this.impacto = null;
 
@@ -133,6 +135,10 @@ class bob_hambur extends THREE.Object3D {
     return this.camara;
   }
 
+  getColisionConPlancton() {
+    return this.colisionPlancton;
+  }
+
   update() {
     this.cajaFigura.setFromObject(this.bob_hambur);
 
@@ -192,15 +198,22 @@ class bob_hambur extends THREE.Object3D {
     //this.nodoPosOrientTubo.getWorldDirection(this.direccionH);
     
     for (var i = 0; i < this.candidatos.length; i++) {
-        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){
-            //console.log("COLISIÓN");
-            this.velocidad =  this.velocidad * 0.5;
-            this.impacto = this.candidatos[i];
-            this.hasImpacted = true;
-            //console.log(this.hasImpacted);
+        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
+            if(this.candidatos[i] instanceof plancton){ 
+                this.colisionPlancton = true;
+                console.log("COLISIÓN CON PLANCTON");
+            } else{
+                //console.log("COLISIÓN");
+                this.velocidad =  this.velocidad * 0.5;
+                this.impacto = this.candidatos[i];
+                this.hasImpacted = true;
+                //console.log(this.hasImpacted);
+            }
+            
         }else{
             //console.log("NO COLISIÓN");
             this.hasImpacted = false;
+            this.colisionPlancton = false;
         }
     }
 

@@ -17,8 +17,9 @@ import { bob_hambur } from '../bob_hambur/bob_hambur.js'
 import { gary } from '../gary/gary.js'  
 import { hamburguesa } from '../hamburguesa/hamburguesa.js'
 import { pinia } from '../piña/pinia.js'
+import { plancton } from '../plancton/plancton.js'
 
- 
+
 /// La clase fachada del modelo
 /**
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
@@ -35,43 +36,31 @@ class bikinirace extends THREE.Scene {
     this.gui = this.createGUI ();
     
     this.initStats(); // Para mostrar información de rendimiento
-    this.initPuntos(); // Para mostrar información de puntos
+    this.initPuntos(); // Para mostrar información de los puntos conseguidos
     
     // Construimos los distinos elementos que tendremos en la escena
     
-    // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
-    // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
-    this.createLights ();
-    
-    // Tendremos una cámara con un control de movimiento con el ratón
+    this.createLights (); 
+
     this.createCamera ();
     
-    // Un suelo 
-    //this.createGround ();
-    
-    // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
-    // Todas las unidades están en metros
     this.axis = new THREE.AxesHelper (2);
     this.add (this.axis);
     
-    
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
-    
+ 
+    // Creación de los modelos 
 
-    this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
-    this.multiplayer = false; // Variable que indica si estamos en modo multijugador
+    // Circuito
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
+    // Obstáculos (Garys)
 
-    //this.obstaculo1 = new MyBoxColision (this.circuito.geometry, 0.2); 
     this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
-    //this.obstaculo2 = new MyBoxColision (this.circuito.geometry, 0.4);
     this.obstaculo2 = new gary (this.circuito.geometry, 0.4); 
-    //this.obstaculo3 = new MyBoxColision (this.circuito.geometry, 0.6);
     this.obstaculo3 = new gary (this.circuito.geometry, 0.6); 
+
+    // Objetos voladores (Medusas)
     
     this.volador1 = new medusa(this.circuito.geometry, 0.01);
     this.volador2 = new medusa(this.circuito.geometry, 0.15);
@@ -82,52 +71,53 @@ class bikinirace extends THREE.Scene {
     this.volador7 = new medusa(this.circuito.geometry, 0.75);
     this.volador8 = new medusa(this.circuito.geometry, 0.90);
 
+    // Premios (Hamburguesas)
 
     this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
     this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
 
+    // "Casilla de salida" (Piña)
+
     this.pinia = new pinia(this.circuito.geometry, 0);
 
 
+    // Variables 
+
+    // Control de la cámara y las vistas 
+
+    this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
+    this.multiplayer = false; // Variable que indica si estamos en modo multijugador
+    this.mouse = new THREE.Vector2(); // Vector que almacena la posición del ratón
+    this.raycaster = new THREE.Raycaster(); // Raycaster para detectar picking en los objetos voladores
+
+    // Colisiones
+
+    this.plancton = new plancton(this.circuito.geometry);
+
     
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3];
+    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton]; 
     this.premios = [this.premio1, this.premio2]; 
+
+    // Objetos voladores
 
     this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
 
+    // Protagonista/s
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
-    //this.protagonista = new MyBox(this.circuito.geometry, this.candidatos,0 , 'lightpink');
-    //this.box2 = new MyBox(this.circuito.geometry, this.candidatos,0.5 , 'lightblue');
-    this.box2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
-
-
-    this.mouse = new THREE.Vector2();
-    this.raycaster = new THREE.Raycaster();
-
-    this.puntos = 0;
+    this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
 
     
-
-/*  COLISIONES POR CAJAS ENGLOBANTES
-    this.meshBox = new THREE.Box3().setFromObject(this.protagonista);
-    this.meshObstaculo1 = new THREE.Box3().setFromObject(this.obstaculo1);
-    this.meshObstaculo2 = new THREE.Box3().setFromObject(this.obstaculo2);
+    // Control de la puntuación
+    
+    this.puntos = 0;
 
 
-    this.meshBoxVisible = new THREE.BoxHelper(this.meshBox, 0x00ff00);
-    this.meshObstaculo1Visible = new THREE.BoxHelper(this.meshObstaculo1, 0x00ff00);
-    this.meshObstaculo2Visible = new THREE.BoxHelper(this.meshObstaculo2, 0x00ff00);
-
-    this.add(this.meshBoxVisible, this.meshObstaculo1Visible, this.meshObstaculo2Visible);
-
-    this.meshBoxVisible.visible = true;
-    this.meshObstaculo1Visible.visible = true;
-    this.meshObstaculo2Visible.visible = true;*/
-
-
+    // Añadimos los elementos a la escena
+  
     this.circuito.add(this.protagonista);
-    this.circuito.add(this.box2);
+    this.circuito.add(this.jugador2);
+    this.circuito.add(this.plancton);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
     this.circuito.add(this.obstaculo3);
@@ -144,8 +134,22 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.pinia); 
     this.add(this.circuito);
 
+    //this.background = textureCube;
+    
+    this.background = new THREE.CubeTextureLoader()
+    .setPath( '../imgs/' )
+    .load( [
+          'cielo.png',
+          'cielo.png',
+          'cielo.png',
+          'cielo.png',
+          'cielo.png',
+          'cielo.png'
+        ] );
 
-  
+
+    this.background = new THREE.Color( 'lightblue' );
+
   }
 
   
@@ -208,7 +212,6 @@ class bikinirace extends THREE.Scene {
 
   }
   
-
   createGUI () {
     // Se crea la interfaz gráfica de usuario
     var gui = new GUI();
@@ -294,8 +297,10 @@ class bikinirace extends THREE.Scene {
   }
   
   getCamera () {
-    // En principio se devuelve la única cámara que tenemos
-    // Si hubiera varias cámaras, este método decidiría qué cámara devuelve cada vez que es consultado
+    // Devuelve la cámara determinada por la variable "general"
+    // Si general es true, devuelve la cámara general, con la que vemos toda la escena
+    // Si general es false, devuelve la cámara en tercera persona del protagonista
+
     if (this.general){
       return this.camera;
     }else{
@@ -313,6 +318,9 @@ class bikinirace extends THREE.Scene {
   }
 
   onWindowResize () {
+    // Este método es llamado cada vez que el usuario modifica el tamaño de la ventana de la aplicación
+    // Hay que actualizar el ratio de aspecto de la cámara
+
     var camara = this.getCamera();
     var nuevaRatio = window.innerWidth / window.innerHeight;
     if (camara.isOrthographicCamera) {
@@ -334,26 +342,31 @@ class bikinirace extends THREE.Scene {
     var key = event.key;
     switch (key) {
       case ' ':
-        this.general = !this.general;
+        this.general = !this.general; // Cambia la cámara general por la del protagonista y viceversa con la barra espaciadora
         break;
 
       case 'ArrowLeft':
-        this.protagonista.izquierda = true;
+        this.protagonista.izquierda = true; // Mueve al protagonista a la izquierda con la flecha izquierda
         break;
 
       case 'ArrowRight':
-        this.protagonista.derecha = true;
+        this.protagonista.derecha = true; // Mueve al protagonista a la derecha con la flecha derecha
         break;
 
       case 'a':
         if(this.multiplayer){
-          this.box2.izquierda = true;
+          this.jugador2.izquierda = true; // Mueve al jugador 2 a la izquierda con la tecla 'a'
+        }
+        else{
+          this.protagonista.izquierda = true; // Mueve al protagonista a la izquierda con la tecla 'a'
         }
         break;
 
       case 'd':
         if(this.multiplayer){
-          this.box2.derecha = true;
+          this.jugador2.derecha = true; // Mueve al jugador 2 a la derecha con la tecla 'd'
+        }else{
+          this.protagonista.derecha = true; // Mueve al protagonista a la derecha con la tecla 'd'
         }
         break;
 
@@ -365,38 +378,43 @@ class bikinirace extends THREE.Scene {
     var key = event.key;
     switch (key) {
       case 'ArrowLeft':
-        this.protagonista.izquierda = false;
+        this.protagonista.izquierda = false; // Deja de mover al protagonista a la izquierda al soltar la flecha izquierda
         break;
 
       case 'ArrowRight':
-        this.protagonista.derecha = false;
+        this.protagonista.derecha = false; // Deja de mover al protagonista a la derecha al soltar la flecha derecha
         break;
 
       case 'a':
         if(this.multiplayer){
-          this.box2.izquierda = false;
+          this.jugador2.izquierda = false; // Deja de mover al jugador 2 a la izquierda al soltar la tecla 'a'
+        }else{
+          this.protagonista.izquierda = false; // Deja de mover al protagonista a la izquierda al soltar la tecla 'a'
         }
         break;
 
       case 'd':
         if(this.multiplayer){
-          this.box2.derecha = false;
+          this.jugador2.derecha = false; // Deja de mover al jugador 2 a la derecha al soltar la tecla 'd'
+        }else{
+          this.protagonista.derecha = false; // Deja de mover al protagonista a la derecha al soltar la tecla 'd'
         }
         break;
 
       case 'p':
-        this.protagonista.velocidad = 0;
+        this.protagonista.velocidad = 0; // Frena al protagonista y al jugador 2 al pulsar la tecla 'p' (para pruebas)
         if(this.multiplayer){
-          this.box2.velocidad = 0;
+          this.jugador2.velocidad = 0; 
         }
         break;
 
       case 'r':
-        this.protagonista.velocidad = 0.01;
+        this.protagonista.velocidad = 0.02; // Reanuda la velocidad del protagonista y del jugador 2 al pulsar la tecla 'r' (para pruebas)
+        this.jugador2.velocidad = 0.02;
         break;
 
       case 'm':
-        this.multiplayer = !this.multiplayer;
+        this.multiplayer = !this.multiplayer; // Cambia el modo multijugador al pulsar la tecla 'm' (cambio de vista)
         break;
 
 
@@ -404,39 +422,37 @@ class bikinirace extends THREE.Scene {
     }
   }
 
-  onDocumentMouseDown(event) {
-    event.preventDefault();
+  onDocumentMouseDown(event) { // Método para detectar clics en los objetos voladores
+    event.preventDefault(); 
     console.log("click")
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1; // Normaliza la posición del ratón
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   
     this.raycaster.setFromCamera(this.mouse, this.getCamera());
   
-    var pickedObjects = this.raycaster.intersectObjects(this.voladores, true);
+    var pickedObjects = this.raycaster.intersectObjects(this.voladores, true); // Detecta si se ha hecho clic en un objeto volador
   
-    if (pickedObjects.length > 0) {
-      var selectedObject = pickedObjects[0].object;
+    if (pickedObjects.length > 0) { // Si se ha hecho clic en un objeto volador
+      var selectedObject = pickedObjects[0].object; // Se selecciona el objeto
 
-      console.log(selectedObject);
-      if(selectedObject.userData){
-        selectedObject.userData.recibeClic(selectedObject);
+      //console.log(selectedObject);  
+      if(selectedObject.userData){ // Si el objeto tiene un userData
+        selectedObject.userData.recibeClic(selectedObject); // Se llama al método recibeClic del objeto
       }
 
-      var selectedPoint = pickedObjects[0].point;
+      //var selectedPoint = pickedObjects[0].point;
 
-      console.log(selectedObject);
-      console.log(selectedPoint);
+      //console.log(selectedObject);
+      //console.log(selectedPoint);
   
-      // Cambiar la opacidad del material del objeto intersectado
+      // Aumenta la puntuación si se ha hecho clic en un objeto volador
       this.puntos++; // Aumenta la puntuación
-      //intersectedObject.material.transparent = true;
-  
-      //this.puntos++; // Aumenta la puntuación
+
     }
   }
 
-  onTouchStart(event) {
-    var touch = event.touches[0];
+  onTouchStart(event) { // Método para detectar pulsaciones táctiles en la pantalla
+    var touch = event.touches[0]; 
     var touchX = touch.clientX;
 
     if (touchX < window.innerWidth / 2) {
@@ -465,29 +481,34 @@ class bikinirace extends THREE.Scene {
   }
 
 
+  renderViewport (escena, camara, left, top, width, height) { // Método para renderizar la vista de la cámara en un viewport
 
-
-  renderViewport (escena, camara, left, top, width, height) {
     var l = left * window.innerWidth;
     var t = top * window.innerHeight;
     var w = width * window.innerWidth;
     var h = height * window.innerHeight;
+
     this.renderer.setViewport(l, t, w, h);
     this.renderer.setScissor(l, t, w, h);
     this.renderer.setScissorTest(true);
+
     camara.aspect = w / h;
     camara.updateProjectionMatrix();
+
     this.renderer.render(escena, camara);
   }
 
 
   update () {
     
-    
     if (this.stats) this.stats.update();
 
+    if(this.protagonista.getColisionConPlancton()){ // Si el protagonista colisiona con el plancton
+      this.puntos = 0; // Aumenta la puntuación en 10 puntos
+    }
+
     if (this.marcador) {
-      this.marcador.textContent = 'Puntos: ' + this.puntos;
+      this.marcador.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla
     }
     
     // Se actualizan los elementos de la escena para cada frame
@@ -498,7 +519,8 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.protagonista.update();
-    this.box2.update();
+    this.jugador2.update();
+    this.plancton.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
     this.obstaculo3.update();
@@ -514,50 +536,41 @@ class bikinirace extends THREE.Scene {
     this.premio2.update(); 
     this.pinia.update(); 
 
-
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-    //this.renderer.render (this, this.getCamera());
 
-    if(this.multiplayer){
-      this.renderViewport(this, this.box2.getCamara3aPersona(), 0, 0, 0.5, 1);
+    if(this.multiplayer){ // Si estamos en modo multijugador, se renderizan dos vistas
+      this.renderViewport(this, this.jugador2.getCamara3aPersona(), 0, 0, 0.5, 1);
       this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0.5, 0, 0.5, 1);
-    }else if(this.general){
+    }else if(this.general){ // Si estamos en vista general, se renderiza una vista
       this.renderViewport(this, this.camera, 0, 0, 1, 1);
-    }else{
+      
+    }else{ // Si estamos en vista en tercera persona, se renderizan dos vistas
       this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0, 0, 1, 1);
       this.renderViewport(this, this.camera, 0.75, 0.75, 0.25, 0.25);
     }
   
-
-    // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
-    // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
-    // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
   }
   }
 
 
 
-/// La función   main
 $(function () {
-  
-  // Se instancia la escena pasándole el  div  que se ha creado en el html para visualizar
+
   var scene = new bikinirace("#WebGL-output");
 
-  // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
-  window.addEventListener ("resize", () => scene.onWindowResize());
 
-  window.addEventListener('keydown', (event) => scene.onKeyDown(event));
+  window.addEventListener ("resize", () => scene.onWindowResize()); // Se añade un listener para el evento resize
+
+  window.addEventListener('keydown', (event) => scene.onKeyDown(event)); // Se añaden listeners para los eventos de teclado
   window.addEventListener('keyup', (event) => scene.onKeyUp(event));
-  window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event));
+  window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event)); // Se añade un listener para el evento de clic
 
-  window.addEventListener('touchstart', (event) => scene.onTouchStart(event));
+  window.addEventListener('touchstart', (event) => scene.onTouchStart(event)); // Se añaden listeners para los eventos táctiles
   window.addEventListener('touchmove', (event) => scene.onTouchMove(event));
   window.addEventListener('touchend', (event) => scene.onTouchEnd(event));
 
-  
-  
-  // Que no se nos olvide, la primera visualización.
+
   scene.update();
 });
