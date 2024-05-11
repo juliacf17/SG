@@ -43,7 +43,7 @@ class bob_hambur extends THREE.Object3D {
 
     this.rotacion = 0; // rotación en el tubo
 
-    this.velocidad = 0; // velocidad del personaje
+    this.velocidad = 0.02; // velocidad del personaje
     
 
     this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
