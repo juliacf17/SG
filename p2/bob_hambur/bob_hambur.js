@@ -145,6 +145,11 @@ class bob_hambur extends THREE.Object3D {
     return this.modoVelocidad + " (" + Math.floor(this.velocidad*1000) + " km)";
   }
 
+  pararPersonaje() {
+    this.modoVelocidad = "Parado";
+    this.velocidad = 0;
+  }
+
   update() {
     this.cajaFigura.setFromObject(this.bob_hambur);
 

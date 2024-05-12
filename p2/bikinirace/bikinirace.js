@@ -38,6 +38,8 @@ class bikinirace extends THREE.Scene {
     this.initStats(); // Para mostrar información de rendimiento
     this.initPuntos(); // Para mostrar información de los puntos conseguidos
     this.initVelocidad(); // Para mostrar información de la velocidad
+    this.marcadorFinal(); 
+    this.porcentajeFinal();
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -63,14 +65,14 @@ class bikinirace extends THREE.Scene {
 
     // Objetos voladores (Medusas)
     
-    this.volador1 = new medusa(this.circuito.geometry, 0.01);
-    this.volador2 = new medusa(this.circuito.geometry, 0.15);
-    this.volador3 = new medusa(this.circuito.geometry, 0.25);
-    this.volador4 = new medusa(this.circuito.geometry, 0.40);
-    this.volador5 = new medusa(this.circuito.geometry, 0.55);
-    this.volador6 = new medusa(this.circuito.geometry, 0.65);
-    this.volador7 = new medusa(this.circuito.geometry, 0.75);
-    this.volador8 = new medusa(this.circuito.geometry, 0.90);
+    //this.volador1 = new medusa(this.circuito.geometry, 0.01);
+    this.volador1 = new medusa(this.circuito.geometry, 0.15);
+    this.volador2 = new medusa(this.circuito.geometry, 0.25);
+    this.volador3 = new medusa(this.circuito.geometry, 0.40);
+    //this.volador5 = new medusa(this.circuito.geometry, 0.55);
+    this.volador4 = new medusa(this.circuito.geometry, 0.65);
+    this.volador5 = new medusa(this.circuito.geometry, 0.75);
+    //this.volador8 = new medusa(this.circuito.geometry, 0.90);
 
     // Premios (Hamburguesas)
 
@@ -102,7 +104,9 @@ class bikinirace extends THREE.Scene {
 
     // Objetos voladores
 
-    this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
+    //this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
+    this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
+
 
     // Protagonista/s
 
@@ -113,13 +117,14 @@ class bikinirace extends THREE.Scene {
     // Control de la puntuación
     
     this.puntos = 0;
+    this.puntosParaGanar = this.voladores.length * 2; // Puntos necesarios para ganar
 
     //Control de velocidad 
 
     this.modoVelocidad = "Media"; 
 
     //Control de fin de juego
-    this.medusasCazadas = false; 
+    this.finJuego = false; 
 
 
     // Añadimos los elementos a la escena
@@ -135,9 +140,9 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.volador3);
     this.circuito.add(this.volador4);
     this.circuito.add(this.volador5);
-    this.circuito.add(this.volador6);
-    this.circuito.add(this.volador7);
-    this.circuito.add(this.volador8);
+    //this.circuito.add(this.volador6);
+    //this.circuito.add(this.volador7);
+    //this.circuito.add(this.volador8);
     this.circuito.add(this.premio1);
     this.circuito.add(this.premio2);
     this.circuito.add(this.pinia); 
@@ -186,7 +191,8 @@ class bikinirace extends THREE.Scene {
     marcador.style.position = 'absolute';
     marcador.style.left = '100px'; 
     marcador.style.top = '0px'; // Espacio debajo de los stats
-    marcador.style.color = 'black'; // Color del texto
+    marcador.style.color = 'white'; // Color del texto
+    marcador.style.textShadow = '2px 2px 2px black';
     marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
     marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
     
@@ -203,7 +209,8 @@ class bikinirace extends THREE.Scene {
     marcador.style.position = 'absolute';
     marcador.style.left = '350px'; 
     marcador.style.top = '0px'; // Espacio debajo de los stats
-    marcador.style.color = 'black'; // Color del texto
+    marcador.style.color = 'white'; // Color del texto
+    marcador.style.textShadow = '2px 2px 2px black';
     marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
     marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
     
@@ -212,6 +219,49 @@ class bikinirace extends THREE.Scene {
     this.marcadorVelocidad = marcador;
   }
 
+  marcadorFinal(){
+    // Crea un elemento para mostrar los puntos
+    var marcador = document.createElement('div');
+
+    marcador.id = 'MarcadorFinal';
+    marcador.style.textShadow = '2px 2px 2px black';
+    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+    
+    $("#MarcadorFinal").append(marcador); // Añade el elemento al div ya existente
+
+    this.marcadorF = marcador;
+  }
+
+  porcentajeFinal(){
+    // Crea un elemento para mostrar los puntos
+    var marcador = document.createElement('div');
+
+    marcador.id = 'Porcentaje';
+    marcador.style.textShadow = '2px 2px 2px black';
+    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+    
+    $("#Porcentaje").append(marcador); // Añade el elemento al div ya existente
+
+    this.marcadorP = marcador;
+  }
+
+  //Muestra la pantalla de fin de juego. 
+  finDelJuego() {
+    this.finJuego = true;
+    // Muestra la pantalla de fin de juego
+    if (this.marcadorF) {
+      this.marcadorF.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla
+    }
+
+    var porcentaje = (this.puntos / (this.voladores.length*2)) * 100; // Calcula el porcentaje de puntos conseguidos
+
+    if(this.marcadorP){
+      this.marcadorP.textContent = 'Porcentaje conseguido: ' + porcentaje + '%'; // Muestra el porcentaje en la pantalla
+    }
+
+    this.protagonista.pararPersonaje(); // Parar al protagonista
+    document.getElementById("game-over-screen").style.display = "flex";
+  }
   
   createCamera () {
     // Para crear una cámara le indicamos
@@ -529,7 +579,8 @@ class bikinirace extends THREE.Scene {
     
     if (this.stats) this.stats.update();
 
-    if(this.protagonista.getColisionConPlancton()){ // Si el protagonista colisiona con el plancton
+    if(this.protagonista.getColisionConPlancton() && !this.finJuego){ // Si el protagonista colisiona con el plancton
+      this.puntosParaGanar -= this.puntos; 
       this.puntos = 0; // Aumenta la puntuación en 10 puntos
     }
 
@@ -561,14 +612,17 @@ class bikinirace extends THREE.Scene {
     this.volador3.update();
     this.volador4.update();
     this.volador5.update();
-    this.volador6.update();
-    this.volador7.update();
-    this.volador8.update();
+    //this.volador6.update();
+    //this.volador7.update();
+    //this.volador8.update();
     this.premio1.update();
     this.premio2.update(); 
     this.premio3.update();
     this.pinia.update(); 
 
+
+    if(this.puntosParaGanar == this.puntos)
+      this.finDelJuego(); // Si se consiguen los puntos necesarios para ganar, se muestra la pantalla de fin de juego
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
 
