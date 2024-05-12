@@ -169,11 +169,6 @@ class medusa extends THREE.Object3D {
     this.nodoPosOrientTubo.add(this.movLateral);
     this.movLateral.add(this.posSuper);
     this.posSuper.add(this.medusa);
-
-    
-
-    
-
   }
 
   recibeClic(meshConcreto){
@@ -182,10 +177,6 @@ class medusa extends THREE.Object3D {
         this.medusa.children[0].material.opacity -= 0.5; // cabeza
         this.medusa.children[1].material.opacity -= 0.5; // anillo
         this.medusa.children[2].children[0].material.opacity -= 0.5; // tentáculos
-      
-
-
-
     }
   }
 

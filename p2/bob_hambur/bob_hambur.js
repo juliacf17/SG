@@ -43,12 +43,14 @@ class bob_hambur extends THREE.Object3D {
 
     this.rotacion = 0; // rotación en el tubo
 
-    this.velocidad = 0.02; // velocidad del personaje
+
+    this.modoVelocidad = "Media"; // modo de velocidad
+    this.velocidad = 0.025; // velocidad del personaje
     
 
     this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
 
-    this.createCamara3aPersona(); // crear cámara en 3a persona
+    this.createCamara3aPersona(); //ñ crear cámara en 3a persona
 
     // Movimientos a la izquierda y derecha
     this.izquierda = false; 
@@ -139,6 +141,10 @@ class bob_hambur extends THREE.Object3D {
     return this.colisionPlancton;
   }
 
+  getModoVelocidad() {
+    return this.modoVelocidad + " (" + Math.floor(this.velocidad*1000) + " km)";
+  }
+
   update() {
     this.cajaFigura.setFromObject(this.bob_hambur);
 
@@ -148,7 +154,10 @@ class bob_hambur extends THREE.Object3D {
 
     if(this.t >= 1){
         this.t = 0;
-        this.velocidad *= 2;
+        this.velocidad *= 1.1;  //Aumenta un 10% la velocidad
+
+        if(this.velocidad >= 0.045)
+            this.velocidad = 0.045;
     }
 
     //console.log("Izquierda: " + this.izquierda);
@@ -185,17 +194,7 @@ class bob_hambur extends THREE.Object3D {
     var segmentoActual = Math.floor(this.t * this.segmentos);
     this.nodoPosOrientTubo.up = this.circuito.binormals[segmentoActual];
     this.nodoPosOrientTubo.lookAt(posTmp);
-    
-                      
-    
-    //this.bob_hambur.getWorldPosition(this.posicion);
 
-    //this.nodoPosOrientTubo.getWorldDirection(this.direccion);
-
-
-    //this.bob_hambur.getWorldPosition(this.posicionH);
-
-    //this.nodoPosOrientTubo.getWorldDirection(this.direccionH);
     
     for (var i = 0; i < this.candidatos.length; i++) {
         if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
@@ -203,15 +202,23 @@ class bob_hambur extends THREE.Object3D {
                 this.colisionPlancton = true;
                 console.log("COLISIÓN CON PLANCTON");
             } else{
-                //console.log("COLISIÓN");
-                this.velocidad =  this.velocidad * 0.5;
+                if (this.modoVelocidad == "Alta"){
+                    this.velocidad =  this.velocidad - 0.015;
+                    this.modoVelocidad = "Media";
+                }
+                else if (this.modoVelocidad == "Media"){
+                    this.velocidad =  this.velocidad - 0.015;
+
+                    if(this.velocidad < 0.01)
+                        this.velocidad = 0.01;
+
+                    this.modoVelocidad = "Baja";
+                }
+                
                 this.impacto = this.candidatos[i];
                 this.hasImpacted = true;
-                //console.log(this.hasImpacted);
-            }
-            
+            }  
         }else{
-            //console.log("NO COLISIÓN");
             this.hasImpacted = false;
             this.colisionPlancton = false;
         }
@@ -219,13 +226,23 @@ class bob_hambur extends THREE.Object3D {
 
     for (var i = 0; i < this.premios.length; i++) {
       if(this.cajaFigura.intersectsBox(this.premios[i].cajaFigura) && !this.hasImpactedH && this.premios[i] != this.impactoH){
-          //console.log("COLISIÓN");
-          this.velocidad =  this.velocidad * 1.5;
+          
+        if (this.modoVelocidad == "Baja"){
+            this.velocidad =  this.velocidad + 0.01;
+            this.modoVelocidad = "Media";
+        }
+        else if (this.modoVelocidad == "Media"){
+            this.velocidad = this.velocidad + 0.01;
+
+            if(this.velocidad > 0.045)
+                this.velocidad = 0.045;
+
+            this.modoVelocidad = "Alta";
+        }
+
           this.impactoH = this.premios[i];
           this.hasImpactedH = true;
-          //console.log(this.hasImpacted);
       }else{
-          //console.log("NO COLISIÓN");
           this.hasImpactedH = false;
       }
   }

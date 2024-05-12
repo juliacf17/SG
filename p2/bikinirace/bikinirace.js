@@ -37,6 +37,7 @@ class bikinirace extends THREE.Scene {
     
     this.initStats(); // Para mostrar información de rendimiento
     this.initPuntos(); // Para mostrar información de los puntos conseguidos
+    this.initVelocidad(); // Para mostrar información de la velocidad
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -75,6 +76,7 @@ class bikinirace extends THREE.Scene {
 
     this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
     this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
+    this.premio3 = new hamburguesa(this.circuito.geometry, 0.6);
 
     // "Casilla de salida" (Piña)
 
@@ -96,7 +98,7 @@ class bikinirace extends THREE.Scene {
 
     
     this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton]; 
-    this.premios = [this.premio1, this.premio2]; 
+    this.premios = [this.premio1, this.premio2, this.premio3]; 
 
     // Objetos voladores
 
@@ -105,18 +107,22 @@ class bikinirace extends THREE.Scene {
     // Protagonista/s
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
-    this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
+    //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
 
     
     // Control de la puntuación
     
     this.puntos = 0;
 
+    //Control de velocidad 
+
+    this.modoVelocidad = "Media"; 
+
 
     // Añadimos los elementos a la escena
   
     this.circuito.add(this.protagonista);
-    this.circuito.add(this.jugador2);
+    //this.circuito.add(this.jugador2);
     this.circuito.add(this.plancton);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
@@ -185,6 +191,23 @@ class bikinirace extends THREE.Scene {
 
     this.marcador = marcador;
 }
+
+  initVelocidad() {
+    // Crea un elemento para mostrar los puntos
+    var marcador = document.createElement('div');
+
+    marcador.id = 'MarcadorVelocidad';
+    marcador.style.position = 'absolute';
+    marcador.style.left = '350px'; 
+    marcador.style.top = '0px'; // Espacio debajo de los stats
+    marcador.style.color = 'black'; // Color del texto
+    marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
+    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+    
+    $("#MarcadorVelocidad").append(marcador); // Añade el elemento al div ya existente
+
+    this.marcadorVelocidad = marcador;
+  }
 
   
   createCamera () {
@@ -507,8 +530,14 @@ class bikinirace extends THREE.Scene {
       this.puntos = 0; // Aumenta la puntuación en 10 puntos
     }
 
+    this.modoVelocidad = this.protagonista.getModoVelocidad(); // Obtiene el modo de velocidad del protagonista
+
     if (this.marcador) {
       this.marcador.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla
+    }
+
+    if(this.marcadorVelocidad){
+      this.marcadorVelocidad.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
     }
     
     // Se actualizan los elementos de la escena para cada frame
@@ -519,7 +548,7 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.protagonista.update();
-    this.jugador2.update();
+    //this.jugador2.update();
     this.plancton.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
@@ -534,6 +563,7 @@ class bikinirace extends THREE.Scene {
     this.volador8.update();
     this.premio1.update();
     this.premio2.update(); 
+    this.premio3.update();
     this.pinia.update(); 
 
     
