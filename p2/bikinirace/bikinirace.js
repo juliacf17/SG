@@ -118,6 +118,9 @@ class bikinirace extends THREE.Scene {
 
     this.modoVelocidad = "Media"; 
 
+    //Control de fin de juego
+    this.medusasCazadas = false; 
+
 
     // Añadimos los elementos a la escena
   
@@ -566,7 +569,7 @@ class bikinirace extends THREE.Scene {
     this.premio3.update();
     this.pinia.update(); 
 
-    
+
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
 
     if(this.multiplayer){ // Si estamos en modo multijugador, se renderizan dos vistas

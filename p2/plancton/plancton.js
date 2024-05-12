@@ -173,6 +173,7 @@ class plancton extends THREE.Object3D {
     this.add(this.plancton);
 
     this.plancton.scale.set(0.2,0.2,0.2);
+    this.plancton.rotateY(THREE.MathUtils.degToRad(180));
     this.plancton.translateY(0.15);
 
 

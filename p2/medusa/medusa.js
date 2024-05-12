@@ -180,6 +180,9 @@ class medusa extends THREE.Object3D {
     }
   }
 
+  getOpacity(){
+    return this.medusa.children[0].material.opacity==0;
+  }
 
 
   update () {    
