@@ -196,7 +196,7 @@ class gary extends THREE.Object3D {
     
     this.add(cajaVisible);
 
-    cajaVisible.visible = true;
+    cajaVisible.visible = false;
     
     this.nodoPosOrientTubo = new THREE.Object3D();
     this.movLateral = new THREE.Object3D();

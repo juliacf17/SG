@@ -9,7 +9,11 @@ class pinia extends THREE.Object3D {
 
     this.pinia = new THREE.Group();
     var texture = new THREE.TextureLoader().load('../imgs/textura-piña.png');
-    var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture, side: THREE.DoubleSide});
+    var textureRelieve = new THREE.TextureLoader().load('../imgs/relieve-piña.png');
+    var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture, 
+                                                        bumpMap: textureRelieve, 
+                                                        bumpScale: 1.0,
+                                                        side: THREE.DoubleSide});
     
     this.points = [];
 
@@ -127,7 +131,7 @@ class pinia extends THREE.Object3D {
 
     var chimeneaGeom1 = new THREE.BoxGeometry (0.4,0.20,0.15); //ancho, alto y largo
     chimeneaGeom1.translate(0.8,1.4,0); 
-    var chimeneaMat1 = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
+    var chimeneaMat1 = new THREE.MeshStandardMaterial({ color: 'grey', side: THREE.DoubleSide, metalness: 0.5, roughness: 0.5});
 
     var chimeneaParte1 = new THREE.Mesh (chimeneaGeom1, chimeneaMat1);
 

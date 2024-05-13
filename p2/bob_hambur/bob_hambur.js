@@ -6,11 +6,12 @@ import { OBJLoader } from '../libs/OBJLoader.js'
 
 import { bob } from './bob.js'
 import { hamburcarro } from './hamburcarro.js'
-import { hamburguesa } from './hamburguesa.js'
+import { hamburguesa } from '../hamburguesa/hamburguesa.js'
 import { plancton } from '../plancton/plancton.js'
+import { gary } from '../gary/gary.js'
 
 class bob_hambur extends THREE.Object3D {
-  constructor(circuitoGeometry, candidatosColision, premiosColision, _t) {
+  constructor(circuitoGeometry, candidatosColision, _t) {
     
     super();
 
@@ -66,22 +67,17 @@ class bob_hambur extends THREE.Object3D {
     //this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
 
     this.hasImpacted = false;
-    this.colisionPlancton = false;
-
-    this.impacto = null;
-
 
     // Colisiones por Raycasting HAMBURGUESA
 
-    this.premios = premiosColision;
     //this.posicionH = new THREE.Vector3();
     //this.direccionH = new THREE.Vector3();
     
     //this.rayoH = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
 
-    this.hasImpactedH = false;
+    //this.hasImpactedH = false;
 
-    this.impactoH = null;
+    //this.impactoH = null;
 
 
 
@@ -94,7 +90,7 @@ class bob_hambur extends THREE.Object3D {
 
     this.add(cajaVisible);
 
-    cajaVisible.visible = true;
+    cajaVisible.visible = false;
 
 
 
@@ -138,17 +134,23 @@ class bob_hambur extends THREE.Object3D {
   }
 
   getColisionConPlancton() {
-    return this.colisionPlancton;
+    if (this.impacto instanceof plancton){
+        var impactoPlancton = true;
+        this.impacto = null;
+        return impactoPlancton;
+    }
+    return false;
   }
 
-  getModoVelocidad() {
-    return this.modoVelocidad + " (" + Math.floor(this.velocidad*1000) + " km)";
+  getVelocidadInterfaz() {
+    return this.modoVelocidad + " (" + Math.floor(this.velocidad*1000) + " km/h)";
   }
 
   pararPersonaje() {
     this.modoVelocidad = "Parado";
     this.velocidad = 0;
   }
+
 
   update() {
     this.cajaFigura.setFromObject(this.bob_hambur);
@@ -203,54 +205,69 @@ class bob_hambur extends THREE.Object3D {
     
     for (var i = 0; i < this.candidatos.length; i++) {
         if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
+
             if(this.candidatos[i] instanceof plancton){ 
-                this.colisionPlancton = true;
+                this.impactoPlancton = true;
                 console.log("COLISIÓN CON PLANCTON");
-            } else{
-                if (this.modoVelocidad == "Alta"){
-                    this.velocidad =  this.velocidad - 0.015;
-                    this.modoVelocidad = "Media";
+
+            
+            }else if (this.candidatos[i] instanceof hamburguesa){
+
+                if (this.modoVelocidad != "Alta"){
+
+                    this.velocidad =  this.velocidad + 0.010;
+
+                    if(this.velocidad >= 0.045){
+                        this.velocidad = 0.045;
+                    }
+
+                    if (this.velocidad >= 0.035){
+                        this.modoVelocidad = "Alta";
+                    } else if (this.velocidad >= 0.025){
+                        this.modoVelocidad = "Media";
+                    } else {
+                        this.modoVelocidad = "Baja";
+                    }
+
                 }
-                else if (this.modoVelocidad == "Media"){
+
+                console.log("COLISIÓN CON HAMBURGUESA");
+
+
+            } else if (this.candidatos[i] instanceof gary){
+
+
+                if (this.modoVelocidad != "Baja"){
+
                     this.velocidad =  this.velocidad - 0.015;
 
-                    if(this.velocidad < 0.01)
+                    if (this.velocidad <= 0.01){
                         this.velocidad = 0.01;
+                    }
 
-                    this.modoVelocidad = "Baja";
+                    if (this.velocidad <= 0.025){
+                        this.modoVelocidad = "Baja";
+                    } else if (this.velocidad <= 0.035){
+                        this.modoVelocidad = "Media";
+                    } else {
+                        this.modoVelocidad = "Alta";
+                    }
+
                 }
-                
-                this.impacto = this.candidatos[i];
-                this.hasImpacted = true;
-            }  
+                console.log("COLISIÓN CON GARY");
+            }
+
+            this.impacto = this.candidatos[i];
+            this.hasImpacted = true; 
+
         }else{
+            
             this.hasImpacted = false;
-            this.colisionPlancton = false;
+
+
         }
+
     }
-
-    for (var i = 0; i < this.premios.length; i++) {
-      if(this.cajaFigura.intersectsBox(this.premios[i].cajaFigura) && !this.hasImpactedH && this.premios[i] != this.impactoH){
-          
-        if (this.modoVelocidad == "Baja"){
-            this.velocidad =  this.velocidad + 0.01;
-            this.modoVelocidad = "Media";
-        }
-        else if (this.modoVelocidad == "Media"){
-            this.velocidad = this.velocidad + 0.01;
-
-            if(this.velocidad > 0.045)
-                this.velocidad = 0.045;
-
-            this.modoVelocidad = "Alta";
-        }
-
-          this.impactoH = this.premios[i];
-          this.hasImpactedH = true;
-      }else{
-          this.hasImpactedH = false;
-      }
-  }
     
   
   }

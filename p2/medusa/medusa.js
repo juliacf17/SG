@@ -182,7 +182,13 @@ class medusa extends THREE.Object3D {
 
   getOpacity(meshConcreto){
     if(meshConcreto.userData == this){
-        return this.medusa.children[0].material.opacity<=0;
+        if (this.medusa.children[0].material.opacity<0){
+          return true; 
+        }
+        else if (this.medusa.children[0].material.opacity==0){
+          this.medusa.visible = false; 
+          console.log("La medusa ha desaparecido");
+        }
     }
 
     return false; 

@@ -99,18 +99,16 @@ class bikinirace extends THREE.Scene {
     this.plancton = new plancton(this.circuito.geometry);
 
     
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton]; 
-    this.premios = [this.premio1, this.premio2, this.premio3]; 
+    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton, this.premio1, this.premio2, this.premio3]; 
 
     // Objetos voladores
 
     //this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
     this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
 
-
     // Protagonista/s
 
-    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0);
+    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
     //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
 
     
@@ -148,21 +146,21 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.pinia); 
     this.add(this.circuito);
 
-    //this.background = textureCube;
+
+    var path = "../imgs/";
+    var format = '.jpg';
+
+    var urls = [
+      path + 'cielo' + format, path + 'cielo' + format,
+      path + 'cielo' + format, path + 'cielo' + format,
+      path + 'cielo' + format, path + 'cielo' + format
+    ];
+
+    var textureCube = new THREE.CubeTextureLoader().load(urls);
+
+    this.background = textureCube;
     
-    this.background = new THREE.CubeTextureLoader()
-    .setPath( '../imgs/' )
-    .load( [
-          'cielo.png',
-          'cielo.png',
-          'cielo.png',
-          'cielo.png',
-          'cielo.png',
-          'cielo.png'
-        ] );
-
-
-    this.background = new THREE.Color( 'lightblue' );
+    
 
   }
 
@@ -298,7 +296,7 @@ class bikinirace extends THREE.Scene {
     this.guiControls = {
       // En el contexto de una función   this   alude a la función
       lightPower : 1000.0,  // La potencia de esta fuente de luz se mide en lúmenes
-      ambientIntensity : 1.0,   
+      ambientIntensity : 1.0,  
       axisOnOff : true
     }
 
@@ -311,7 +309,7 @@ class bikinirace extends THREE.Scene {
       .onChange ( (value) => this.setLightPower(value) );
     
     // Otro para la intensidad de la luz ambiental
-    folder.add (this.guiControls, 'ambientIntensity', 0, 1, 0.05)
+    folder.add (this.guiControls, 'ambientIntensity', 0, 3, 0.05)
       .name('Luz ambiental: ')
       .onChange ( (value) => this.setAmbientIntensity(value) );
       
@@ -329,7 +327,7 @@ class bikinirace extends THREE.Scene {
     // Se declara como   var   y va a ser una variable local a este método
     //    se hace así puesto que no va a ser accedida desde otros métodos
     this.ambientLight = new THREE.AmbientLight('white', this.guiControls.ambientIntensity);
-    // La añadimos a la escena
+    // La añadimos a la escenap 
     this.add (this.ambientLight);
     
     // Se crea una luz focal que va a ser la luz principal de la escena
@@ -486,7 +484,9 @@ class bikinirace extends THREE.Scene {
 
       case 'r':
         this.protagonista.velocidad = 0.02; // Reanuda la velocidad del protagonista y del jugador 2 al pulsar la tecla 'r' (para pruebas)
-        this.jugador2.velocidad = 0.02;
+        if(this.multiplayer){
+          this.jugador2.velocidad = 0.02;
+        }
         break;
 
       case 'm':
@@ -580,12 +580,17 @@ class bikinirace extends THREE.Scene {
     
     if (this.stats) this.stats.update();
 
+    
     if(this.protagonista.getColisionConPlancton() && !this.finJuego){ // Si el protagonista colisiona con el plancton
+      console.log("Colisión con plancton");
       this.puntosParaGanar -= this.puntos; 
-      this.puntos = 0; // Aumenta la puntuación en 10 puntos
+      this.puntos = 0;
     }
 
-    this.modoVelocidad = this.protagonista.getModoVelocidad(); // Obtiene el modo de velocidad del protagonista
+    //console.log(this.puntos);
+    
+
+    this.modoVelocidad = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
 
     if (this.marcador) {
       this.marcador.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla

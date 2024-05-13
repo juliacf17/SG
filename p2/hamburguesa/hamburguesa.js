@@ -19,7 +19,7 @@ class hamburguesa extends THREE.Object3D {
 
     // Creamos una esfera
     const esferaGeom = new THREE.SphereGeometry(0.5, 32, 32);
-    const esferaMat = new THREE.MeshBasicMaterial({ color:  0xa7780a });
+    const esferaMat = new THREE.MeshStandardMaterial({ color:  0xa7780a });
     const esfera = new THREE.Mesh(esferaGeom, esferaMat);
 
     esferaGeom.translate(0,0.45,0);
@@ -54,7 +54,7 @@ class hamburguesa extends THREE.Object3D {
     // -------------------------------- CARNE -------------------------------- //
 
     var carneGeom = pan_inferior.geometry.clone(); 
-    const carneMat = new THREE.MeshBasicMaterial({ color:  0x873709 });
+    const carneMat = new THREE.MeshStandardMaterial({ color:  0x873709 });
 
     carneGeom.translate(0,0.2,0); 
     carneGeom.scale(1.15,0.75,1.15);
@@ -227,7 +227,8 @@ class hamburguesa extends THREE.Object3D {
     
     this.add(cajaVisible);
 
-    cajaVisible.visible = true;
+    cajaVisible.visible = false;
+    
     this.nodoPosOrientTubo = new THREE.Object3D();
     this.movLateral = new THREE.Object3D();
     this.posSuper = new THREE.Object3D();
