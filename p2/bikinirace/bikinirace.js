@@ -518,11 +518,12 @@ class bikinirace extends THREE.Scene {
 
       //var selectedPoint = pickedObjects[0].point;
 
-      //console.log(selectedObject);
-      //console.log(selectedPoint);
+
+      //NO FUNCIONA, PODEMOS ELIMIANAR EL OBJETO CUANDO LA OPACIDAD SEA 0?
   
       // Aumenta la puntuación si se ha hecho clic en un objeto volador
-      this.puntos++; // Aumenta la puntuación
+      if(!selectedObject.userData.getOpacity(selectedObject))  // Si el objeto no ha desaparecido ya y no se ha acabado el juego
+        this.puntos++; // Aumenta la puntuación
 
     }
   }

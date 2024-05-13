@@ -180,6 +180,15 @@ class medusa extends THREE.Object3D {
     }
   }
 
+  getOpacity(meshConcreto){
+    if(meshConcreto.userData == this){
+        return this.medusa.children[0].material.opacity<=0;
+    }
+
+    return false; 
+  }
+
+
   update () {    
           
     this.t += this.reloj.getDelta() * this.velocidad;
