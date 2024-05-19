@@ -43,8 +43,7 @@ class bikinirace extends THREE.Scene {
     
     // Construimos los distinos elementos que tendremos en la escena
     
-    this.createLights (); 
-
+    
     this.createCamera ();
     
     this.axis = new THREE.AxesHelper (2);
@@ -57,21 +56,56 @@ class bikinirace extends THREE.Scene {
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
 
+    this.circuito.receiveShadow = true;
+    this.circuito.castShadow = true;
+    
+ 
     // Obstáculos (Garys)
 
     this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
+
+    this.obstaculo1.castShadow = true;
+    this.obstaculo1.receiveShadow = true;
+
     this.obstaculo2 = new gary (this.circuito.geometry, 0.4); 
+
+    this.obstaculo2.castShadow = true;
+    this.obstaculo2.receiveShadow = true;
+
     this.obstaculo3 = new gary (this.circuito.geometry, 0.6); 
+
+    this.obstaculo3.castShadow = true;
+    this.obstaculo3.receiveShadow = true;
 
     // Objetos voladores (Medusas)
     
     //this.volador1 = new medusa(this.circuito.geometry, 0.01);
     this.volador1 = new medusa(this.circuito.geometry, 0.15);
+
+    this.volador1.castShadow = true;
+    this.volador1.receiveShadow = true;
+
     this.volador2 = new medusa(this.circuito.geometry, 0.25);
+
+    this.volador2.castShadow = true;
+    this.volador2.receiveShadow = true;
+
     this.volador3 = new medusa(this.circuito.geometry, 0.40);
+
+    this.volador3.castShadow = true;
+    this.volador3.receiveShadow = true;
+
     //this.volador5 = new medusa(this.circuito.geometry, 0.55);
     this.volador4 = new medusa(this.circuito.geometry, 0.65);
+
+    this.volador4.castShadow = true;
+    this.volador4.receiveShadow = true;
+
     this.volador5 = new medusa(this.circuito.geometry, 0.75);
+
+    this.volador5.castShadow = true;
+    this.volador5.receiveShadow = true;
+
     //this.volador8 = new medusa(this.circuito.geometry, 0.90);
 
     // Premios (Hamburguesas)
@@ -83,6 +117,9 @@ class bikinirace extends THREE.Scene {
     // "Casilla de salida" (Piña)
 
     this.pinia = new pinia(this.circuito.geometry, 0);
+
+    this.pinia.castShadow = true;
+    this.pinia.receiveShadow = true;
 
 
     // Variables 
@@ -109,6 +146,10 @@ class bikinirace extends THREE.Scene {
     // Protagonista/s
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+
+    this.protagonista.castShadow = true;
+    this.protagonista.receiveShadow = true;
+
     //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
 
     
@@ -146,6 +187,13 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.pinia); 
     this.add(this.circuito);
 
+    // Sombras arrojadas
+
+
+
+    this.createLights (); 
+
+
 
     var path = "../imgs/";
     var format = '.jpg';
@@ -159,6 +207,9 @@ class bikinirace extends THREE.Scene {
     var textureCube = new THREE.CubeTextureLoader().load(urls);
 
     this.background = textureCube;
+
+    this.castShadow = true;
+    this.receiveShadow = true;
     
     
 
@@ -309,9 +360,11 @@ class bikinirace extends THREE.Scene {
       .onChange ( (value) => this.setLightPower(value) );
     
     // Otro para la intensidad de la luz ambiental
-    folder.add (this.guiControls, 'ambientIntensity', 0, 3, 0.05)
+    /*
+    folder.add (this.guiControls, 'ambientIntensity', 0, 1, 0.05)
       .name('Luz ambiental: ')
       .onChange ( (value) => this.setAmbientIntensity(value) );
+      */
       
     // Y otro para mostrar u ocultar los ejes
     folder.add (this.guiControls, 'axisOnOff')
@@ -321,23 +374,56 @@ class bikinirace extends THREE.Scene {
     return gui;
   }
   
-  createLights () {
-    // Se crea una luz ambiental, evita que se vean complentamente negras las zonas donde no incide de manera directa una fuente de luz
-    // La luz ambiental solo tiene un color y una intensidad
-    // Se declara como   var   y va a ser una variable local a este método
-    //    se hace así puesto que no va a ser accedida desde otros métodos
-    this.ambientLight = new THREE.AmbientLight('white', this.guiControls.ambientIntensity);
-    // La añadimos a la escenap 
-    this.add (this.ambientLight);
-    
-    // Se crea una luz focal que va a ser la luz principal de la escena
-    // La luz focal, además tiene una posición, y un punto de mira
-    // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
-    // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-    this.pointLight = new THREE.PointLight( 0xffffff ); 
-    this.pointLight.power = this.guiControls.lightPower;
-    this.pointLight.position.set( 0, 4, 4 );
-    this.add (this.pointLight);
+  createLights() {
+    this.ambientLight = new THREE.AmbientLight('white', 1);
+    this.add(this.ambientLight);
+
+    this.directionalLight1 = new THREE.DirectionalLight('white', 1.5);
+    this.directionalLight1.position.set(0, 20, 0);
+    this.directionalLight1.castShadow = true;
+    this.directionalLight1.shadow.mapSize.width = 2048;
+    this.directionalLight1.shadow.mapSize.height = 2048;
+    this.directionalLight1.shadow.camera.near = 0.1;
+    this.directionalLight1.shadow.camera.far = 100;
+    this.directionalLight1.shadow.camera.left = -50;
+    this.directionalLight1.shadow.camera.right = 50;
+    this.directionalLight1.shadow.camera.bottom = -50;
+    this.directionalLight1.shadow.camera.top = 50;
+    this.add(this.directionalLight1);
+
+    this.directionalLight2 = new THREE.DirectionalLight('white', 1.5);
+    this.directionalLight2.position.set(0, -20, 0);
+    this.directionalLight2.castShadow = true;
+    this.directionalLight2.shadow.mapSize.width = 2048;
+    this.directionalLight2.shadow.mapSize.height = 2048;
+    this.directionalLight2.shadow.camera.near = 0.1;
+    this.directionalLight2.shadow.camera.far = 100;
+    this.directionalLight2.shadow.camera.left = -50;
+    this.directionalLight2.shadow.camera.right = 50;
+    this.directionalLight2.shadow.camera.bottom = -50;
+    this.directionalLight2.shadow.camera.top = 50;
+    this.add(this.directionalLight2);
+
+    const helper = new THREE.DirectionalLightHelper(this.directionalLight1);
+    const helper2 = new THREE.DirectionalLightHelper(this.directionalLight2);
+    this.add(helper);
+    this.add(helper2);
+
+
+
+    /*
+
+    this.spotlight = new THREE.SpotLight('red');
+
+    this.spotlight.power = 1000;
+    this.spotlight.angle = Math.PI / 6;
+    this.spotlight.penumbra = 0.5;
+    this.spotlight.position.set(0, 1, 0);
+    this.spotlight.target = this.protagonista;
+
+    this.add(this.spotlight);
+    */
+
   }
   
   setLightPower (valor) {
@@ -357,6 +443,11 @@ class bikinirace extends THREE.Scene {
     
     // Se instancia un Renderer   WebGL
     var renderer = new THREE.WebGLRenderer();
+
+    // Sombras arrojadas
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // You can change this to other types like THREE.PCFShadowMap or THREE.VSMShadowMap
+
     
     // Se establece un color de fondo en las imágenes que genera el render
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 1.0);

@@ -53,6 +53,8 @@ class bob_hambur extends THREE.Object3D {
 
     this.createCamara3aPersona(); //ñ crear cámara en 3a persona
 
+    this.createLight(); // crear luz en la cámara
+
     // Movimientos a la izquierda y derecha
     this.izquierda = false; 
     this.derecha = false;
@@ -128,6 +130,25 @@ class bob_hambur extends THREE.Object3D {
     this.camara.lookAt(puntoDeMiraRelativo);
 
    }
+
+   createLight() {
+    this.luzPuntual = new THREE.PointLight('white');
+    this.luzPuntual.power = 10000;
+    this.luzPuntual.position.set(0, 5, 0);
+    this.luzPuntual.visible = false;
+    this.bob_hambur.add(this.luzPuntual);
+   }
+
+   setColorLight(color) {
+    this.luzPuntual.visible = true;
+    this.luzPuntual.color = new THREE.Color(color);
+
+    setTimeout(() => {
+        this.luzPuntual.visible = false;
+    }, 250);
+
+    }
+
 
    getCamara3aPersona() {
     return this.camara;
@@ -209,6 +230,8 @@ class bob_hambur extends THREE.Object3D {
             if(this.candidatos[i] instanceof plancton){ 
                 this.impactoPlancton = true;
                 console.log("COLISIÓN CON PLANCTON");
+                this.setColorLight('red', true);
+                
 
             
             }else if (this.candidatos[i] instanceof hamburguesa){
@@ -231,6 +254,7 @@ class bob_hambur extends THREE.Object3D {
 
                 }
 
+                this.setColorLight('darkgreen');
                 console.log("COLISIÓN CON HAMBURGUESA");
 
 
@@ -254,6 +278,7 @@ class bob_hambur extends THREE.Object3D {
                     }
 
                 }
+                this.setColorLight('red');
                 console.log("COLISIÓN CON GARY");
             }
 

@@ -69,7 +69,7 @@ class gary extends THREE.Object3D {
     var babosaGeom = new THREE.ExtrudeGeometry( shapeBabosa, options );     //Crear la geometría
     babosaGeom.scale(1.0,1.0,1.5);
     babosaGeom.translate(0, -0.6, 0);
-    var babosaMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
+    var babosaMat = new THREE.MeshStandardMaterial({ color: 'lightblue', side: THREE.DoubleSide });
 
     var babosa = new THREE.Mesh(babosaGeom, babosaMat);
 
@@ -78,19 +78,19 @@ class gary extends THREE.Object3D {
 
     // ---------------------------- SOPORTES OJOS ---------------------------- 
 
-    var soporteGeom = new THREE.CylinderGeometry(0.1, 0.5, 5, 64);
+    this.soporteGeom = new THREE.CylinderGeometry(0.1, 0.5, 5, 64);
 
-    var soporteMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
+    var soporteMat = new THREE.MeshStandardMaterial({ color: 'lightblue', side: THREE.DoubleSide });
 
-    var soporte1 = new THREE.Mesh(soporteGeom, soporteMat);
+    this.soporte1 = new THREE.Mesh(this.soporteGeom, soporteMat);
 
-    soporte1.position.set(3.0, 2, 1.0);
-    soporte1.rotateZ(-20 * Math.PI / 180);
-    soporte1.rotateX(20 * Math.PI / 180)
+    this.soporte1.position.set(3.0, 2, 1.0);
+    this.soporte1.rotateZ(-20 * Math.PI / 180);
+    this.soporte1.rotateX(20 * Math.PI / 180)
 
-    //this.add(soporte1);
+    this.add(this.soporte1);
 
-    var soporte2 = new THREE.Mesh(soporteGeom, soporteMat);
+    var soporte2 = new THREE.Mesh(this.soporteGeom, soporteMat);
 
     soporte2.position.set(3.0, 2, -1.0);
     soporte2.rotateZ(-20 * Math.PI / 180);
@@ -100,16 +100,16 @@ class gary extends THREE.Object3D {
 
     var unionGeom = new THREE.BoxGeometry(4,1,1);
     unionGeom.translate(-1.0, -0.3, 0);
-    var unionMat = new THREE.MeshPhongMaterial({ color: 'lightblue', side: THREE.DoubleSide });
+    var unionMat = new THREE.MeshStandardMaterial({ color: 'lightblue', side: THREE.DoubleSide });
 
     var union = new THREE.Mesh(unionGeom, unionMat);
 
     var csg = new CSG();
-    csg.union([babosa, soporte1, soporte2, union]);
+    csg.union([babosa, this.soporte1, soporte2, union]);
     //csg.union([babosa, union]);
     var cuerpo = csg.toMesh();
 
-    this.add(cuerpo);
+    //this.add(cuerpo);
 
     
 
@@ -141,7 +141,7 @@ class gary extends THREE.Object3D {
     caparazonGeom.translate(-10, 20.5, 0);
     caparazonGeom.scale(0.15, 0.15, 0.2);
 
-    var caparazonMat = new THREE.MeshPhongMaterial({ color: 'lightpink', side: THREE.DoubleSide });
+    var caparazonMat = new THREE.MeshStandardMaterial({ color: 'lightpink', side: THREE.DoubleSide });
 
     var caparazon = new THREE.Mesh(caparazonGeom, caparazonMat);
 
@@ -149,7 +149,7 @@ class gary extends THREE.Object3D {
 
     var recorteGeom = new THREE.BoxGeometry(5,5,5);
     recorteGeom.translate(-1.5, -2, 0);
-    var recorteMat = new THREE.MeshPhongMaterial({ color: 'red', side: THREE.DoubleSide });
+    var recorteMat = new THREE.MeshStandardMaterial({ color: 'red', side: THREE.DoubleSide });
 
     var recorte = new THREE.Mesh(recorteGeom, recorteMat);
 
@@ -174,10 +174,8 @@ class gary extends THREE.Object3D {
       objectLoader.load('../../models/ojo/eyeball.obj', (ojo1) => {
         ojo1.scale.set(0.5,0.5,0.5);
         ojo1.rotateY(Math.PI/2);
-        this.add(ojo1); 
-        ojo1.position.z = 2;
-        ojo1.position.x = 4;
-        ojo1.position.y = 5;
+        this.soporte1.add(ojo1); 
+        ojo1.position.y = 3;
 
       }, null, null); 
     });
@@ -204,6 +202,9 @@ class gary extends THREE.Object3D {
 
   
 
+    this.escala = 1;
+
+    this.escala_negativa = true;
 
 
 
@@ -211,8 +212,22 @@ class gary extends THREE.Object3D {
   }
 
   update() {
-    this.rotation.y += 0.01;
-    
+    //this.rotation.y += 0.01;
+
+    if (this.escala_negativa) this.escala -= 0.01;
+    else this.escala += 0.01;
+
+    if (this.escala <= 0.5) {
+      this.escala_negativa = false;
+    } else if (this.escala >= 1) {
+      this.escala_negativa = true;
+    }
+
+    this.soporte1.scale.set(1, this.escala, 1);
+
+    this.soporte1.position.y = 2 * this.escala;
+
+  
   }
 }
 

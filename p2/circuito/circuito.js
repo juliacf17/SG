@@ -1,6 +1,7 @@
 
 import * as THREE from '../libs/three.module.js'
 import { CSG } from '../libs/CSG-v2.js'
+import { color } from '../../libs/dat.gui.module.js';
 
 
 
@@ -25,8 +26,14 @@ class circuito extends THREE.Object3D {
 
     // Creamos un tubo a partir de la spline
     this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, true);
-    var textureArena = new THREE.TextureLoader().load('../imgs/arena.png');
-    const material = new THREE.MeshBasicMaterial({ map: textureArena, side: THREE.DoubleSide, opacity: 1.0, transparent: true});
+    var textureArena = new THREE.TextureLoader().load('../imgs/arena2.png');
+
+
+    var material = new THREE.MeshStandardMaterial({ map: textureArena,
+                                                      side: THREE.DoubleSide, opacity: 1.0, transparent: true});
+    //const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, side: THREE.DoubleSide, opacity: 1.0, transparent: true})
+
+    material.map.repeat.set(1, 1); 
     var tube = new THREE.Mesh(this.geometry, material);
 
     this.add(tube);

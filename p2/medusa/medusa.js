@@ -30,9 +30,6 @@ class medusa extends THREE.Object3D {
 
     this.cabeza = cabeza.toMesh();
 
-    this.cabeza.material.color = new THREE.Color(0xfabaf4);
-    this.cabeza.material.emissive = new THREE.Color(0xfabaf4);
-    this.cabeza.material.ambient = new THREE.Color(0xfabaf4);
     this.cabeza.material.transparent = true;
     this.cabeza.material.opacity = 1.0;
 
@@ -48,7 +45,7 @@ class medusa extends THREE.Object3D {
 
     var torusGeom = new THREE.TorusGeometry(0.37, 0.10, 30, 30); //radio, grosor tubo, segmentos radiales (resolución ancho) y segmentos tubulares 
     torusGeom.rotateX(Math.PI/2);
-    var torusMat = new THREE.MeshStandardMaterial({ color: 0xf7caf3 , emissive: 0xf7caf3, ambient: 0xf7caf3 , transparent: true, opacity: 1.0});
+    var torusMat = new THREE.MeshStandardMaterial({ color: 0xf7caf3 , transparent: true, opacity: 1.0});
     
     // Ya podemos construir el Mesh
     this.anillo = new THREE.Mesh (torusGeom, torusMat);
@@ -73,7 +70,7 @@ class medusa extends THREE.Object3D {
     tentaculoShape.lineTo(0,0); 
     tentaculoShape.lineTo(-0.15,0); 
 
-    var tentaculosMat = new THREE.MeshStandardMaterial({ color: 0xcb87c5, emissive: 0xcb87c5, ambient: 0xcb87c5, side: THREE.DoubleSide , transparent: true, opacity: 1.0});
+    var tentaculosMat = new THREE.MeshStandardMaterial({ color: 0xcb87c5, side: THREE.DoubleSide , transparent: true, opacity: 1.0});
     var options = { depth: 1, steps: 10, bevelEnabled: false}; 
 
     // Tentáculo 1

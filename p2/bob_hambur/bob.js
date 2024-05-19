@@ -17,7 +17,12 @@ class bob extends THREE.Object3D {
     cuerpoGeom.translate(0,2.25,0.0);
 
     var textureBob = new THREE.TextureLoader().load('../imgs/textura-bob.png');
-    var cuerpoMat = new THREE.MeshStandardMaterial ({map: textureBob});
+    var relieveBob = new THREE.TextureLoader().load('../imgs/relieve-bob.jpeg');
+
+    var cuerpoMat = new THREE.MeshStandardMaterial ({map: textureBob, 
+                                                      bumpMap: relieveBob, 
+                                                      bumpScale: 0.75,
+                                                      side: THREE.DoubleSide});
 
     var cuerpo = new THREE.Mesh(cuerpoGeom, cuerpoMat);
 

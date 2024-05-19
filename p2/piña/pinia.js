@@ -9,7 +9,7 @@ class pinia extends THREE.Object3D {
 
     this.pinia = new THREE.Group();
     var texture = new THREE.TextureLoader().load('../imgs/textura-piña.png');
-    var textureRelieve = new THREE.TextureLoader().load('../imgs/relieve-piña.png');
+    var textureRelieve = new THREE.TextureLoader().load('../imgs/relieve-piña.jpeg');
     var MatBasePinia = new THREE.MeshStandardMaterial ({map: texture, 
                                                         bumpMap: textureRelieve, 
                                                         bumpScale: 1.0,
@@ -76,7 +76,11 @@ class pinia extends THREE.Object3D {
 
     //---------------------HOJAS PIÑA---------------------
 
-    var MatHojasPinia = new THREE.MeshBasicMaterial({ color: 0x25800c, side: THREE.DoubleSide });
+    //var MatHojasPinia = new THREE.MeshStandardMaterial({ color: 'green', side: THREE.DoubleSide });
+
+    var texturaHojasPinia = new THREE.TextureLoader().load('../imgs/texturas-hojas-piña.png');
+
+    var MatHojasPinia = new THREE.MeshStandardMaterial({ map: texturaHojasPinia, side: THREE.DoubleSide, metalness: 1.0});
 
     this.points = [];
 
@@ -131,26 +135,27 @@ class pinia extends THREE.Object3D {
 
     var chimeneaGeom1 = new THREE.BoxGeometry (0.4,0.20,0.15); //ancho, alto y largo
     chimeneaGeom1.translate(0.8,1.4,0); 
-    var chimeneaMat1 = new THREE.MeshStandardMaterial({ color: 'grey', side: THREE.DoubleSide, metalness: 0.5, roughness: 0.5});
+    var chimeneaMat = new THREE.MeshStandardMaterial({ color: 'lightgrey', side: THREE.DoubleSide, metalness: 1.0});
 
-    var chimeneaParte1 = new THREE.Mesh (chimeneaGeom1, chimeneaMat1);
+    var chimeneaParte1 = new THREE.Mesh (chimeneaGeom1, chimeneaMat);
 
     //this.add(chimenea); 
 
 
     var chimeneaGeom2 = new THREE.BoxGeometry (0.2,0.4,0.15); //ancho, alto y largo
     chimeneaGeom2.translate(0.9,1.5,0); 
-    var chimeneaMat2 = new THREE.MeshBasicMaterial({ color: 'grey', side: THREE.DoubleSide });
 
     // Ya podemos construir el Mesh
-    var chimeneaParte2 = new THREE.Mesh (chimeneaGeom2, chimeneaMat2);
+    var chimeneaParte2 = new THREE.Mesh (chimeneaGeom2, chimeneaMat);
 
     //this.add(chimenea2); 
 
     var chimenea = new CSG();
     chimenea.union([chimeneaParte1, chimeneaParte2]);
 
-    var chimenea = chimenea.toMesh();          
+    var chimenea = chimenea.toMesh();  
+    
+    chimenea.rotateY(Math.PI/2);
     
     this.pinia.add(chimenea);
     //this.add(chimenea);

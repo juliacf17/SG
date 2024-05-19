@@ -9,7 +9,7 @@ class plancton extends THREE.Object3D {
 
     this.plancton = new THREE.Group();
 
-    var mat = new THREE.MeshPhongMaterial({ color: 'lightgreen', side: THREE.DoubleSide });
+    var mat = new THREE.MeshStandardMaterial({ color: 'green', side: THREE.DoubleSide });
 
     // ---------------------------- TORSO ---------------------------- //
 
