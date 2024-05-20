@@ -43,130 +43,66 @@ class bikinirace extends THREE.Scene {
     
     // Construimos los distinos elementos que tendremos en la escena
     
+    this.createCamera();
+    this.createAxis();
     
-    this.createCamera ();
-    
-    this.axis = new THREE.AxesHelper (2);
-    this.add (this.axis);
-    
- 
-    // Creación de los modelos 
-
-    // Circuito
-
-    this.circuito = new circuito(this.gui, "Controles del Circuito");
-    
- 
-    // Obstáculos (Garys)
-
-    this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
-
-    this.obstaculo1.castShadow = true;
-    this.obstaculo1.receiveShadow = true;
-
-    this.obstaculo2 = new gary (this.circuito.geometry, 0.4); 
-
-    this.obstaculo2.castShadow = true;
-    this.obstaculo2.receiveShadow = true;
-
-    this.obstaculo3 = new gary (this.circuito.geometry, 0.6); 
-
-    this.obstaculo3.castShadow = true;
-    this.obstaculo3.receiveShadow = true;
-
-    // Objetos voladores (Medusas)
-    
-    //this.volador1 = new medusa(this.circuito.geometry, 0.01);
-    this.volador1 = new medusa(this.circuito.geometry, 0.15);
-
-    this.volador1.castShadow = true;
-    this.volador1.receiveShadow = true;
-
-    this.volador2 = new medusa(this.circuito.geometry, 0.25);
-
-    this.volador2.castShadow = true;
-    this.volador2.receiveShadow = true;
-
-    this.volador3 = new medusa(this.circuito.geometry, 0.40);
-
-    this.volador3.castShadow = true;
-    this.volador3.receiveShadow = true;
-
-    //this.volador5 = new medusa(this.circuito.geometry, 0.55);
-    this.volador4 = new medusa(this.circuito.geometry, 0.65);
-
-    this.volador4.castShadow = true;
-    this.volador4.receiveShadow = true;
-
-    this.volador5 = new medusa(this.circuito.geometry, 0.75);
-
-    this.volador5.castShadow = true;
-    this.volador5.receiveShadow = true;
-
-    //this.volador8 = new medusa(this.circuito.geometry, 0.90);
-
-    // Premios (Hamburguesas)
-
-    this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
-    this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
-    this.premio3 = new hamburguesa(this.circuito.geometry, 0.6);
-
-    // "Casilla de salida" (Piña)
-
-    this.pinia = new pinia(this.circuito.geometry, 0);
-
-    this.pinia.castShadow = true;
-    this.pinia.receiveShadow = true;
-
-
-    // Variables 
-
-    // Control de la cámara y las vistas 
-
-    this.general = false; // Variable que indica qué camara usamos - la vista general por defecto
-    this.multiplayer = false; // Variable que indica si estamos en modo multijugador
     this.mouse = new THREE.Vector2(); // Vector que almacena la posición del ratón
     this.raycaster = new THREE.Raycaster(); // Raycaster para detectar picking en los objetos voladores
 
-    // Colisiones
+    // Creación de los modelos 
+    this.createModels(); 
+    this.createVariablesControl(); 
 
-    this.plancton = new plancton(this.circuito.geometry);
+    //Creamos las luces
+    this.createLights(); 
 
-    
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton, this.premio1, this.premio2, this.premio3]; 
+    //this.createCubeTexture(); 
+    this.createSkySphere(); // Crea la esfera que simula el cielo
 
-    // Objetos voladores
-
-    //this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5, this.volador6, this.volador7, this.volador8];
-    this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
-
-    // Protagonista/s
-
-    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
-
-    this.protagonista.castShadow = true;
-    this.protagonista.receiveShadow = true;
+    // Multijugador
 
     //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, this.premios, 0.5);
-
-    
-    // Control de la puntuación
-    
-    this.puntos = 0;
-    this.puntosParaGanar = this.voladores.length * 2; // Puntos necesarios para ganar
-
-    //Control de velocidad 
-
-    this.modoVelocidad = "Media"; 
-
-    //Control de fin de juego
-    this.finJuego = false; 
-
-
-    // Añadimos los elementos a la escena
-  
-    this.circuito.add(this.protagonista);
     //this.circuito.add(this.jugador2);
+  }
+
+
+  createObstacles() {
+    this.obstaculo1 = new gary (this.circuito.geometry, 0.2); 
+    this.obstaculo2 = new gary (this.circuito.geometry, 0.4); 
+    this.obstaculo3 = new gary (this.circuito.geometry, 0.6); 
+  }
+
+  createFlyingObjects() {
+    this.volador1 = new medusa(this.circuito.geometry, 0.15);
+    this.volador2 = new medusa(this.circuito.geometry, 0.25);
+    this.volador3 = new medusa(this.circuito.geometry, 0.40);
+    this.volador4 = new medusa(this.circuito.geometry, 0.65);
+    this.volador5 = new medusa(this.circuito.geometry, 0.75);
+  }
+
+  createPrizes() {
+    this.premio1 = new hamburguesa(this.circuito.geometry, 0.1);
+    this.premio2 = new hamburguesa(this.circuito.geometry, 0.3);
+    this.premio3 = new hamburguesa(this.circuito.geometry, 0.6);
+  }
+
+  createModels() {
+    this.circuito = new circuito(this.gui, "Controles del Circuito");
+    this.createObstacles();
+    this.createFlyingObjects();
+    this.createPrizes();
+    this.pinia = new pinia(this.circuito.geometry, 0);
+    this.plancton = new plancton(this.circuito.geometry);
+
+    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton, this.premio1, this.premio2, this.premio3]; 
+    this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
+
+    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+    this.addObjectsToScene();
+  }
+
+  addObjectsToScene(){
+    this.circuito.add(this.protagonista);
     this.circuito.add(this.plancton);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
@@ -176,22 +112,53 @@ class bikinirace extends THREE.Scene {
     this.circuito.add(this.volador3);
     this.circuito.add(this.volador4);
     this.circuito.add(this.volador5);
-    //this.circuito.add(this.volador6);
-    //this.circuito.add(this.volador7);
-    //this.circuito.add(this.volador8);
     this.circuito.add(this.premio1);
     this.circuito.add(this.premio2);
     this.circuito.add(this.pinia); 
     this.add(this.circuito);
-
-    // Sombras arrojadas
-
+  }
 
 
-    this.createLights (); 
+  createVariablesControl(){
+    // Variable que indica qué camara usamos - la vista general por defecto
+    this.general = false; 
+    
+    // Variable que indica si estamos en modo multijugador
+    this.multiplayer = false; 
+    
+    //Puntuación
+    this.puntos = 0;
+    this.puntosParaGanar = this.voladores.length * 2; // Puntos necesarios para ganar
+
+    //Modo de valocidad
+    this.modoVelocidad = "Media"; 
+
+    //Control de fin de juego
+    this.finJuego = false; 
+  }
+
+  createAxis(){
+    this.axis = new THREE.AxesHelper (2);
+    this.add (this.axis);
+  }
 
 
+  createSkySphere() {
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('../imgs/cielo.jpg', (texture) => {
+      const sphereGeometry = new THREE.SphereGeometry(100, 60, 40);
+      const sphereMaterial = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.DoubleSide   // Renderizar el interior de la esfera
+      });
+      const skySphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      this.add(skySphere);
+    }, undefined, (error) => {
+      console.error('Error loading texture:', error);
+    });
+  }
 
+  createCubeTexture(){
     var path = "../imgs/";
     var format = '.jpg';
 
@@ -207,12 +174,8 @@ class bikinirace extends THREE.Scene {
 
     this.castShadow = true;
     this.receiveShadow = true;
-    
-    
-
   }
 
-  
   initStats() {
   
     var stats = new Stats(); // Crea la gráfica de rendimiento
@@ -314,7 +277,7 @@ class bikinirace extends THREE.Scene {
     //   El ángulo del campo de visión en grados sexagesimales
     //   La razón de aspecto ancho/alto
     //   Los planos de recorte cercano y lejano
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 300);
     // Recuerda: Todas las unidades están en metros
     // También se indica dónde se coloca
     this.camera.position.set (0,16,32);
