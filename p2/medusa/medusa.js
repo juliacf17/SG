@@ -30,6 +30,9 @@ class medusa extends THREE.Object3D {
 
     this.cabeza = cabeza.toMesh();
 
+    this.cabeza.castShadow = true;
+    this.cabeza.receiveShadow = true;
+
     this.cabeza.material.transparent = true;
     this.cabeza.material.opacity = 1.0;
 
@@ -49,6 +52,10 @@ class medusa extends THREE.Object3D {
     
     // Ya podemos construir el Mesh
     this.anillo = new THREE.Mesh (torusGeom, torusMat);
+
+    this.anillo.castShadow = true;
+    this.anillo.receiveShadow = true;
+
     //torus.rotation.set(Math.PI/2,0,0);
 
     this.anillo.userData = this;
@@ -78,6 +85,10 @@ class medusa extends THREE.Object3D {
 
 
     this.tentaculo1 = new THREE.Mesh(tentaculo1Geom, tentaculosMat);
+
+    this.tentaculo1.castShadow = true;
+    this.tentaculo1.receiveShadow = true;
+
     this.tentaculo1.userData = this;
     this.tentaculo1.scale.set(1,1,0.15); 
     this.tentaculo1.position.set(-0.1, 0.1, 0);
@@ -93,6 +104,10 @@ class medusa extends THREE.Object3D {
     tentaculo2Geom.rotateY(Math.PI); 
 
     this.tentaculo2 = new THREE.Mesh(tentaculo2Geom, tentaculosMat);
+
+    this.tentaculo2.castShadow = true;
+    this.tentaculo2.receiveShadow = true;
+
     this.tentaculo2.userData = this;
     this.tentaculo2.scale.set(1,1,0.15); 
     this.tentaculo2.position.set(0.1, 0.1, 0);
@@ -102,11 +117,16 @@ class medusa extends THREE.Object3D {
 
     // Tentáculo 3 
     var tentaculo3Geom = new THREE.ExtrudeGeometry(tentaculoShape, options);
+    
     tentaculo3Geom.scale(1,0.8,0.15); 
     tentaculo3Geom.rotateY(-Math.PI/2); 
     tentaculo3Geom.translate(0,0.1,-0.1); 
 
     this.tentaculo3 = new THREE.Mesh(tentaculo3Geom, tentaculosMat);
+
+    this.tentaculo3.castShadow = true;
+    this.tentaculo3.receiveShadow = true;
+
     this.tentaculo3.userData = this;
 
     this.tentaculos.add(this.tentaculo3);
@@ -119,6 +139,10 @@ class medusa extends THREE.Object3D {
     tentaculo4Geom.translate(0,0.1,0.1); 
 
     this.tentaculo4 = new THREE.Mesh(tentaculo4Geom, tentaculosMat);
+
+    this.tentaculo4.castShadow = true;
+    this.tentaculo4.receiveShadow = true;
+
     this.tentaculo4.userData = this;
 
     this.tentaculos.add(this.tentaculo4);

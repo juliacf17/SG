@@ -133,7 +133,7 @@ class bob_hambur extends THREE.Object3D {
 
    createLight() {
     this.luzPuntual = new THREE.PointLight('white');
-    this.luzPuntual.power = 10000;
+    this.luzPuntual.power = 5000;
     this.luzPuntual.position.set(0, 5, 0);
     this.luzPuntual.visible = false;
     this.bob_hambur.add(this.luzPuntual);

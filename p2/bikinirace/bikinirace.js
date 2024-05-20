@@ -55,9 +55,6 @@ class bikinirace extends THREE.Scene {
     // Circuito
 
     this.circuito = new circuito(this.gui, "Controles del Circuito");
-
-    this.circuito.receiveShadow = true;
-    this.circuito.castShadow = true;
     
  
     // Obstáculos (Garys)
@@ -446,8 +443,7 @@ class bikinirace extends THREE.Scene {
 
     // Sombras arrojadas
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // You can change this to other types like THREE.PCFShadowMap or THREE.VSMShadowMap
-
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
     
     // Se establece un color de fondo en las imágenes que genera el render
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 1.0);

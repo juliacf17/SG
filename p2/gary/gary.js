@@ -178,6 +178,10 @@ class gary extends THREE.Object3D {
     this.add(this.gary);
 
 
+    
+
+
+
      // ---------------------------- VARIABLES ---------------------------- //
     
   

@@ -25,16 +25,26 @@ class circuito extends THREE.Object3D {
     const spline = this.getPathFromTorusKnot(torusKnot);
 
     // Creamos un tubo a partir de la spline
-    this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 8, true);
-    var textureArena = new THREE.TextureLoader().load('../imgs/arena2.png');
-
+    this.geometry = new THREE.TubeGeometry(spline, 600, 0.5, 80, true);
+    var textureArena = new THREE.TextureLoader().load('../imgs/arena3.png', function (texture) {
+      // Configura la textura para que se repita
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(100, 4); // Ajusta los valores de repetición según tus necesidades
+    });
 
     var material = new THREE.MeshStandardMaterial({ map: textureArena,
                                                       side: THREE.DoubleSide, opacity: 1.0, transparent: true});
+
+
+
     //const material = new THREE.MeshStandardMaterial({ color: 0x00ff00, side: THREE.DoubleSide, opacity: 1.0, transparent: true})
 
     material.map.repeat.set(1, 1); 
     var tube = new THREE.Mesh(this.geometry, material);
+
+    tube.castShadow = true;
+    tube.receiveShadow = true;
 
     this.add(tube);
     // Añade edges al tubo
