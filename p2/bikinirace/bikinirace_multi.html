@@ -18,6 +18,9 @@
         body {
             margin: 0;
             overflow: hidden;
+            background-image: url('../imgs/fondo1.png'); /* Ruta de tu imagen de fondo */
+            background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */  
         }
         #loading-screen {
             position: fixed;
@@ -25,7 +28,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff;
+
+            background-color: rgba(255, 255, 255, 0.5); /* Fondo blanco semitransparente */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+            
             display: flex;
             justify-content: center;
             align-items: center;
@@ -53,7 +61,8 @@
 
         #loading-message {
             font-size: 24px;
-            color: #333;
+            font-weight: bold;
+            color: black;
         }
 
         #game-over-screen-multi {
