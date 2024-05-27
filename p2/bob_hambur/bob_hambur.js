@@ -25,6 +25,21 @@ class bob_hambur extends THREE.Object3D {
 
     this.hamburcarro = new hamburcarro();
 
+
+    let meshes = [];
+
+    this.hamburcarro.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            meshes.push(child);
+        }
+    });
+
+    meshes.forEach((mesh) => {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        console.log("Sombra añadida a " + mesh.name);
+    });
+        
     this.bob_hambur.add(this.hamburcarro);
 
     this.bob_hambur.scale.set(0.25,0.25,0.25);
