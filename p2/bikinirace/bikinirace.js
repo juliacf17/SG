@@ -29,9 +29,6 @@ class bikinirace extends THREE.Scene {
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     
-    // Se añade a la gui los controles para manipular los elementos de esta clase
-    this.gui = this.createGUI ();
-    
     this.initStats(); // Para mostrar información de rendimiento
     this.initPuntos(); // Para mostrar información de los puntos conseguidos
     this.initVelocidad(); // Para mostrar información de la velocidad
@@ -84,7 +81,7 @@ class bikinirace extends THREE.Scene {
   }
 
   createModels() {
-    this.circuito = new circuito(this.gui, "Controles del Circuito");
+    this.circuito = new circuito();
     this.createObstacles();
     this.createFlyingObjects();
     this.createPrizes();
@@ -294,42 +291,7 @@ class bikinirace extends THREE.Scene {
 
   }
   
-  createGUI () {
-    // Se crea la interfaz gráfica de usuario
-    var gui = new GUI();
-    
-    // La escena le va a añadir sus propios controles. 
-    // Se definen mediante un objeto de control
-    // En este caso la intensidad de la luz y si se muestran o no los ejes
-    this.guiControls = {
-      // En el contexto de una función   this   alude a la función
-      lightPower : 1000.0,  // La potencia de esta fuente de luz se mide en lúmenes
-      ambientIntensity : 1.0,  
-      axisOnOff : true
-    }
-
-    // Se crea una sección para los controles de esta clase
-    var folder = gui.addFolder ('Luz y Ejes');
-    
-    // Se le añade un control para la potencia de la luz puntual
-    folder.add (this.guiControls, 'lightPower', 0, 1000, 20)
-      .name('Luz puntual : ')
-      .onChange ( (value) => this.setLightPower(value) );
-    
-    // Otro para la intensidad de la luz ambiental
-    /*
-    folder.add (this.guiControls, 'ambientIntensity', 0, 1, 0.05)
-      .name('Luz ambiental: ')
-      .onChange ( (value) => this.setAmbientIntensity(value) );
-      */
-      
-    // Y otro para mostrar u ocultar los ejes
-    folder.add (this.guiControls, 'axisOnOff')
-      .name ('Mostrar ejes : ')
-      .onChange ( (value) => this.setAxisVisible (value) );
-    
-    return gui;
-  }
+ 
   
   createLights() {
     this.ambientLight = new THREE.AmbientLight('white', 1);

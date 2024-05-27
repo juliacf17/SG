@@ -7,13 +7,10 @@ import { color } from '../../libs/dat.gui.module.js';
 
 
 class circuito extends THREE.Object3D {
-  constructor(gui,titleGui) {
+  constructor() {
     
     super();
 
-    // Se crea la parte de la interfaz que corresponde a la grapadora
-    // Se crea primero porque otros métodos usan las variables que se definen para la interfaz
-    this.createGUI(gui,titleGui);
 
     //const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,6,8,);
     const torusKnotGeom = new THREE.TorusKnotGeometry(9,1,300,12,2,3);
@@ -64,47 +61,7 @@ class circuito extends THREE.Object3D {
 
   }
 
-  createGUI (gui,titleGui) {
-    // Controles para el movimiento de la parte móvil
-    this.guiControls = {
-      edgesVisible: false,
-      scale : 1,
-    } 
-    
-    // Se crea una sección para los controles de la caja
-    var folder = gui.addFolder (titleGui);
-    // Estas lineas son las que añaden los componentes de la interfaz
-    // Las tres cifras indican un valor mínimo, un máximo y el incremento
-    folder.add (this.guiControls, 'edgesVisible')
-      .name ('Mostrar aristas')
-      .onChange ( () => this.changeEdgesVisibility() );
 
-    folder.add (this.guiControls, 'scale', 0.1, 2, 0.1)
-      .name ('Escala')
-      .onChange ( () => this.changeScale() );
-  }
-
-  changeEdgesVisibility() {
-    this.children.forEach( (child) => {
-      if (child instanceof THREE.Mesh) {
-        child.children.forEach((edgesMesh) => {
-          if (edgesMesh instanceof THREE.LineSegments) {
-            edgesMesh.visible = this.guiControls.edgesVisible;
-          }
-        });
-      }
-    });
-  }
-
-  changeScale() {
-    this.children.forEach( (child) => {
-      if (child instanceof THREE.Mesh) {
-        child.scale.set(this.guiControls.scale, this.guiControls.scale, this.guiControls.scale);
-        child.children.forEach((edgesMesh) => {
-        });
-      }
-    });
-  }
 
 
   update() {
