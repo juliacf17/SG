@@ -46,7 +46,11 @@ class bob_hambur extends THREE.Object3D {
 
 
     this.modoVelocidad = "Media"; // modo de velocidad
-    this.velocidad = 0.025; // velocidad del personaje
+    this.velocidad = 0; // velocidad del personaje
+
+    setTimeout(() => {
+        this.velocidad = 0.025;
+    }, 3000);
     
 
     this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara
