@@ -2,7 +2,6 @@
 // Clases de la biblioteca
 
 import * as THREE from '../../libs/three.module.js'
-import { GUI } from '../../libs/dat.gui.module.js'
 import { TrackballControls } from '../../libs/TrackballControls.js'
 import { Stats } from '../../libs/stats.module.js'
 
@@ -11,10 +10,11 @@ import { Stats } from '../../libs/stats.module.js'
 import { circuito } from '../objetos circuito/circuito/circuito.js'
 import { medusa } from '../objetos circuito/medusa/medusa.js'
 import { bob_hambur } from '../objetos circuito/bob_hambur/bob_hambur.js'
-import { gary } from '../objetos circuito/gary/gary.js'  
+import { gary } from '../objetos circuito/gary/gary.js'
 import { hamburguesa } from '../objetos circuito/hamburguesa/hamburguesa.js'
 import { pinia } from '../objetos circuito/piña/pinia.js'
-import { plancton } from '../objetos circuito/plancton/plancton.js'
+import { plancton } from '../plancton_multi/plancton.js'
+
 
 
 /// La clase fachada del modelo
@@ -22,16 +22,17 @@ import { plancton } from '../objetos circuito/plancton/plancton.js'
  * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
  */
 
-class bikinirace extends THREE.Scene {
+class multijugador extends THREE.Scene {
   constructor (myCanvas) {
     super();
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     
-    this.initStats(); // Para mostrar información de rendimiento
-    this.initPuntos(); // Para mostrar información de los puntos conseguidos
+
     this.initVelocidad(); // Para mostrar información de la velocidad
+    
+    
     this.marcadorFinal(); 
     this.porcentajeFinal();
     
@@ -52,7 +53,6 @@ class bikinirace extends THREE.Scene {
 
     //this.createCubeTexture(); 
     this.createSkySphere(); // Crea la esfera que simula el cielo
-
   }
 
 
@@ -82,18 +82,20 @@ class bikinirace extends THREE.Scene {
     this.createFlyingObjects();
     this.createPrizes();
     this.pinia = new pinia(this.circuito.geometry, 0);
-    this.plancton = new plancton(this.circuito.geometry);
 
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.plancton, this.premio1, this.premio2, this.premio3]; 
+    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.premio1, this.premio2, this.premio3]; 
     this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
 
     this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+
+    this.jugador2 = new plancton(this.circuito.geometry, this.candidatos, 0.5);
+    //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, 0.5);
     this.addObjectsToScene();
   }
 
   addObjectsToScene(){
     this.circuito.add(this.protagonista);
-    this.circuito.add(this.plancton);
+    this.circuito.add(this.jugador2);
     this.circuito.add (this.obstaculo1); 
     this.circuito.add(this.obstaculo2);
     this.circuito.add(this.obstaculo3);
@@ -114,7 +116,7 @@ class bikinirace extends THREE.Scene {
     this.general = false; 
     
     // Variable que indica si estamos en modo multijugador
-    this.multiplayer = false; 
+    this.multiplayer = true; 
     
     //Puntuación
     this.puntos = 0;
@@ -148,7 +150,7 @@ class bikinirace extends THREE.Scene {
     });
   }
 
-  createCubeTexture(){
+  /*createCubeTexture(){
     var path = "../imgs/";
     var format = '.jpg';
 
@@ -166,7 +168,7 @@ class bikinirace extends THREE.Scene {
     this.receiveShadow = true;
   }
 
-  initStats() {
+  /*initStats() {
   
     var stats = new Stats(); // Crea la gráfica de rendimiento
     
@@ -182,7 +184,7 @@ class bikinirace extends THREE.Scene {
     this.stats = stats;
   }
 
-  initPuntos() {
+  /*initPuntos() {
     // Crea un elemento para mostrar los puntos
     var marcador = document.createElement('div');
 
@@ -198,7 +200,7 @@ class bikinirace extends THREE.Scene {
     $("#Marcador").append(marcador); // Añade el elemento al div ya existente
 
     this.marcador = marcador;
-}
+}*/
 
   initVelocidad() {
     // Crea un elemento para mostrar los puntos
@@ -284,10 +286,7 @@ class bikinirace extends THREE.Scene {
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
     this.cameraControl.target = look;
-
   }
-  
- 
   
   createLights() {
     this.ambientLight = new THREE.AmbientLight('white', 1);
@@ -323,22 +322,6 @@ class bikinirace extends THREE.Scene {
     const helper2 = new THREE.DirectionalLightHelper(this.directionalLight2);
     this.add(helper);
     this.add(helper2);
-
-
-
-    /*
-
-    this.spotlight = new THREE.SpotLight('red');
-
-    this.spotlight.power = 1000;
-    this.spotlight.angle = Math.PI / 6;
-    this.spotlight.penumbra = 0.5;
-    this.spotlight.position.set(0, 1, 0);
-    this.spotlight.target = this.protagonista;
-
-    this.add(this.spotlight);
-    */
-
   }
   
   setLightPower (valor) {
@@ -494,6 +477,10 @@ class bikinirace extends THREE.Scene {
         }
         break;
 
+      case 'm':
+        this.multiplayer = !this.multiplayer; // Cambia el modo multijugador al pulsar la tecla 'm' (cambio de vista)
+        break;
+
 
 
     }
@@ -516,11 +503,6 @@ class bikinirace extends THREE.Scene {
       if(selectedObject.userData){ // Si el objeto tiene un userData
         selectedObject.userData.recibeClic(selectedObject); // Se llama al método recibeClic del objeto
       }
-
-      //var selectedPoint = pickedObjects[0].point;
-
-
-      //NO FUNCIONA, PODEMOS ELIMIANAR EL OBJETO CUANDO LA OPACIDAD SEA 0?
   
       // Aumenta la puntuación si se ha hecho clic en un objeto volador
       if(!selectedObject.userData.getOpacity(selectedObject))  // Si el objeto no ha desaparecido ya y no se ha acabado el juego
@@ -588,9 +570,6 @@ class bikinirace extends THREE.Scene {
       this.puntos = 0;
     }
 
-    //console.log(this.puntos);
-    
-
     this.modoVelocidad = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
 
     if (this.marcador) {
@@ -609,8 +588,7 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.protagonista.update();
-    //this.jugador2.update();
-    this.plancton.update();
+    this.jugador2.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
     this.obstaculo3.update();
@@ -619,9 +597,6 @@ class bikinirace extends THREE.Scene {
     this.volador3.update();
     this.volador4.update();
     this.volador5.update();
-    //this.volador6.update();
-    //this.volador7.update();
-    //this.volador8.update();
     this.premio1.update();
     this.premio2.update(); 
     this.premio3.update();
@@ -633,7 +608,10 @@ class bikinirace extends THREE.Scene {
 
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
 
-    if(this.general){ // Si estamos en vista general, se renderiza una vista
+    if(this.multiplayer){ // Si estamos en modo multijugador, se renderizan dos vistas
+      this.renderViewport(this, this.jugador2.getCamara3aPersona(), 0, 0, 0.5, 1);
+      this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0.5, 0, 0.5, 1);
+    }else if(this.general){ // Si estamos en vista general, se renderiza una vista
       this.renderViewport(this, this.camera, 0, 0, 1, 1);
       
     }else{ // Si estamos en vista en tercera persona, se renderizan dos vistas
@@ -649,7 +627,7 @@ class bikinirace extends THREE.Scene {
 
 $(function () {
 
-  var scene = new bikinirace("#WebGL-output");
+  var scene = new multijugador("#WebGL-output2");
 
 
   window.addEventListener ("resize", () => scene.onWindowResize()); // Se añade un listener para el evento resize
