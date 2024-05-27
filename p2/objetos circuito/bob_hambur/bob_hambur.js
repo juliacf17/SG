@@ -7,6 +7,7 @@ import { OBJLoader } from '../../../libs/OBJLoader.js'
 import { bob } from './bob.js'
 import { hamburcarro } from './hamburcarro.js'
 import { hamburguesa } from '../hamburguesa/hamburguesa.js'
+import { plancton_multi } from '../plancton_multi/plancton.js'
 import { plancton } from '../plancton/plancton.js'
 import { gary } from '../gary/gary.js'
 
@@ -248,7 +249,7 @@ class bob_hambur extends THREE.Object3D {
 
             if(this.candidatos[i] instanceof plancton){ 
                 this.impactoPlancton = true;
-                console.log("COLISIÓN CON PLANCTON");
+                console.log("Bob dice: COLISIÓN CON PLANCTON");
                 this.setColorLight('red', true);
                 
 

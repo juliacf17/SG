@@ -1,11 +1,11 @@
 
-import * as THREE from '../../libs/three.module.js'
-import { CSG } from '../../libs/CSG-v2.js'
-import { bob_hambur } from '../objetos circuito/bob_hambur/bob_hambur.js'
-import { hamburguesa } from '../objetos circuito/hamburguesa/hamburguesa.js';
-import { gary } from '../objetos circuito/gary/gary.js';
+import * as THREE from '../../../libs/three.module.js'
+import { CSG } from '../../../libs/CSG-v2.js'
+import { bob_hambur } from '../bob_hambur/bob_hambur.js'
+import { hamburguesa } from '../hamburguesa/hamburguesa.js';
+import { gary } from '../gary/gary.js';
 
-class plancton extends THREE.Object3D {
+class plancton_multi extends THREE.Object3D {
   constructor(circuitoGeometry, candidatosColision, _t) {
     
     super();
@@ -213,6 +213,8 @@ class plancton extends THREE.Object3D {
 
     this.hasImpacted = false;
 
+    this.impactoSpawn = true;
+
 
 // ---------------------------- CAJA DE COLISIÓN --------------------------- //
 
@@ -291,6 +293,10 @@ class plancton extends THREE.Object3D {
     return false;
   }
 
+  addCandidato(candidato) {
+    this.candidatos.push(candidato);
+}
+
   getVelocidadInterfaz() {
     return this.modoVelocidad + " (" + Math.floor(this.velocidad*1000) + " km/h)";
   }
@@ -362,14 +368,13 @@ class plancton extends THREE.Object3D {
 
     
     for (var i = 0; i < this.candidatos.length; i++) {
-        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
+        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto && !this.impactoSpawn){
+          
+            console.log("Impacto spawn: " + this.impactoSpawn);
 
-            if(this.candidatos[i] instanceof plancton){ 
-                this.impactoPlancton = true;
-                console.log("COLISIÓN CON PLANCTON");
+            if(this.candidatos[i] instanceof bob_hambur){ 
+                console.log("Plancton dice: COLISIÓN CON BOB");
                 this.setColorLight('red', true);
-                
-
             
             }else if (this.candidatos[i] instanceof hamburguesa){
 
@@ -422,9 +427,11 @@ class plancton extends THREE.Object3D {
             this.impacto = this.candidatos[i];
             this.hasImpacted = true; 
 
-        }else{
-            
+
+        }else{           
             this.hasImpacted = false;
+            this.impactoSpawn = false;
+
 
 
         }
@@ -435,4 +442,4 @@ class plancton extends THREE.Object3D {
   }
 }
 
-export { plancton };
+export { plancton_multi };

@@ -13,7 +13,8 @@ import { bob_hambur } from '../objetos circuito/bob_hambur/bob_hambur.js'
 import { gary } from '../objetos circuito/gary/gary.js'
 import { hamburguesa } from '../objetos circuito/hamburguesa/hamburguesa.js'
 import { pinia } from '../objetos circuito/piña/pinia.js'
-import { plancton } from '../plancton_multi/plancton.js'
+import { plancton_multi } from '../objetos circuito/plancton_multi/plancton.js'
+
 
 
 
@@ -83,12 +84,18 @@ class multijugador extends THREE.Scene {
     this.createPrizes();
     this.pinia = new pinia(this.circuito.geometry, 0);
 
-    this.candidatos = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.premio1, this.premio2, this.premio3]; 
+    
+    this.candidatosPlancton = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.premio1, this.premio2, this.premio3]; 
     this.voladores = [this.volador1, this.volador2, this.volador3, this.volador4, this.volador5];
 
-    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatos, 0);
+    this.jugador2 = new plancton_multi(this.circuito.geometry, this.candidatosPlancton, 0.5);
 
-    this.jugador2 = new plancton(this.circuito.geometry, this.candidatos, 0.5);
+    this.candidatosBob = [this.obstaculo1, this.obstaculo2, this.obstaculo3, this.premio1, this.premio2, this.premio3, this.jugador2]; 
+
+    this.protagonista = new bob_hambur(this.circuito.geometry, this.candidatosBob, 0);
+
+    this.jugador2.addCandidato(this.protagonista);
+    
     //this.jugador2 = new bob_hambur(this.circuito.geometry, this.candidatos, 0.5);
     this.addObjectsToScene();
   }
@@ -466,7 +473,7 @@ class multijugador extends THREE.Scene {
       case 'p':
         this.protagonista.velocidad = 0; // Frena al protagonista y al jugador 2 al pulsar la tecla 'p' (para pruebas)
         if(this.multiplayer){
-          this.jugador2.velocidad = 0; 
+          //this.jugador2.velocidad = 0; 
         }
         break;
 
@@ -564,10 +571,8 @@ class multijugador extends THREE.Scene {
     if (this.stats) this.stats.update();
 
     
-    if(this.protagonista.getColisionConPlancton() && !this.finJuego){ // Si el protagonista colisiona con el plancton
-      console.log("Colisión con plancton");
-      this.puntosParaGanar -= this.puntos; 
-      this.puntos = 0;
+    if((this.protagonista.getColisionConPlancton() || this.jugador2.getColisionConBob()) && !this.finJuego){ // Si el protagonista colisiona con el plancton
+      this.finDelJuego(); // Se muestra la pantalla de fin de juego
     }
 
     this.modoVelocidad = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
