@@ -90,6 +90,8 @@ class bob_hambur extends THREE.Object3D {
 
     this.hasImpacted = false;
 
+    this.impactoSpawn = true;
+
     // Colisiones por Raycasting HAMBURGUESA
 
     //this.posicionH = new THREE.Vector3();
@@ -175,10 +177,15 @@ class bob_hambur extends THREE.Object3D {
   }
 
   getColisionConPlancton() {
-    if (this.impacto instanceof plancton){
+    if (this.impactoSpawn){
+      this.impactoSpawn = false;
+    }
+    else {
+      if (this.impacto instanceof bob_hambur){
         var impactoPlancton = true;
         this.impacto = null;
         return impactoPlancton;
+      }
     }
     return false;
   }
@@ -245,7 +252,7 @@ class bob_hambur extends THREE.Object3D {
 
     
     for (var i = 0; i < this.candidatos.length; i++) {
-        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
+        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto && !this.impactoSpawn){  
 
             if(this.candidatos[i] instanceof plancton){ 
                 this.impactoPlancton = true;

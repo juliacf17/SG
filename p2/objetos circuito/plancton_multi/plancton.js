@@ -285,10 +285,15 @@ class plancton_multi extends THREE.Object3D {
   }
 
   getColisionConBob() {
-    if (this.impacto instanceof bob_hambur){
+    if (this.impactoSpawn){
+      this.impactoSpawn = false;
+    }
+    else {
+      if (this.impacto instanceof bob_hambur){
         var impactoBob = true;
         this.impacto = null;
         return impactoBob;
+      }
     }
     return false;
   }
@@ -430,10 +435,6 @@ class plancton_multi extends THREE.Object3D {
 
         }else{           
             this.hasImpacted = false;
-            this.impactoSpawn = false;
-
-
-
         }
 
     }

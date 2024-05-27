@@ -56,7 +56,7 @@
             color: #333;
         }
 
-        #game-over-screen {
+        #game-over-screen-multi {
             position: fixed;
             top: 0;
             left: 0;
@@ -71,17 +71,14 @@
             align-items: center;
             z-index: 9999;
         }
-        #game-over-screen h1 {
+        #game-over-screen-multi h1 {
             font-size: 48px;
             margin-bottom: 20px;
         }
-        #game-over-screen #MarcadorFinal {
+        #game-over-screen-multi #MarcadorFinal {
             font-size: 30px;
         }
 
-        #game-over-screen #Porcentaje {
-            font-size: 30px;
-        }
 
     </style>
 </head>
@@ -97,20 +94,20 @@
 </div>
 
 <!-- Div que muestra la pantalla de fin de juego -->
-<div id="game-over-screen" style="display: none;">
+<div id="game-over-screen-multi" style="display: none;">
     <h1>¡Fin del juego!</h1>
     <div id="MarcadorFinal">
     </div>
-    <div id="Porcentaje">
-    </div>
 </div>
 
-    <!-- Div which will show statistical information -->
-    <div id="Stats-output">
+
+       <!-- Div which will show the points -->
+    <div id="MarcadorVelocidadBob">
     </div>
+    
 
     <!-- Div which will show the points -->
-    <div id="MarcadorVelocidad">
+    <div id="MarcadorVelocidadPlancton">
     </div>
     
 

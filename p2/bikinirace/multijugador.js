@@ -31,11 +31,11 @@ class multijugador extends THREE.Scene {
     this.renderer = this.createRenderer(myCanvas);
     
 
-    this.initVelocidad(); // Para mostrar información de la velocidad
+    this.initVelocidadBob(); // Para mostrar información de la velocidad
+    this.initVelocidadPlancton(); 
     
     
     this.marcadorFinal(); 
-    this.porcentajeFinal();
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -122,15 +122,9 @@ class multijugador extends THREE.Scene {
     // Variable que indica qué camara usamos - la vista general por defecto
     this.general = false; 
     
-    // Variable que indica si estamos en modo multijugador
-    this.multiplayer = true; 
-    
-    //Puntuación
-    this.puntos = 0;
-    this.puntosParaGanar = this.voladores.length * 2; // Puntos necesarios para ganar
-
     //Modo de valocidad
-    this.modoVelocidad = "Media"; 
+    this.modoVelocidadBob = "Media"; 
+    this.modoVelocidadPlancton = "Media";
 
     //Control de fin de juego
     this.finJuego = false; 
@@ -209,23 +203,41 @@ class multijugador extends THREE.Scene {
     this.marcador = marcador;
 }*/
 
-  initVelocidad() {
-    // Crea un elemento para mostrar los puntos
-    var marcador = document.createElement('div');
+initVelocidadBob() {
+  // Crea un elemento para mostrar los puntos
+  var marcador = document.createElement('div');
 
-    marcador.id = 'MarcadorVelocidad';
-    marcador.style.position = 'absolute';
-    marcador.style.left = '350px'; 
-    marcador.style.top = '0px'; // Espacio debajo de los stats
-    marcador.style.color = 'white'; // Color del texto
-    marcador.style.textShadow = '2px 2px 2px black';
-    marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
-    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
-    
-    $("#MarcadorVelocidad").append(marcador); // Añade el elemento al div ya existente
+  marcador.id = 'MarcadorVelocidadBob';
+  marcador.style.position = 'absolute';
+  marcador.style.left = '1300px'; 
+  marcador.style.top = '0px'; // Espacio debajo de los stats
+  marcador.style.color = 'white'; // Color del texto
+  marcador.style.textShadow = '2px 2px 2px black';
+  marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
+  marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+  
+  $("#MarcadorVelocidadBob").append(marcador); // Añade el elemento al div ya existente
 
-    this.marcadorVelocidad = marcador;
-  }
+  this.marcadorVelocidad = marcador;
+}
+
+initVelocidadPlancton() {
+  // Crea un elemento para mostrar los puntos
+  var marcador = document.createElement('div');
+
+  marcador.id = 'MarcadorVelocidadPlancton';
+  marcador.style.position = 'absolute';
+  marcador.style.left = '300px'; 
+  marcador.style.top = '0px'; // Espacio debajo de los stats
+  marcador.style.color = 'white'; // Color del texto
+  marcador.style.textShadow = '2px 2px 2px black';
+  marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
+  marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
+  
+  $("#MarcadorVelocidadPlancton").append(marcador); // Añade el elemento al div ya existente
+
+  this.marcadorVelocidad = marcador;
+}
 
   marcadorFinal(){
     // Crea un elemento para mostrar los puntos
@@ -240,35 +252,20 @@ class multijugador extends THREE.Scene {
     this.marcadorF = marcador;
   }
 
-  porcentajeFinal(){
-    // Crea un elemento para mostrar los puntos
-    var marcador = document.createElement('div');
-
-    marcador.id = 'Porcentaje';
-    marcador.style.textShadow = '2px 2px 2px black';
-    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
-    
-    $("#Porcentaje").append(marcador); // Añade el elemento al div ya existente
-
-    this.marcadorP = marcador;
-  }
-
   //Muestra la pantalla de fin de juego. 
   finDelJuego() {
     this.finJuego = true;
     // Muestra la pantalla de fin de juego
+
+    var ganador = "Bob Esponja";  //DETERMINAR QUIEN GANA
+
+
     if (this.marcadorF) {
-      this.marcadorF.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla
-    }
-
-    var porcentaje = (this.puntos / (this.voladores.length*2)) * 100; // Calcula el porcentaje de puntos conseguidos
-
-    if(this.marcadorP){
-      this.marcadorP.textContent = 'Porcentaje conseguido: ' + porcentaje + '%'; // Muestra el porcentaje en la pantalla
+      this.marcadorF.textContent = 'Ha ganado: ' + ganador; // Muestra la puntuación en la pantalla
     }
 
     this.protagonista.pararPersonaje(); // Parar al protagonista
-    document.getElementById("game-over-screen").style.display = "flex";
+    document.getElementById("game-over-screen-multi").style.display = "flex";
   }
   
   createCamera () {
@@ -423,23 +420,12 @@ class multijugador extends THREE.Scene {
         break;
 
       case 'a':
-        if(this.multiplayer){
           this.jugador2.izquierda = true; // Mueve al jugador 2 a la izquierda con la tecla 'a'
-        }
-        else{
-          this.protagonista.izquierda = true; // Mueve al protagonista a la izquierda con la tecla 'a'
-        }
         break;
 
       case 'd':
-        if(this.multiplayer){
           this.jugador2.derecha = true; // Mueve al jugador 2 a la derecha con la tecla 'd'
-        }else{
-          this.protagonista.derecha = true; // Mueve al protagonista a la derecha con la tecla 'd'
-        }
         break;
-
-
     }
   }
 
@@ -455,98 +441,24 @@ class multijugador extends THREE.Scene {
         break;
 
       case 'a':
-        if(this.multiplayer){
           this.jugador2.izquierda = false; // Deja de mover al jugador 2 a la izquierda al soltar la tecla 'a'
-        }else{
-          this.protagonista.izquierda = false; // Deja de mover al protagonista a la izquierda al soltar la tecla 'a'
-        }
         break;
 
       case 'd':
-        if(this.multiplayer){
           this.jugador2.derecha = false; // Deja de mover al jugador 2 a la derecha al soltar la tecla 'd'
-        }else{
-          this.protagonista.derecha = false; // Deja de mover al protagonista a la derecha al soltar la tecla 'd'
-        }
         break;
 
       case 'p':
         this.protagonista.velocidad = 0; // Frena al protagonista y al jugador 2 al pulsar la tecla 'p' (para pruebas)
-        if(this.multiplayer){
-          //this.jugador2.velocidad = 0; 
-        }
+        this.jugador2.velocidad = 0; 
         break;
 
       case 'r':
         this.protagonista.velocidad = 0.02; // Reanuda la velocidad del protagonista y del jugador 2 al pulsar la tecla 'r' (para pruebas)
-        if(this.multiplayer){
-          this.jugador2.velocidad = 0.02;
-        }
+        this.jugador2.velocidad = 0.02;
         break;
-
-      case 'm':
-        this.multiplayer = !this.multiplayer; // Cambia el modo multijugador al pulsar la tecla 'm' (cambio de vista)
-        break;
-
-
-
     }
   }
-
-  onDocumentMouseDown(event) { // Método para detectar clics en los objetos voladores
-    event.preventDefault(); 
-    console.log("click")
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1; // Normaliza la posición del ratón
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-    this.raycaster.setFromCamera(this.mouse, this.getCamera());
-  
-    var pickedObjects = this.raycaster.intersectObjects(this.voladores, true); // Detecta si se ha hecho clic en un objeto volador
-  
-    if (pickedObjects.length > 0) { // Si se ha hecho clic en un objeto volador
-      var selectedObject = pickedObjects[0].object; // Se selecciona el objeto
-
-      //console.log(selectedObject);  
-      if(selectedObject.userData){ // Si el objeto tiene un userData
-        selectedObject.userData.recibeClic(selectedObject); // Se llama al método recibeClic del objeto
-      }
-  
-      // Aumenta la puntuación si se ha hecho clic en un objeto volador
-      if(!selectedObject.userData.getOpacity(selectedObject))  // Si el objeto no ha desaparecido ya y no se ha acabado el juego
-        this.puntos++; // Aumenta la puntuación
-
-    }
-  }
-
-  onTouchStart(event) { // Método para detectar pulsaciones táctiles en la pantalla
-    var touch = event.touches[0]; 
-    var touchX = touch.clientX;
-
-    if (touchX < window.innerWidth / 2) {
-      this.protagonista.izquierda = true;
-    }
-    else {
-      this.protagonista.derecha = true;
-    }
-  }
-
-  onTouchMove(event) {
-    var touch = event.touches[0];
-    var touchX = touch.clientX;
-
-    if (touchX < window.innerWidth / 2) {
-      this.protagonista.izquierda = true;
-    }
-    else {
-      this.protagonista.derecha = true;
-    }
-  }
-
-  onTouchEnd(event) {
-    this.protagonista.izquierda = false;
-    this.protagonista.derecha = false;
-  }
-
 
   renderViewport (escena, camara, left, top, width, height) { // Método para renderizar la vista de la cámara en un viewport
 
@@ -568,21 +480,19 @@ class multijugador extends THREE.Scene {
 
   update () {
     
-    if (this.stats) this.stats.update();
-
-    
     if((this.protagonista.getColisionConPlancton() || this.jugador2.getColisionConBob()) && !this.finJuego){ // Si el protagonista colisiona con el plancton
       this.finDelJuego(); // Se muestra la pantalla de fin de juego
     }
 
-    this.modoVelocidad = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
+    this.modoVelocidadBob = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
+    this.modoVelocidadPlancton = this.jugador2.getVelocidadInterfaz(); // Obtiene el modo de velocidad del jugador 2
 
-    if (this.marcador) {
-      this.marcador.textContent = 'Puntos: ' + this.puntos; // Muestra la puntuación en la pantalla
+    if(this.marcadorVelocidadBob){
+      this.marcadorVelocidadBob.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
     }
 
-    if(this.marcadorVelocidad){
-      this.marcadorVelocidad.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
+    if(this.marcadorVelocidadPlancton){
+        this.marcadorVelocidadPlancton.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
     }
     
     // Se actualizan los elementos de la escena para cada frame
@@ -607,22 +517,9 @@ class multijugador extends THREE.Scene {
     this.premio3.update();
     this.pinia.update(); 
 
-
-    if(this.puntosParaGanar == this.puntos)
-      this.finDelJuego(); // Si se consiguen los puntos necesarios para ganar, se muestra la pantalla de fin de juego
-
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-
-    if(this.multiplayer){ // Si estamos en modo multijugador, se renderizan dos vistas
-      this.renderViewport(this, this.jugador2.getCamara3aPersona(), 0, 0, 0.5, 1);
-      this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0.5, 0, 0.5, 1);
-    }else if(this.general){ // Si estamos en vista general, se renderiza una vista
-      this.renderViewport(this, this.camera, 0, 0, 1, 1);
-      
-    }else{ // Si estamos en vista en tercera persona, se renderizan dos vistas
-      this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0, 0, 1, 1);
-      this.renderViewport(this, this.camera, 0.75, 0.75, 0.25, 0.25);
-    }
+    this.renderViewport(this, this.jugador2.getCamara3aPersona(), 0, 0, 0.5, 1);
+    this.renderViewport(this, this.protagonista.getCamara3aPersona(), 0.5, 0, 0.5, 1);
   
     requestAnimationFrame(() => this.update())
   }
@@ -640,10 +537,6 @@ $(function () {
   window.addEventListener('keydown', (event) => scene.onKeyDown(event)); // Se añaden listeners para los eventos de teclado
   window.addEventListener('keyup', (event) => scene.onKeyUp(event));
   window.addEventListener('mousedown', (event) => scene.onDocumentMouseDown(event)); // Se añade un listener para el evento de clic
-
-  window.addEventListener('touchstart', (event) => scene.onTouchStart(event)); // Se añaden listeners para los eventos táctiles
-  window.addEventListener('touchmove', (event) => scene.onTouchMove(event));
-  window.addEventListener('touchend', (event) => scene.onTouchEnd(event));
 
 
   scene.update();
