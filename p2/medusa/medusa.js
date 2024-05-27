@@ -30,9 +30,6 @@ class medusa extends THREE.Object3D {
 
     this.cabeza = cabeza.toMesh();
 
-    this.cabeza.castShadow = true;
-    this.cabeza.receiveShadow = true;
-
     this.cabeza.material.transparent = true;
     this.cabeza.material.opacity = 1.0;
 
@@ -53,8 +50,6 @@ class medusa extends THREE.Object3D {
     // Ya podemos construir el Mesh
     this.anillo = new THREE.Mesh (torusGeom, torusMat);
 
-    this.anillo.castShadow = true;
-    this.anillo.receiveShadow = true;
 
     //torus.rotation.set(Math.PI/2,0,0);
 
@@ -86,8 +81,6 @@ class medusa extends THREE.Object3D {
 
     this.tentaculo1 = new THREE.Mesh(tentaculo1Geom, tentaculosMat);
 
-    this.tentaculo1.castShadow = true;
-    this.tentaculo1.receiveShadow = true;
 
     this.tentaculo1.userData = this;
     this.tentaculo1.scale.set(1,1,0.15); 
@@ -105,8 +98,6 @@ class medusa extends THREE.Object3D {
 
     this.tentaculo2 = new THREE.Mesh(tentaculo2Geom, tentaculosMat);
 
-    this.tentaculo2.castShadow = true;
-    this.tentaculo2.receiveShadow = true;
 
     this.tentaculo2.userData = this;
     this.tentaculo2.scale.set(1,1,0.15); 
@@ -124,8 +115,6 @@ class medusa extends THREE.Object3D {
 
     this.tentaculo3 = new THREE.Mesh(tentaculo3Geom, tentaculosMat);
 
-    this.tentaculo3.castShadow = true;
-    this.tentaculo3.receiveShadow = true;
 
     this.tentaculo3.userData = this;
 
@@ -140,9 +129,6 @@ class medusa extends THREE.Object3D {
 
     this.tentaculo4 = new THREE.Mesh(tentaculo4Geom, tentaculosMat);
 
-    this.tentaculo4.castShadow = true;
-    this.tentaculo4.receiveShadow = true;
-
     this.tentaculo4.userData = this;
 
     this.tentaculos.add(this.tentaculo4);
@@ -151,6 +137,24 @@ class medusa extends THREE.Object3D {
 
     //this.medusa.translateY(1);
     this.medusa.scale.set(0.25,0.25,0.25);
+
+    // Sombra
+
+
+    let meshes = [];
+
+    this.medusa.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            meshes.push(child);
+        }
+    });
+
+    meshes.forEach((mesh) => {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        console.log("Sombras añadidas a la medusa");
+    });
+        
     
     // Posicionamiento en el circuito
 

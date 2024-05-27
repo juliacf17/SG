@@ -175,7 +175,23 @@ class gary extends THREE.Object3D {
     this.gary.translateY(0.03);
     this.gary.scale.set(0.025, 0.025, 0.025);
 
+    let meshes = [];
+
+    this.gary.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            meshes.push(child);
+        }
+    });
+
+    meshes.forEach((mesh) => {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        console.log("Sombras añadidas a Gary");
+    });
+
     this.add(this.gary);
+
+
 
 
     

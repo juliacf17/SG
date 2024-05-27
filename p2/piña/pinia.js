@@ -163,7 +163,22 @@ class pinia extends THREE.Object3D {
     this.pinia.rotation.y = Math.PI/2;
     this.pinia.position.set(0,1.5,0);
 
+    let meshes = [];
+
+    this.pinia.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            meshes.push(child);
+        }
+    });
+
+    meshes.forEach((mesh) => {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        console.log("Sombras añadidas a la piña");
+    });
+
     this.add(this.pinia); 
+
 
 
 
