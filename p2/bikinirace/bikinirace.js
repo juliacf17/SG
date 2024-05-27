@@ -8,16 +8,13 @@ import { Stats } from '../../libs/stats.module.js'
 
 // Clases de mi proyecto
 
-import { circuito } from '../circuito/circuito.js'
-import { medusa } from '../medusa/medusa.js'
-import { MyBox } from './MyBox.js'
-import {MyBoxColision} from './colisiones.js' 
-import { MyBoxVolador } from './voladores.js'
-import { bob_hambur } from '../bob_hambur/bob_hambur.js'
-import { gary } from '../gary/gary.js'  
-import { hamburguesa } from '../hamburguesa/hamburguesa.js'
-import { pinia } from '../piña/pinia.js'
-import { plancton } from '../plancton/plancton.js'
+import { circuito } from '../objetos circuito/circuito/circuito.js'
+import { medusa } from '../objetos circuito/medusa/medusa.js'
+import { bob_hambur } from '../objetos circuito/bob_hambur/bob_hambur.js'
+import { gary } from '../objetos circuito/gary/gary.js'  
+import { hamburguesa } from '../objetos circuito/hamburguesa/hamburguesa.js'
+import { pinia } from '../objetos circuito/piña/pinia.js'
+import { plancton } from '../objetos circuito/plancton/plancton.js'
 
 
 /// La clase fachada del modelo

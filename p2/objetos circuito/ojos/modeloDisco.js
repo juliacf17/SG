@@ -1,7 +1,7 @@
 
-import * as THREE from '../libs/three.module.js'
-import { MTLLoader } from '../libs/MTLLoader.js'
-import { OBJLoader } from '../libs/OBJLoader.js'
+import * as THREE from '../../libs/three.module.js'
+import { MTLLoader } from '../../libs/MTLLoader.js'
+import { OBJLoader } from '../../libs/OBJLoader.js'
  
 
 class modeloDisco extends THREE.Object3D {

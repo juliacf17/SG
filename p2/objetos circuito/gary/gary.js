@@ -1,8 +1,8 @@
 
-import * as THREE from '../libs/three.module.js'
-import { CSG } from '../libs/CSG-v2.js'
-import { MTLLoader } from '../libs/MTLLoader.js'
-import { OBJLoader } from '../libs/OBJLoader.js'
+import * as THREE from '../../libs/three.module.js'
+import { CSG } from '../../libs/CSG-v2.js'
+import { MTLLoader } from '../../libs/MTLLoader.js'
+import { OBJLoader } from '../../libs/OBJLoader.js'
 
 class gary extends THREE.Object3D {
   constructor(circuitoGeometry, _t) {

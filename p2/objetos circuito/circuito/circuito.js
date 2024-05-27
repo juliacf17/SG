@@ -1,6 +1,6 @@
 
-import * as THREE from '../libs/three.module.js'
-import { CSG } from '../libs/CSG-v2.js'
+import * as THREE from '../../libs/three.module.js'
+import { CSG } from '../../libs/CSG-v2.js'
 import { color } from '../../libs/dat.gui.module.js';
 
 
