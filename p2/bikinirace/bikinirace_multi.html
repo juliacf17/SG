@@ -84,8 +84,33 @@
             font-size: 48px;
             margin-bottom: 20px;
         }
-        #game-over-screen-multi #MarcadorFinal {
+        #game-over-screen-multi #MarcadorMulti {
             font-size: 30px;
+        }
+
+        /* Estilos para el pop-up */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 24px;
+            z-index: 10000; /* Asegúrate de que está por encima de otros elementos */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        /* Mostrar el pop-up */
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
         }
 
 
@@ -105,10 +130,14 @@
 <!-- Div que muestra la pantalla de fin de juego -->
 <div id="game-over-screen-multi" style="display: none;">
     <h1>¡Fin del juego!</h1>
-    <div id="MarcadorFinal">
+    <div id="MarcadorMulti">
     </div>
 </div>
 
+
+    <div id="game-instructions" class="popup">
+        <p>Gana quien consiga alcanzar a el otro. ¡Suerte!</p>
+    </div>
 
        <!-- Div which will show the points -->
     <div id="MarcadorVelocidadBob">
@@ -149,6 +178,16 @@
 
             // Mostrar el contenedor del juego
             document.getElementById("game-container").style.display = "block";
+
+            // Muestra el pop-up cuando la página se carga
+            const popup = document.getElementById('game-instructions');
+            popup.classList.add('show');
+
+            // Oculta el pop-up después de 4 segundos
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 4000);
+
         } catch (error) {
             console.error("Error al cargar los recursos:", error);
         }

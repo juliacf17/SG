@@ -35,7 +35,7 @@ class multijugador extends THREE.Scene {
     this.initVelocidadPlancton(); 
     
     
-    this.marcadorFinal(); 
+    this.marcadorMulti(); 
     
     // Construimos los distinos elementos que tendremos en la escena
     
@@ -239,15 +239,15 @@ initVelocidadPlancton() {
   this.marcadorVelocidad = marcador;
 }
 
-  marcadorFinal(){
+  marcadorMulti(){
     // Crea un elemento para mostrar los puntos
     var marcador = document.createElement('div');
 
-    marcador.id = 'MarcadorFinal';
+    marcador.id = 'MarcadorMulti';
     marcador.style.textShadow = '2px 2px 2px black';
     marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
     
-    $("#MarcadorFinal").append(marcador); // Añade el elemento al div ya existente
+    $("#MarcadorMulti").append(marcador); // Añade el elemento al div ya existente
 
     this.marcadorF = marcador;
   }
@@ -480,7 +480,7 @@ initVelocidadPlancton() {
 
   update () {
     
-    if((this.protagonista.getColisionConPlancton() || this.jugador2.getColisionConBob()) && !this.finJuego){ // Si el protagonista colisiona con el plancton
+    if((this.protagonista.getColisionConPlancton() || this.jugador2.getColisionConBob()) && this.finJuego){ // Si el protagonista colisiona con el plancton
       this.finDelJuego(); // Se muestra la pantalla de fin de juego
     }
 
