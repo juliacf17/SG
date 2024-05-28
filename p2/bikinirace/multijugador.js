@@ -257,7 +257,11 @@ initVelocidadPlancton() {
     this.finJuego = true;
     // Muestra la pantalla de fin de juego
 
-    var ganador = "Bob Esponja";  //DETERMINAR QUIEN GANA
+    if(this.protagonista.t < this.jugador2.t){
+      var ganador = "Bob Esponja"; //DETERMINAR QUIEN GANA
+    }else {
+      var ganador = "Plancton";
+    }
 
 
     if (this.marcadorF) {
@@ -450,7 +454,7 @@ initVelocidadPlancton() {
 
       case 'p':
         this.protagonista.velocidad = 0; // Frena al protagonista y al jugador 2 al pulsar la tecla 'p' (para pruebas)
-        this.jugador2.velocidad = 0; 
+        //this.jugador2.velocidad = 0; 
         break;
 
       case 'r':
@@ -480,7 +484,13 @@ initVelocidadPlancton() {
 
   update () {
     
-    if((this.protagonista.getColisionConPlancton() || this.jugador2.getColisionConBob()) && this.finJuego){ // Si el protagonista colisiona con el plancton
+    if(this.protagonista.getColisionConMultiPlancton() && !this.finJuego){ // Si el protagonista colisiona con el plancton
+      if (this.protagonista.getColisionConPlancton()){
+        console.log("Colisión de Bob con plancton");
+      }else{
+        console.log("Colisión de Plancton con Bob");
+      }
+
       this.finDelJuego(); // Se muestra la pantalla de fin de juego
     }
 

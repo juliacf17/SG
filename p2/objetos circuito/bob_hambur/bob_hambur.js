@@ -90,8 +90,6 @@ class bob_hambur extends THREE.Object3D {
 
     this.hasImpacted = false;
 
-    this.impactoSpawn = true;
-
     // Colisiones por Raycasting HAMBURGUESA
 
     //this.posicionH = new THREE.Vector3();
@@ -114,7 +112,7 @@ class bob_hambur extends THREE.Object3D {
 
     this.add(cajaVisible);
 
-    cajaVisible.visible = false;
+    cajaVisible.visible = true;
 
 
 
@@ -176,17 +174,25 @@ class bob_hambur extends THREE.Object3D {
     return this.camara;
   }
 
-  getColisionConPlancton() {
-    if (this.impactoSpawn){
-      this.impactoSpawn = false;
+  getColisionConMultiPlancton() {
+
+        if (this.impacto instanceof plancton_multi){
+            var impactoMultiPlancton = true;
+            this.impacto = null;
+            return impactoMultiPlancton;
+        }
+        
+        return false;
     }
-    else {
-      if (this.impacto instanceof bob_hambur){
+
+  getColisionConPlancton() {
+
+      if (this.impacto instanceof plancton){
         var impactoPlancton = true;
         this.impacto = null;
         return impactoPlancton;
       }
-    }
+    
     return false;
   }
 
@@ -252,15 +258,18 @@ class bob_hambur extends THREE.Object3D {
 
     
     for (var i = 0; i < this.candidatos.length; i++) {
-        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto && !this.impactoSpawn){  
+        if(this.cajaFigura.intersectsBox(this.candidatos[i].cajaFigura) && !this.hasImpacted && this.candidatos[i] != this.impacto){  
 
             if(this.candidatos[i] instanceof plancton){ 
                 this.impactoPlancton = true;
                 console.log("Bob dice: COLISIÓN CON PLANCTON");
                 this.setColorLight('red', true);
                 
-
-            
+            }else if (this.candidatos[i] instanceof plancton_multi){
+                this.impactoPlancton = true;
+                console.log("Bob dice: COLISIÓN CON PLANCTON");
+                this.setColorLight('red', true);
+                          
             }else if (this.candidatos[i] instanceof hamburguesa){
 
                 if (this.modoVelocidad != "Alta"){
