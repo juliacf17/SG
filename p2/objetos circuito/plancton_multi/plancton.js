@@ -200,7 +200,7 @@ class plancton_multi extends THREE.Object3D {
 
     setTimeout(() => {
       this.velocidad = 0.025;
-    }, 3000);
+    }, 4000);
 
 
     this.nuevoTarget = new THREE.Vector3(); // nuevo target para la cámara

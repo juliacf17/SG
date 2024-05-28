@@ -91,6 +91,29 @@
             font-size: 30px;
         }
 
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco con 80% de opacidad */
+            color: black; /* Letras negras */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-size: 24px;
+            z-index: 10000; /* Asegúrate de que está por encima de otros elementos */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        /* Mostrar el pop-up */
+        .popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
     </style>
 </head>
 <body>
@@ -113,6 +136,12 @@
     </div>
 </div>
 
+    <div id="game-instructions" class="popup">
+        <p>Caza todas las medusas haciendo click para ganar. <br></br>
+            Si chocas con Plancton, perderás todos los puntos. <br></br>
+            ¡Suerte!</p>
+    </div>
+
     <!-- Div which will show the points -->
     <div id="Marcador">
     </div>
@@ -133,7 +162,7 @@
             // Simular una carga de 3 segundos
             setTimeout(() => {
                 resolve();
-            }, 3000);
+            }, 7000);
         });
     }
 
@@ -148,6 +177,15 @@
 
             // Ocultar la pantalla de carga
             document.getElementById("loading-screen").style.display = "none";
+
+            // Muestra el pop-up cuando la página se carga
+            const popup = document.getElementById('game-instructions');
+            popup.classList.add('show');
+
+             // Oculta el pop-up después de 4 segundos
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 4000);
 
             // Mostrar el contenedor del juego
             document.getElementById("game-container").style.display = "block";
