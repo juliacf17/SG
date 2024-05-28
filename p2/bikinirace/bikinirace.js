@@ -319,26 +319,10 @@ class bikinirace extends THREE.Scene {
     this.directionalLight2.shadow.camera.top = 50;
     this.add(this.directionalLight2);
 
-    const helper = new THREE.DirectionalLightHelper(this.directionalLight1);
+    /*const helper = new THREE.DirectionalLightHelper(this.directionalLight1);
     const helper2 = new THREE.DirectionalLightHelper(this.directionalLight2);
     this.add(helper);
-    this.add(helper2);
-
-
-
-    /*
-
-    this.spotlight = new THREE.SpotLight('red');
-
-    this.spotlight.power = 1000;
-    this.spotlight.angle = Math.PI / 6;
-    this.spotlight.penumbra = 0.5;
-    this.spotlight.position.set(0, 1, 0);
-    this.spotlight.target = this.protagonista;
-
-    this.add(this.spotlight);
-    */
-
+    this.add(helper2);*/
   }
   
   setLightPower (valor) {
@@ -480,7 +464,7 @@ class bikinirace extends THREE.Scene {
         }
         break;
 
-      case 'p':
+      /*case 'p':
         this.protagonista.velocidad = 0; // Frena al protagonista y al jugador 2 al pulsar la tecla 'p' (para pruebas)
         if(this.multiplayer){
           this.jugador2.velocidad = 0; 
@@ -492,10 +476,7 @@ class bikinirace extends THREE.Scene {
         if(this.multiplayer){
           this.jugador2.velocidad = 0.02;
         }
-        break;
-
-
-
+        break;*/
     }
   }
 
@@ -517,11 +498,6 @@ class bikinirace extends THREE.Scene {
         selectedObject.userData.recibeClic(selectedObject); // Se llama al método recibeClic del objeto
       }
 
-      //var selectedPoint = pickedObjects[0].point;
-
-
-      //NO FUNCIONA, PODEMOS ELIMIANAR EL OBJETO CUANDO LA OPACIDAD SEA 0?
-  
       // Aumenta la puntuación si se ha hecho clic en un objeto volador
       if(!selectedObject.userData.getOpacity(selectedObject))  // Si el objeto no ha desaparecido ya y no se ha acabado el juego
         this.puntos++; // Aumenta la puntuación
@@ -588,9 +564,6 @@ class bikinirace extends THREE.Scene {
       this.puntos = 0;
     }
 
-    //console.log(this.puntos);
-    
-
     this.modoVelocidad = this.protagonista.getVelocidadInterfaz(); // Obtiene el modo de velocidad del protagonista
 
     if (this.marcador) {
@@ -609,7 +582,6 @@ class bikinirace extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.circuito.update();
     this.protagonista.update();
-    //this.jugador2.update();
     this.plancton.update();
     this.obstaculo1.update(); 
     this.obstaculo2.update();
@@ -619,9 +591,6 @@ class bikinirace extends THREE.Scene {
     this.volador3.update();
     this.volador4.update();
     this.volador5.update();
-    //this.volador6.update();
-    //this.volador7.update();
-    //this.volador8.update();
     this.premio1.update();
     this.premio2.update(); 
     this.premio3.update();

@@ -112,7 +112,7 @@ class bob_hambur extends THREE.Object3D {
 
     this.add(cajaVisible);
 
-    cajaVisible.visible = true;
+    cajaVisible.visible = false;
 
 
 

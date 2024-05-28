@@ -227,7 +227,7 @@ class plancton_multi extends THREE.Object3D {
 
     this.add(cajaVisible);
 
-    cajaVisible.visible = true;
+    cajaVisible.visible = false;
 
 
 // ---------------------------- NODOS ---------------------------- //

@@ -151,65 +151,13 @@ class multijugador extends THREE.Scene {
     });
   }
 
-  /*createCubeTexture(){
-    var path = "../imgs/";
-    var format = '.jpg';
-
-    var urls = [
-      path + 'cielo' + format, path + 'cielo' + format,
-      path + 'cielo' + format, path + 'cielo' + format,
-      path + 'cielo' + format, path + 'cielo' + format
-    ];
-
-    var textureCube = new THREE.CubeTextureLoader().load(urls);
-
-    this.background = textureCube;
-
-    this.castShadow = true;
-    this.receiveShadow = true;
-  }
-
-  /*initStats() {
-  
-    var stats = new Stats(); // Crea la gráfica de rendimiento
-    
-    stats.setMode(0); // 0: fps, 1: ms 
-    
-    // Align top-left 
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-    
-    $("#Stats-output").append( stats.domElement ); // Añade la gráfica al div ya existente
-    
-    this.stats = stats;
-  }
-
-  /*initPuntos() {
-    // Crea un elemento para mostrar los puntos
-    var marcador = document.createElement('div');
-
-    marcador.id = 'Marcador';
-    marcador.style.position = 'absolute';
-    marcador.style.left = '100px'; 
-    marcador.style.top = '0px'; // Espacio debajo de los stats
-    marcador.style.color = 'white'; // Color del texto
-    marcador.style.textShadow = '2px 2px 2px black';
-    marcador.style.fontSize = 40 + 'px'; // Tamaño de la fuente
-    marcador.textContent = 'Probando'; // Mostrar cero puntos por defecto
-    
-    $("#Marcador").append(marcador); // Añade el elemento al div ya existente
-
-    this.marcador = marcador;
-}*/
-
 initVelocidadBob() {
   // Crea un elemento para mostrar los puntos
   var marcador = document.createElement('div');
 
   marcador.id = 'MarcadorVelocidadBob';
   marcador.style.position = 'absolute';
-  marcador.style.left = '1300px'; 
+  marcador.style.left = '1150px'; 
   marcador.style.top = '0px'; // Espacio debajo de los stats
   marcador.style.color = 'white'; // Color del texto
   marcador.style.textShadow = '2px 2px 2px black';
@@ -218,7 +166,7 @@ initVelocidadBob() {
   
   $("#MarcadorVelocidadBob").append(marcador); // Añade el elemento al div ya existente
 
-  this.marcadorVelocidad = marcador;
+  this.marcadorVelocidadBob = marcador;
 }
 
 initVelocidadPlancton() {
@@ -227,7 +175,7 @@ initVelocidadPlancton() {
 
   marcador.id = 'MarcadorVelocidadPlancton';
   marcador.style.position = 'absolute';
-  marcador.style.left = '300px'; 
+  marcador.style.left = '200px'; 
   marcador.style.top = '0px'; // Espacio debajo de los stats
   marcador.style.color = 'white'; // Color del texto
   marcador.style.textShadow = '2px 2px 2px black';
@@ -236,7 +184,7 @@ initVelocidadPlancton() {
   
   $("#MarcadorVelocidadPlancton").append(marcador); // Añade el elemento al div ya existente
 
-  this.marcadorVelocidad = marcador;
+  this.marcadorVelocidadPlancton = marcador;
 }
 
   marcadorMulti(){
@@ -263,12 +211,13 @@ initVelocidadPlancton() {
       var ganador = "Plancton";
     }
 
-
     if (this.marcadorF) {
       this.marcadorF.textContent = 'Ha ganado: ' + ganador; // Muestra la puntuación en la pantalla
     }
 
     this.protagonista.pararPersonaje(); // Parar al protagonista
+    this.jugador2.pararPersonaje(); // Parar al plancton
+
     document.getElementById("game-over-screen-multi").style.display = "flex";
   }
   
@@ -326,10 +275,11 @@ initVelocidadPlancton() {
     this.directionalLight2.shadow.camera.top = 50;
     this.add(this.directionalLight2);
 
+    /*
     const helper = new THREE.DirectionalLightHelper(this.directionalLight1);
     const helper2 = new THREE.DirectionalLightHelper(this.directionalLight2);
     this.add(helper);
-    this.add(helper2);
+    this.add(helper2);*/
   }
   
   setLightPower (valor) {
@@ -498,11 +448,11 @@ initVelocidadPlancton() {
     this.modoVelocidadPlancton = this.jugador2.getVelocidadInterfaz(); // Obtiene el modo de velocidad del jugador 2
 
     if(this.marcadorVelocidadBob){
-      this.marcadorVelocidadBob.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
+      this.marcadorVelocidadBob.textContent = 'Velocidad: ' + this.modoVelocidadBob; // Muestra el modo de velocidad en la pantalla
     }
 
     if(this.marcadorVelocidadPlancton){
-        this.marcadorVelocidadPlancton.textContent = 'Velocidad: ' + this.modoVelocidad; // Muestra el modo de velocidad en la pantalla
+        this.marcadorVelocidadPlancton.textContent = 'Velocidad: ' + this.modoVelocidadPlancton; // Muestra el modo de velocidad en la pantalla
     }
     
     // Se actualizan los elementos de la escena para cada frame
