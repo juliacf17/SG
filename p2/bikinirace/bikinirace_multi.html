@@ -88,14 +88,13 @@
             font-size: 30px;
         }
 
-        /* Estilos para el pop-up */
         .popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
+            background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco con 80% de opacidad */
+            color: black; /* Letras negras */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -106,7 +105,6 @@
             visibility: hidden;
             transition: opacity 0.5s, visibility 0.5s;
         }
-
         /* Mostrar el pop-up */
         .popup.show {
             opacity: 1;
@@ -136,7 +134,7 @@
 
 
     <div id="game-instructions" class="popup">
-        <p>Gana quien consiga alcanzar a el otro. ¡Suerte!</p>
+        <p>Gana quien consiga alcanzar al otro. ¡Suerte!</p>
     </div>
 
        <!-- Div which will show the points -->
@@ -176,17 +174,21 @@
             // Ocultar la pantalla de carga
             document.getElementById("loading-screen").style.display = "none";
 
-            // Mostrar el contenedor del juego
-            document.getElementById("game-container").style.display = "block";
-
             // Muestra el pop-up cuando la página se carga
             const popup = document.getElementById('game-instructions');
             popup.classList.add('show');
 
-            // Oculta el pop-up después de 4 segundos
+             // Oculta el pop-up después de 4 segundos
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 4000);
+            }, 5000);
+
+            // Mostrar el contenedor del juego
+            document.getElementById("game-container").style.display = "block";
+
+            
+
+           
 
         } catch (error) {
             console.error("Error al cargar los recursos:", error);
