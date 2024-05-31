@@ -247,11 +247,7 @@ class gary extends THREE.Object3D {
     posTmp.add(tangente);
     var segmentoActual = Math.floor(this.t * this.segmentos);
     this.nodoPosOrientTubo.up = this.circuito.binormals[segmentoActual];
-    this.nodoPosOrientTubo.lookAt(posTmp);
-    
-                     
-    
-    
+    this.nodoPosOrientTubo.lookAt(posTmp); 
   }
 }
 

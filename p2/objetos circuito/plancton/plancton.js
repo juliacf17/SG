@@ -261,10 +261,6 @@ class plancton extends THREE.Object3D {
         this.t = 1;
     }
 
-    //this.rotacion -= 0.05;
-    
-    //this.movLateral.rotation.z = this.rotacion;
-
     var posTmp = this.path.getPointAt(this.t);
     this.nodoPosOrientTubo.position.copy(posTmp);
     

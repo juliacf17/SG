@@ -79,28 +79,10 @@ class bob_hambur extends THREE.Object3D {
     this.izquierda = false; 
     this.derecha = false;
 
-    // Colisiones por Raycasting GARY
 
     this.candidatos = candidatosColision;
-    //var distancia = 0.5; 
-    //this.posicion = new THREE.Vector3();
-    //this.direccion = new THREE.Vector3();
-    
-    //this.rayo = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
 
     this.hasImpacted = false;
-
-    // Colisiones por Raycasting HAMBURGUESA
-
-    //this.posicionH = new THREE.Vector3();
-    //this.direccionH = new THREE.Vector3();
-    
-    //this.rayoH = new THREE.Raycaster(this.posicion, new THREE.Vector3(0,0,1), 0, distancia);
-
-    //this.hasImpactedH = false;
-
-    //this.impactoH = null;
-
 
 
 
@@ -170,9 +152,9 @@ class bob_hambur extends THREE.Object3D {
     }
 
 
-   getCamara3aPersona() {
-    return this.camara;
-  }
+    getCamara3aPersona() {
+        return this.camara;
+    }
 
   getColisionConMultiPlancton() {
 
@@ -211,7 +193,6 @@ class bob_hambur extends THREE.Object3D {
 
     // MODIFICAR CON LA VELOCIDAD
     this.t += this.reloj.getDelta() * this.velocidad;
-    //console.log(this.t);
 
     if(this.t >= 1){
         this.t = 0;
@@ -220,10 +201,6 @@ class bob_hambur extends THREE.Object3D {
         if(this.velocidad >= 0.045)
             this.velocidad = 0.045;
     }
-
-    //console.log("Izquierda: " + this.izquierda);
-    //console.log("Derecha: " + this.derecha);
-
     
     if (this.izquierda) {
         this.rotacion -= Math.PI * 2 / 180;
@@ -236,13 +213,6 @@ class bob_hambur extends THREE.Object3D {
         this.rotacion = Math.PI / 3;
         }
     }
-
-    
-    //this.rotacion += Math.PI * 2 /180;
-
-
-    //console.log(this.velocidad);
-
     
     
     this.movLateral.rotation.z = this.rotacion;
@@ -324,7 +294,6 @@ class bob_hambur extends THREE.Object3D {
         }else{
             
             this.hasImpacted = false;
-
 
         }
 

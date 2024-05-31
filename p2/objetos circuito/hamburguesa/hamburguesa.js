@@ -149,61 +149,6 @@ class hamburguesa extends THREE.Object3D {
 
     this.hamburguesa.add(tomate);
 
-    /*
-    var shape = new THREE.Shape();
-    var lado = 25; // Puedes ajustar el tamaño según necesites
-    shape.moveTo(0, 0);
-    shape.lineTo(lado, 0);
-    shape.lineTo(lado, lado);
-    shape.lineTo(0, lado);
-    shape.lineTo(0, 0);
-
-    var pts = [];
-    var altura = 5; // Altura de la onda
-    var longitud = 200; // Longitud del camino
-    var pasos = 300; // Número de puntos en el camino
-    for (var i = 0; i <= pasos; i++) {
-        var x = (i / pasos) * longitud - longitud / 2;
-        var y = Math.sin(i / pasos * Math.PI * 4) * altura;
-        var z = 0;
-        pts.push(new THREE.Vector3(x, y, z));
-    }
-
-    var path = new THREE.CatmullRomCurve3(pts);     //Crea el camino
-    
-    var options = {
-        steps: 150,     //La suavidad de la extrusión, cuanto más pasos más suave.   
-        curveSegments: 6, // Mejora la resolución de las curvas cuanto mayor es. 
-        extrudePath: path // La trayectoria a lo largo de la cual se extruirá la forma
-    };
-
-    var geometry = new THREE.ExtrudeGeometry( shape, options );     //Crear la geometría
-    var material = new THREE.MeshPhongMaterial({ color: 'green', side: THREE.DoubleSide });
-
-
-    geometry.scale(0.005, 0.007, 0.04); 
-    geometry.translate(0.02,0.17,0.5); 
-    
-
-    var barrido = new THREE.Mesh(geometry, material);   //la forma de la lechuga
-
-    var csg3 = new CSG(); 
-    csg3.union([lechuga]);
-    csg3.subtract([barrido]);             //la forma de la lechuga por debajo
-
-
-    barrido.geometry.translate(0,0.32,0);
-    csg3.subtract([barrido]);                 //la forma de la lechuga por arriba
-
-    csg3.subtract([pan_superior]);    //que el pan se una con la lechuga
-    //csg3.subtract([result4]);   //que el queso se una con la lechuga
-
-    var result3 = csg3.toMesh(); 
-
-    this.add (result3);
-
-    */
-
     this.hamburguesa.translateY(0.1); 
     this.hamburguesa.scale.set(0.15, 0.15, 0.15);
 

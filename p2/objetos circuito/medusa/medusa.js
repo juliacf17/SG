@@ -169,14 +169,7 @@ class medusa extends THREE.Object3D {
     this.movLateral = new THREE.Object3D();
     this.posSuper = new THREE.Object3D();
 
-
-
-    this.posSuper.translateY(this.radio + 0.5);
-
-
-    
-
-    
+    this.posSuper.translateY(this.radio + 0.5);    
 
     this.reloj = new THREE.Clock();
     this.velocidad = 0.005;
